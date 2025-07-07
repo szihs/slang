@@ -39,7 +39,6 @@ static const ExampleResources resourceBase("reflection-api");
 //
 
 static const char* kSourceFileNames[] = {
-    "raster-simple.slang",
     "compute-simple.slang",
 };
 
@@ -48,8 +47,7 @@ static const struct
     SlangCompileTarget format;
     const char* profile;
 } kTargets[] = {
-    {SLANG_DXIL, "sm_6_0"},
-    {SLANG_SPIRV, "sm_6_0"},
+    {SLANG_CUDA_SOURCE, "cs_6_0"},
 };
 static const int kTargetCount = SLANG_COUNT_OF(kTargets);
 
@@ -165,6 +163,7 @@ struct ReflectingPrinting
         diagnoseIfNeeded(diagnostics);
         SLANG_RETURN_ON_FAIL(result);
 
+#if 1
         key("layouts");
         WITH_ARRAY()
         for (int targetIndex = 0; targetIndex < kTargetCount; ++targetIndex)
@@ -186,9 +185,106 @@ struct ReflectingPrinting
                 collectEntryPointMetadata(program, targetIndex, definedEntryPointCount));
 
             _programLayout = programLayout;
-            auto targetFormat = kTargets[targetIndex].format;
-            printProgramLayout(programLayout, targetFormat);
+
+            // Get the entry point layout
+            auto entryPointLayout = programLayout->getEntryPointByIndex(0);
+            auto entryPointVarLayout = entryPointLayout->getVarLayout();
+            auto entryPointTypeLayout = entryPointVarLayout->getTypeLayout();
+
+            // Look for the StructuredBuffer<bool2> parameter
+            slang::TypeLayoutReflection* sb_bool2_layout = nullptr;
+            int paramCount = entryPointTypeLayout->getFieldCount();
+            for (int i = 0; i < paramCount; i++)
+            {
+                auto param = entryPointTypeLayout->getFieldByIndex(i);
+                auto paramTypeLayout = param->getTypeLayout();
+                auto paramType = paramTypeLayout->getType();
+
+                printf(
+                    "Parameter %d: %s (kind: %d)\n",
+                    i,
+                    param->getName(),
+                    (int)paramType->getKind());
+
+                // Check if this is a StructuredBuffer
+                if (paramType->getKind() == slang::TypeReflection::Kind::Resource)
+                {
+                    if ((paramTypeLayout->getResourceShape() & SLANG_RESOURCE_BASE_SHAPE_MASK) ==
+                        SLANG_STRUCTURED_BUFFER)
+                    {
+                        // Check if element type is bool2 - use getElementType for StructuredBuffer
+                        auto elementType = paramType->getElementType();
+                        printf(
+                            "  Element type: %s\n",
+                            elementType ? elementType->getName() : "null");
+                        if (elementType && (strcmp(elementType->getName(), "bool2") == 0 ||
+                                            strcmp(elementType->getName(), "vector") == 0))
+                        {
+                            // For vector types, also check if it's bool2 specifically
+                            if (elementType->getKind() == slang::TypeReflection::Kind::Vector)
+                            {
+                                auto scalarType = elementType->getElementType();
+                                printf(
+                                    "    Vector element type: %s\n",
+                                    scalarType ? scalarType->getName() : "null");
+                                if (scalarType && strcmp(scalarType->getName(), "bool") == 0 &&
+                                    elementType->getElementCount() == 2)
+                                {
+                                    sb_bool2_layout = paramTypeLayout;
+                                    printf(
+                                        "Found StructuredBuffer<bool2> parameter: %s\n",
+                                        param->getName());
+                                    break;
+                                }
+                            }
+                            else if (strcmp(elementType->getName(), "bool2") == 0)
+                            {
+                                sb_bool2_layout = paramTypeLayout;
+                                printf(
+                                    "Found StructuredBuffer<bool2> parameter: %s\n",
+                                    param->getName());
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (!sb_bool2_layout)
+            {
+                printf("StructuredBuffer<bool2> parameter not found!\n");
+                continue;
+            }
+
+            // Get element type layout (equivalent to Python's element_type_layout)
+            slang::TypeLayoutReflection* element_layout = sb_bool2_layout->getElementTypeLayout();
+
+            // Get stride size (equivalent to Python's stride) - from element layout
+            size_t stride = element_layout ? element_layout->getStride() : 0;
+
+            // Get alignment (equivalent to Python's alignment) - from element layout
+            size_t alignment = element_layout ? element_layout->getAlignment() : 0;
+
+            // Get size in bytes - from element layout
+            size_t sizeInBytes = element_layout ? element_layout->getSize() : 0;
+
+            // Get size for specific parameter categories - from element layout
+            size_t uniformSize =
+                element_layout ? element_layout->getSize(slang::ParameterCategory::Uniform) : 0;
+
+            // Print the values
+            printf("StructuredBuffer stride: %zu bytes\n", sb_bool2_layout->getStride());
+            printf("StructuredBuffer alignment: %zu bytes\n", sb_bool2_layout->getAlignment());
+            printf("StructuredBuffer size: %zu bytes\n", sb_bool2_layout->getSize());
+            printf("Element stride: %zu bytes\n", stride);
+            printf("Element alignment: %zu bytes\n", alignment);
+            printf("Element size: %zu bytes\n", sizeInBytes);
+            printf("Element uniform size: %zu bytes\n", uniformSize);
+
+            // auto targetFormat = kTargets[targetIndex].format;
+            // printProgramLayout(programLayout, targetFormat);
         }
+#endif
 
         return result;
     }
