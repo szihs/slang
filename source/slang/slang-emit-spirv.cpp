@@ -3215,6 +3215,10 @@ struct SPIRVEmitContext : public SourceEmitterBase, public SPIRVEmitSharedContex
         if (layout)
             emitVarLayout(param, varInst, layout);
         emitDecorations(param, getID(varInst));
+
+        // TODO: Emit debug information for the global parameter
+        // emitDebugGlobalParamDeclaration(param, varInst);
+
         return varInst;
     }
 
@@ -3237,6 +3241,10 @@ struct SPIRVEmitContext : public SourceEmitterBase, public SPIRVEmitSharedContex
         if (layout)
             emitVarLayout(globalVar, varInst, layout);
         emitDecorations(globalVar, getID(varInst));
+
+        // Emit debug information for the global variable
+        // emitDebugGlobalVarDeclaration(globalVar, varInst);
+
         return varInst;
     }
 
@@ -3844,6 +3852,122 @@ struct SPIRVEmitContext : public SourceEmitterBase, public SPIRVEmitSharedContex
         }
 
         return spvDebugLocalVar;
+    }
+
+    SpvInst* emitDebugGlobalVarDeclaration(IRGlobalVar* globalVar, SpvInst* spvVar)
+    {
+        // Only emit debug info if debug information is enabled
+        if (!m_defaultDebugSource)
+            return nullptr;
+
+        // Get the compilation unit as the scope for global variables
+        auto moduleInst = globalVar->getModule()->getModuleInst();
+        SpvInst* compilationUnit = nullptr;
+        if (!m_mapIRInstToSpvDebugInst.tryGetValue(moduleInst, compilationUnit))
+            return nullptr;
+
+        auto name = getName(globalVar);
+        auto varType = tryGetPointedToType(nullptr, globalVar->getDataType());
+        auto debugType = emitDebugType(varType);
+
+        IRBuilder builder(globalVar);
+        builder.setInsertBefore(globalVar);
+
+        // For global variables, we use the default debug source and line 0
+        // if specific source location isn't available
+        IRInst* source = m_defaultDebugSource;
+        auto line = builder.getIntValue(builder.getUIntType(), 0);
+        auto col = builder.getIntValue(builder.getUIntType(), 0);
+        auto flags = builder.getIntValue(builder.getUIntType(), 0);
+
+        // Use the global variable name as linkage name
+        auto linkageName = name;
+
+        auto spvDebugGlobalVar = emitOpDebugGlobalVariable(
+            getSection(SpvLogicalSectionID::ConstantsAndTypes),
+            globalVar,
+            m_voidType,
+            getNonSemanticDebugInfoExtInst(),
+            name,
+            debugType,
+            source,
+            line,
+            col,
+            compilationUnit,
+            linkageName,
+            globalVar,
+            flags);
+
+        return spvDebugGlobalVar;
+    }
+
+    SpvInst* emitDebugGlobalParamDeclaration(IRGlobalParam* globalParam, SpvInst* spvVar)
+    {
+        // Only emit debug info if debug information is enabled
+        if (!m_defaultDebugSource)
+            return nullptr;
+
+        // Get the compilation unit as the scope for global parameters
+        auto moduleInst = globalParam->getModule()->getModuleInst();
+        SpvInst* compilationUnit = nullptr;
+        if (!m_mapIRInstToSpvDebugInst.tryGetValue(moduleInst, compilationUnit))
+            return nullptr;
+
+        // Check if we've already created debug info for this parameter
+        SpvInst* existingDebugInst = nullptr;
+        if (m_mapIRInstToSpvDebugInst.tryGetValue(globalParam, existingDebugInst))
+            return existingDebugInst;
+
+        auto name = getName(globalParam);
+        auto varType = tryGetPointedToType(nullptr, globalParam->getDataType());
+
+        // Try to get debug type, but be careful about potential conflicts
+        SpvInst* debugType = nullptr;
+        try
+        {
+            debugType = emitDebugType(varType);
+        }
+        catch (...)
+        {
+            // If debug type emission fails, skip debug info for this variable
+            return nullptr;
+        }
+
+        IRBuilder builder(globalParam);
+        builder.setInsertBefore(globalParam);
+
+        // For global parameters, we use the default debug source and line 0
+        // if specific source location isn't available
+        IRInst* source = m_defaultDebugSource;
+        auto line = builder.getIntValue(builder.getUIntType(), 0);
+        auto col = builder.getIntValue(builder.getUIntType(), 0);
+        auto flags = builder.getIntValue(builder.getUIntType(), 0);
+
+        // Use the global parameter name as linkage name
+        auto linkageName = name;
+
+        auto spvDebugGlobalVar = emitOpDebugGlobalVariable(
+            getSection(SpvLogicalSectionID::ConstantsAndTypes),
+            globalParam,
+            m_voidType,
+            getNonSemanticDebugInfoExtInst(),
+            name,
+            debugType,
+            source,
+            line,
+            col,
+            compilationUnit,
+            linkageName,
+            globalParam,
+            flags);
+
+        // Register the debug instruction
+        if (spvDebugGlobalVar)
+        {
+            m_mapIRInstToSpvDebugInst[globalParam] = spvDebugGlobalVar;
+        }
+
+        return spvDebugGlobalVar;
     }
 
     bool isLegalType(IRInst* type)

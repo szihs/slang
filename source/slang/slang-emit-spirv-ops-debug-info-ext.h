@@ -555,6 +555,42 @@ SpvInst* emitOpDebugLocalVariable(
 }
 
 template<typename T>
+SpvInst* emitOpDebugGlobalVariable(
+    SpvInstParent* parent,
+    IRInst* inst,
+    const T& idResultType,
+    SpvInst* set,
+    IRInst* name,
+    SpvInst* type,
+    IRInst* source,
+    IRInst* line,
+    IRInst* col,
+    SpvInst* scope,
+    IRInst* linkageName,
+    IRInst* variable,
+    IRInst* flags)
+{
+    static_assert(isSingular<T>);
+    return emitInst(
+        parent,
+        inst,
+        SpvOpExtInst,
+        idResultType,
+        kResultID,
+        set,
+        SpvWord(18),
+        name,
+        type,
+        source,
+        line,
+        col,
+        scope,
+        linkageName,
+        variable,
+        flags);
+}
+
+template<typename T>
 SpvInst* emitOpDebugInlinedVariable(
     SpvInstParent* parent,
     IRInst* inst,

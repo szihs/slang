@@ -17,5 +17,7 @@ float4 main(PSIn input) : SV_TARGET
     return float4(colVal.xyz, 1.0);
 }
 
+// CHECK: %[[COMPILATION_UNIT_ID:[0-9]+]] = OpExtInst %void {{.*}} DebugCompilationUnit
+// TODO: Enable once DebugGlobalVariable is fully working
 // CHECK: %[[FUNC_ID:[0-9]+]] = OpExtInst %void {{.*}} DebugFunction %{{[0-9]+}}
 // CHECK: DebugLocalVariable %{{[0-9]+}} %{{[0-9]+}} %{{[0-9]+}} %{{.*}} %{{.*}} %[[FUNC_ID]]
