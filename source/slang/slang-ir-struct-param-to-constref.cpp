@@ -116,7 +116,7 @@ struct StructParamToConstRefContext
 
         // Use worklist algorithm to handle cascading fieldExtract/elementExtracts
         List<IRInst*> workList;
-        
+
         // Initialize worklist with all instructions that use transformed parameters
         for (auto block = func->getFirstBlock(); block; block = block->getNextBlock())
         {
