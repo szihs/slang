@@ -22,12 +22,22 @@ struct StructParamToConstRefContext
     // Check if a function is differentiable (has autodiff decorations)
     bool isDifferentiableFunc(IRFunc* func)
     {
-        return func->findDecoration<IRForwardDifferentiableDecoration>() ||
-               func->findDecoration<IRBackwardDifferentiableDecoration>() ||
-               func->findDecoration<IRForwardDerivativeDecoration>() ||
-               func->findDecoration<IRBackwardDerivativeDecoration>() ||
-               func->findDecoration<IRBackwardDerivativePrimalDecoration>() ||
-               func->findDecoration<IRUserDefinedBackwardDerivativeDecoration>();
+        for (auto decoration : func->getDecorations())
+        {
+            switch (decoration->getOp())
+            {
+            case kIROp_ForwardDifferentiableDecoration:
+            case kIROp_BackwardDifferentiableDecoration:
+            case kIROp_ForwardDerivativeDecoration:
+            case kIROp_BackwardDerivativeDecoration:
+            case kIROp_BackwardDerivativePrimalDecoration:
+            case kIROp_UserDefinedBackwardDerivativeDecoration:
+                return true;
+            default:
+                break;
+            }
+        }
+        return false;
     }
 
     // Check if a type should be transformed (struct, array, or other composite types)
@@ -43,9 +53,6 @@ struct StructParamToConstRefContext
         case kIROp_UnsizedArrayType:
             return true;
         default:
-            // Check if it's already a pointer type (don't double-transform)
-            if (as<IRPtrTypeBase>(type) || as<IRConstRefType>(type))
-                return false;
             return false;
         }
     }
@@ -61,7 +68,8 @@ struct StructParamToConstRefContext
         if (auto globalParam = as<IRGlobalParam>(rootAddr))
         {
             auto type = globalParam->getDataType();
-            if (as<IRHLSLStructuredBufferTypeBase>(type))
+            // Only read-only structured buffers are immutable, not RW buffers
+            if (type->getOp() == kIROp_HLSLStructuredBufferType)
                 return true;
             if (as<IRUniformParameterGroupType>(type))
                 return true;
@@ -106,98 +114,110 @@ struct StructParamToConstRefContext
             transformedParams.add(pair.first);
         }
 
-        // Collect all instructions to transform first (to avoid iterator invalidation)
-        List<IRFieldExtract*> fieldExtractsToTransform;
-        List<IRGetElement*> getElementsToTransform;
-        List<IRUse*> directUsesToTransform;
-
-        // Collect all direct uses of transformed parameters
-        for (auto pair : paramMap)
-        {
-            auto param = pair.first;
-            for (auto use = param->firstUse; use; use = use->nextUse)
-            {
-                auto user = use->getUser();
-
-                // Skip uses that are handled by field extract and get element cases
-                if (as<IRFieldExtract>(user) || as<IRGetElement>(user))
-                    continue;
-
-                // Add all other direct uses for transformation
-                directUsesToTransform.add(use);
-            }
-        }
-
+        // Use worklist algorithm to handle cascading fieldExtract/elementExtracts
+        List<IRInst*> workList;
+        
+        // Initialize worklist with all instructions that use transformed parameters
         for (auto block = func->getFirstBlock(); block; block = block->getNextBlock())
         {
             for (auto inst = block->getFirstInst(); inst; inst = inst->getNextInst())
             {
-                // Collect fieldExtract instructions that need transformation
+                // Add fieldExtract and getElement operations that use transformed params
                 if (auto fieldExtract = as<IRFieldExtract>(inst))
                 {
-                    auto baseParam = fieldExtract->getBase();
-                    if (transformedParams.contains(baseParam))
+                    if (transformedParams.contains(fieldExtract->getBase()))
                     {
-                        fieldExtractsToTransform.add(fieldExtract);
+                        workList.add(fieldExtract);
                     }
                 }
-
-                // Collect getElement instructions that need transformation
-                if (auto getElement = as<IRGetElement>(inst))
+                else if (auto getElement = as<IRGetElement>(inst))
                 {
-                    auto baseParam = getElement->getBase();
-                    if (transformedParams.contains(baseParam))
+                    if (transformedParams.contains(getElement->getBase()))
                     {
-                        getElementsToTransform.add(getElement);
+                        workList.add(getElement);
                     }
                 }
             }
         }
 
-        // Now transform all collected field extracts
-        for (auto fieldExtract : fieldExtractsToTransform)
+        // Process worklist iteratively to handle cascading operations
+        for (Index workListIndex = 0; workListIndex < workList.getCount(); workListIndex++)
         {
-            builder.setInsertBefore(fieldExtract);
-            auto baseParam = fieldExtract->getBase();
-            auto transformedParam = as<IRParam>(baseParam);
-            auto fieldAddr = builder.emitFieldAddress(transformedParam, fieldExtract->getField());
-            auto loadInst = builder.emitLoad(fieldAddr);
+            auto inst = workList[workListIndex];
 
-            fieldExtract->replaceUsesWith(loadInst);
-            fieldExtract->removeAndDeallocate();
-            changed = true;
+            if (auto fieldExtract = as<IRFieldExtract>(inst))
+            {
+                auto base = fieldExtract->getBase();
+                if (transformedParams.contains(base) || as<IRConstRefType>(base->getDataType()))
+                {
+                    builder.setInsertBefore(fieldExtract);
+                    auto fieldAddr = builder.emitFieldAddress(base, fieldExtract->getField());
+                    auto loadInst = builder.emitLoad(fieldAddr);
+
+                    // Add users to worklist for cascading operations
+                    for (auto use = fieldExtract->firstUse; use; use = use->nextUse)
+                    {
+                        auto user = use->getUser();
+                        if (as<IRFieldExtract>(user) || as<IRGetElement>(user))
+                        {
+                            workList.add(user);
+                        }
+                    }
+
+                    fieldExtract->replaceUsesWith(loadInst);
+                    fieldExtract->removeAndDeallocate();
+                    changed = true;
+                }
+            }
+            else if (auto getElement = as<IRGetElement>(inst))
+            {
+                auto base = getElement->getBase();
+                if (transformedParams.contains(base) || as<IRConstRefType>(base->getDataType()))
+                {
+                    builder.setInsertBefore(getElement);
+                    auto elemPtr = builder.emitElementAddress(base, getElement->getIndex());
+                    auto loadInst = builder.emitLoad(elemPtr);
+
+                    // Add users to worklist for cascading operations
+                    for (auto use = getElement->firstUse; use; use = use->nextUse)
+                    {
+                        auto user = use->getUser();
+                        if (as<IRFieldExtract>(user) || as<IRGetElement>(user))
+                        {
+                            workList.add(user);
+                        }
+                    }
+
+                    getElement->replaceUsesWith(loadInst);
+                    getElement->removeAndDeallocate();
+                    changed = true;
+                }
+            }
         }
 
-        // Transform all collected get elements
-        for (auto getElement : getElementsToTransform)
+        // Handle direct uses of transformed parameters
+        for (auto pair : paramMap)
         {
-            builder.setInsertBefore(getElement);
-            auto baseParam = getElement->getBase();
-            auto transformedParam = as<IRParam>(baseParam);
-            auto elemPtr = builder.emitElementAddress(transformedParam, getElement->getIndex());
-            auto loadInst = builder.emitLoad(elemPtr);
+            auto param = pair.first;
+            for (auto use = param->firstUse; use;)
+            {
+                auto nextUse = use->nextUse;
+                auto user = use->getUser();
 
-            getElement->replaceUsesWith(loadInst);
-            getElement->removeAndDeallocate();
-            changed = true;
-        }
+                // Skip uses that were already handled by worklist above
+                if (as<IRFieldExtract>(user) || as<IRGetElement>(user))
+                {
+                    use = nextUse;
+                    continue;
+                }
 
-        // Transform all direct uses of transformed parameters
-        for (auto use : directUsesToTransform)
-        {
-            auto user = use->getUser();
-            auto param = as<IRParam>(use->get());
+                builder.setInsertBefore(user);
+                auto loadInst = builder.emitLoad(param);
+                use->set(loadInst);
+                changed = true;
 
-            // Skip if this use was already handled above
-            if (!param || !transformedParams.contains(param))
-                continue;
-
-            builder.setInsertBefore(user);
-            auto loadInst = builder.emitLoad(param);
-
-            // Replace this specific use with the load
-            use->set(loadInst);
-            changed = true;
+                use = nextUse;
+            }
         }
     }
 
