@@ -1,4 +1,15 @@
 {
   "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|MultiEdit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "./extras/formatting.sh --no-version-check --since master"
+          }
+        ]
+      }
+    ]
   }
 }

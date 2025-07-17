@@ -32,7 +32,7 @@ jobs:
       (github.event_name == 'issues' && (contains(github.event.issue.body, '@claude')))
 
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 240
 
     # Cancel previous runs on new pushes
     concurrency:
@@ -187,9 +187,9 @@ jobs:
           fi
 
       # Run Claude Code Action with optimized environment variables
-      - name: Execute Claude Code Action # Right now direct prompt to automatic PR Review
+      - name: Execute Claude Code Action
         id: claude-action
-        uses: anthropics/claude-code-action@v0.0.31
+        uses: anthropics/claude-code-action@beta
         with:
           # Direct Prompt is for testing. We shall use the triggers (on) which shall trigger this part on runtime
           custom_instructions: |
@@ -199,9 +199,8 @@ jobs:
               * Configure: `cmake --preset default`
               * Build: `cmake --build --preset debug`
               * Test: `./build/Release/bin/slang-test ./tests/path/to/test.slang`
-              * Format code: `./extras/formatting.sh`
             - Project is pre-built and ready for development tasks
-            - Run formatting script before committing changes
+              * Run `./build/Debug/bin/slang-test ./tests/library/library-test.slang` for testing setup is working
 
             # CRITICAL: You have access to the mcp__deepwiki__ask_question tool for deep repository knowledge.
 
@@ -223,6 +222,7 @@ jobs:
               keep the target code emission logic as simple and direct as possible, and most of the heavy lifting code transform is done
               in the IR passes.
 
+
           mcp_config: |
             {
               "mcpServers": {
@@ -235,7 +235,7 @@ jobs:
           allowed_tools: "Bash,View,GlobTool,GrepTool,BatchTool,Write,mcp__deepwiki__ask_question"
           trigger_phrase: "@claude"
           assignee_trigger: "claude"
-          timeout_minutes: "90"
+          timeout_minutes: "180"
           github_token: ${{ steps.auth-config.outputs.github-token }}
           use_bedrock: "true"
           model: ${{ vars.ANTHROPIC_MODEL }}
@@ -250,6 +250,8 @@ jobs:
             GITHUB_ACTOR: ${{ github.actor }}
             ANTHROPIC_AUTH_TOKEN: ${{ env.ANTHROPIC_AUTH_TOKEN }}
             DISABLE_TELEMETRY: 1
+            BASH_DEFAULT_TIMEOUT_MS: 18000000
+            DEBUG: 1
 
         # The ANTHROPIC_API_KEY environment variable is automatically picked up
         continue-on-error: true
