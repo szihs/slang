@@ -192,6 +192,9 @@ jobs:
         uses: anthropics/claude-code-action@beta
         with:
           # Direct Prompt is for testing. We shall use the triggers (on) which shall trigger this part on runtime
+	  direct_prompt: |
+              * Run `./build/Debug/bin/slang-test ./tests/library/library-test.slang -v` for testing setup is working
+	      * Also run slangc for the same
           custom_instructions: |
             # Build system information:
             - OS: Ubuntu Linux
@@ -251,7 +254,7 @@ jobs:
             ANTHROPIC_AUTH_TOKEN: ${{ env.ANTHROPIC_AUTH_TOKEN }}
             DISABLE_TELEMETRY: 1
             BASH_DEFAULT_TIMEOUT_MS: 18000000
-            DEBUG: 1
+            DEBUG: true
 
         # The ANTHROPIC_API_KEY environment variable is automatically picked up
         continue-on-error: true
