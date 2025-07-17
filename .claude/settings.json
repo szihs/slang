@@ -7,6 +7,10 @@
           {
             "type": "command",
             "command": "./extras/formatting.sh --no-version-check --since master"
+          },
+          {
+            "type": "command",
+            "command": "cmake --build --preset debug"
           }
         ]
       }
