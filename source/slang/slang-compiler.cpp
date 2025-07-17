@@ -519,7 +519,7 @@ CapabilityAtom getAtomFromStage(Stage stage)
     }
 }
 
-SlangResult checkExternalCompilerSupport(Session* session, PassThroughMode passThrough)
+SlangResult checkExternalCompilerSupport(GlobalSession* globalSession, PassThroughMode passThrough)
 {
     // Check if the type is supported on this compile
     if (passThrough == PassThroughMode::None)
@@ -528,7 +528,7 @@ SlangResult checkExternalCompilerSupport(Session* session, PassThroughMode passT
         return SLANG_OK;
     }
 
-    return session->getOrLoadDownstreamCompiler(passThrough, nullptr) ? SLANG_OK
+    return globalSession->getOrLoadDownstreamCompiler(passThrough, nullptr) ? SLANG_OK
                                                                       : SLANG_E_NOT_FOUND;
 }
 

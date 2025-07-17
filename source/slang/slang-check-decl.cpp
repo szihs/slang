@@ -3693,7 +3693,7 @@ void registerBuiltinDecl(ASTBuilder* astBuilder, Decl* decl)
 ///
 /// This function should only be needed for declarations in the core module.
 ///
-static void _registerBuiltinDeclsRec(Session* session, Decl* decl)
+static void _registerBuiltinDeclsRec(GlobalSession* session, Decl* decl)
 {
     SharedASTBuilder* sharedASTBuilder = session->m_sharedASTBuilder;
 

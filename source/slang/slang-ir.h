@@ -30,7 +30,7 @@ class GenericDecl;
 class FuncType;
 class Layout;
 class Type;
-class Session;
+class GlobalSession;
 class Name;
 struct IRBuilder;
 struct IRFunc;
