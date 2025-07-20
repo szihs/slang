@@ -1,0 +1,21 @@
+time="2025-07-20T10:59:36Z" level=info msg="Using docker host 'unix:///var/run/docker.sock', and daemon socket 'unix:///var/run/docker.sock'"
+[SMH/CC] ⭐ Run Set up job
+[SMH/CC] 🚀  Start image=catthehacker/ubuntu:act-latest
+[SMH/CC]   🐳  docker pull image=catthehacker/ubuntu:act-latest platform=linux/arm64 username= forcePull=true
+[SMH/CC]   🐳  docker create image=catthehacker/ubuntu:act-latest platform=linux/arm64 entrypoint=["tail" "-f" "/dev/null"] cmd=[] network="host"
+[SMH/CC]   🐳  docker run image=catthehacker/ubuntu:act-latest platform=linux/arm64 entrypoint=["tail" "-f" "/dev/null"] cmd=[] network="host"
+[SMH/CC]   🐳  docker exec cmd=[node --no-warnings -e console.log(process.execPath)] user= workdir=
+[SMH/CC]   ✅  Success - Set up job
+[SMH/CC]   ☁  git clone 'https://github.com/actions/create-github-app-token' # ref=v***
+[SMH/CC]   ☁  git clone 'https://github.com/anthropics/claude-code-action' # ref=v0.0.3***
+[SMH/CC] Non-terminating error while running 'git clone': some refs were not updated
+[SMH/CC] ⭐ Run Pre Execute Claude Code Action
+[SMH/CC]   ☁  git clone 'https://github.com/oven-sh/setup-bun' # ref=735343b667d3e6f658f44d0eca948eb6282f2b76
+[SMH/CC]   ☁  git clone 'https://github.com/anthropics/claude-code-base-action' # ref=3560d2***b4***bd***9b***d3ac6c9000af378903d8df0e
+[SMH/CC] ⭐ Run Pre Run Claude Code
+[SMH/CC]   ☁  git clone 'https://github.com/actions/setup-node' # ref=49933ea5288caeca8642d***e84afbd3f7d6820020
+[SMH/CC]   ☁  git clone 'https://github.com/oven-sh/setup-bun' # ref=735343b667d3e6f658f44d0eca948eb6282f2b76
+[SMH/CC]   ✅  Success - Pre Run Claude Code [3.005***67673s]
+[SMH/CC]   ✅  Success - Pre Execute Claude Code Action [5.70***628443s]
+[SMH/CC] ⭐ Run Main Checkout repository
+[SMH/CC]   🐳  docker cp src=/home/droid/slang/. dst=/home/droid/slang
