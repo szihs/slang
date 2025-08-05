@@ -270,7 +270,7 @@ runs:
     # Execute Claude Code Action
     - name: Execute Claude Code Action
       id: claude-action
-      uses: anthropics/claude-code-action@beta
+      uses: anthropics/claude-code-action@v0.0.31
       with:
         custom_instructions: ${{ inputs.custom-instructions }}
         mcp_config: ${{ inputs.mcp-config }}
