@@ -3431,10 +3431,27 @@ SLANG_API SlangReflectionDecl* spReflectionFunction_asDecl(SlangReflectionFuncti
 SLANG_API char const* spReflectionFunction_GetName(SlangReflectionFunction* inFunc)
 {
     auto func = convertToFunc(inFunc);
-    if (!func)
-        return nullptr;
+    if (func)
+    {
+        return getText(func.getDecl()->getName()).getBuffer();
+    }
+    
+    // If the function is not a direct DeclRef, it might be an OverloadedExpr
+    // Handle the overloaded function case
+    if (auto overloadedFunc = convertToOverloadedFunc(inFunc))
+    {
+        // For overloaded functions, return the name of the first overload
+        if (overloadedFunc->lookupResult2.items.getCount() > 0)
+        {
+            auto declRef = overloadedFunc->lookupResult2.items[0].declRef;
+            if (auto funcDeclRef = declRef.as<FunctionDeclBase>())
+            {
+                return getText(funcDeclRef.getDecl()->getName()).getBuffer();
+            }
+        }
+    }
 
-    return getText(func.getDecl()->getName()).getBuffer();
+    return nullptr;
 }
 
 SLANG_API SlangReflectionType* spReflectionFunction_GetResultType(SlangReflectionFunction* inFunc)
