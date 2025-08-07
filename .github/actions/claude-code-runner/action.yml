@@ -11,10 +11,6 @@ inputs:
   llmgw-token-url:
     description: "LLMGW token URL for authentication"
     required: true
-  github-token-fallback:
-    description: "Fallback GitHub token if App token fails"
-    required: false
-    default: ""
 
   # Claude configuration
   model:
@@ -81,15 +77,9 @@ outputs:
   auth-token:
     description: "Generated authentication token"
     value: ${{ steps.auth-token.outputs.token }}
-  github-token:
-    description: "Final GitHub token (App or fallback)"
-    value: ${{ steps.auth-config.outputs.github-token }}
   token-expires:
     description: "Token expiration time (if available)"
     value: ${{ steps.auth-token.outputs.token-expires }}
-  github-app-token-outcome:
-    description: "Outcome of GitHub App token generation"
-    value: ${{ steps.github-app-token.outcome }}
   claude-outcome:
     description: "Outcome of Claude Code execution"
     value: ${{ steps.claude-action.outcome }}
@@ -195,22 +185,6 @@ runs:
         # Clean up response file
         rm -f /tmp/token_response.json
 
-    # Configure authentication
-    - name: Configure Authentication
-      id: auth-config
-      shell: bash
-      run: |
-        set -euo pipefail
-
-        # Use GitHub App token if available, otherwise use GITHUB_TOKEN
-        if [ -n "${{ steps.github-app-token.outputs.token }}" ]; then
-          echo "github-token=${{ steps.github-app-token.outputs.token }}" >> $GITHUB_OUTPUT
-          echo "✅ Using GitHub App authentication"
-        else
-          echo "github-token=${{ inputs.github-token-fallback }}" >> $GITHUB_OUTPUT
-          echo "⚠️  Using fallback GITHUB_TOKEN authentication"
-        fi
-
     # Run setup commands if provided
     - name: Run setup commands
       id: setup-commands
@@ -249,7 +223,6 @@ runs:
         echo "### Authentication" >> $GITHUB_STEP_SUMMARY
         echo "- **Auth Token**: ✅ Generated" >> $GITHUB_STEP_SUMMARY
         echo "- **Token Expiry**: ${{ steps.auth-token.outputs.token-expires || 'Not provided' }}" >> $GITHUB_STEP_SUMMARY
-        echo "- **GitHub Token**: ${{ steps.github-app-token.outcome == 'success' && '✅ GitHub App' || '⚠️ Fallback' }}" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "### Configuration" >> $GITHUB_STEP_SUMMARY
         echo "- **Model**: ${{ inputs.model }}" >> $GITHUB_STEP_SUMMARY
@@ -272,13 +245,14 @@ runs:
       id: claude-action
       uses: anthropics/claude-code-action@beta
       with:
+        additional_permissions: |
+            actions: read
         custom_instructions: ${{ inputs.custom-instructions }}
         mcp_config: ${{ inputs.mcp-config }}
         allowed_tools: ${{ inputs.allowed-tools }}
         trigger_phrase: ${{ inputs.trigger-phrase }}
         assignee_trigger: ${{ inputs.assignee-trigger }}
         timeout_minutes: ${{ inputs.timeout-minutes }}
-        github_token: ${{ steps.auth-config.outputs.github-token }}
         use_bedrock: ${{ inputs.use-bedrock }}
         model: ${{ inputs.model }}
         max_turns: ${{ inputs.max-turns }}
