@@ -38,6 +38,9 @@ inputs:
   custom-instructions:
     description: "Custom instructions for Claude"
     required: true
+  additional_permissions:
+    description: "Additional permissions for Claude"
+    required: false
   mcp-config:
     description: "MCP server configuration JSON"
     required: false
@@ -245,8 +248,7 @@ runs:
       id: claude-action
       uses: anthropics/claude-code-action@beta
       with:
-        additional_permissions: |
-            actions: read
+        additional_permissions: ${{ inputs.additional_permissions }}
         custom_instructions: ${{ inputs.custom-instructions }}
         mcp_config: ${{ inputs.mcp-config }}
         allowed_tools: ${{ inputs.allowed-tools }}
