@@ -4,7 +4,6 @@ permissions:
   contents: write
   pull-requests: write
   issues: write
-  actions: read
   id-token: write
 
 on:
@@ -58,11 +57,12 @@ jobs:
         id: claude
         uses: ./.github/actions/claude-code-runner
         with:
+          additional_permissions: |
+            actions: read
           # Authentication (these secrets must be configured in your repository)
           llmgw-id: ${{ secrets.LLMGW_ID }}
           llmgw-secret: ${{ secrets.LLMGW_SECRET }}
           llmgw-token-url: ${{ secrets.LLMGW_TOKEN_URL }}
-          github-token-fallback: ${{ secrets.GITHUB_TOKEN }}
 
           # Repository-specific setup
           setup-commands: |
