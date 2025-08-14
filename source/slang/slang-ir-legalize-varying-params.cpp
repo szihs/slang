@@ -2220,6 +2220,11 @@ private:
     {
         // Ensure each field in an output struct type has either a system semantic or a user
         // semantic, so that signature matching can happen correctly.
+        
+        // Early return if varLayout is null (can happen for entry points with void return)
+        if (!varLayout)
+            return;
+            
         auto typeLayout = as<IRStructTypeLayout>(varLayout->getTypeLayout());
         Index index = 0;
         IRBuilder builder(structType);
@@ -2251,13 +2256,16 @@ private:
             SLANG_ASSERT(typeLayout);
             typeLayout->getFieldLayout(index);
             auto fieldLayout = typeLayout->getFieldLayout(index);
-            if (auto offsetAttr = fieldLayout->findOffsetAttr(K))
+            if (fieldLayout)
+            {
+                if (auto offsetAttr = fieldLayout->findOffsetAttr(K))
             {
                 UInt varOffset = 0;
                 if (auto varOffsetAttr = varLayout->findOffsetAttr(K))
                     varOffset = varOffsetAttr->getOffset();
                 varOffset += offsetAttr->getOffset();
                 builder.addSemanticDecoration(key, toSlice("_slang_attr"), (int)varOffset);
+                }
             }
             index++;
         }
@@ -2943,9 +2951,12 @@ private:
             }
             // Ensure non-overlapping semantics
             fixFieldSemanticsOfFlatStruct(flattenedStruct);
-            ensureStructHasUserSemantic<LayoutResourceKind::VaryingOutput>(
-                flattenedStruct,
-                resultLayout);
+            if (resultLayout)
+            {
+                ensureStructHasUserSemantic<LayoutResourceKind::VaryingOutput>(
+                    flattenedStruct,
+                    resultLayout);
+            }
             return;
         }
 
