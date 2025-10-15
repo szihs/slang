@@ -7,13 +7,13 @@ uniform RaytracingAccelerationStructure scene;
 //TEST_INPUT:ubuffer(data=[0 0 0 0], stride=4):out,name=outputBuffer
 RWStructuredBuffer<uint> outputBuffer;
 
-// Multi-level traversal intrinsics
+// Multi-level traversal intrinsics - check for OptiX function calls in CUDA output
 //CHECK-DAG: optixGetTransformTypeFromHandle
 //CHECK-DAG: optixGetInstanceTraversableFromIAS
 //CHECK-DAG: optixGetInstanceIdFromHandle
 //CHECK-DAG: optixGetInstanceChildFromHandle
-//CHECK-DAG: optixGetInstanceTransformFromHandle
-//CHECK-DAG: optixGetInstanceInverseTransformFromHandle
+//CHECK-DAG: _slang_optixGetInstanceTransformFromHandle
+//CHECK-DAG: _slang_optixGetInstanceInverseTransformFromHandle
 
 // PTX intrinsics validation
 //CHECK_PTX-DAG: _optix_get_transform_type_from_handle
@@ -25,7 +25,7 @@ RWStructuredBuffer<uint> outputBuffer;
 
 struct TestPayload
 {
-    uint transformType;
+    TRAVERSABLE_TRANSFORM_TYPE transformType;
     uint instanceId;
     uint64_t transformPtr;
     uint64_t inverseTransformPtr;
@@ -37,26 +37,27 @@ void rayGen()
     TestPayload payload;
 
     // Test all the new multi-level traversal intrinsics
-    OptixTraversableHandle handle = OptixTraversableHandle(0);
+    // Note: Using uint64_t for traversable handles (maps to OptixTraversableHandle in CUDA)
+    uint64_t handle = 0;
 
     // Test 1: Get transform type
-    payload.transformType = (uint)optixGetTransformTypeFromHandle(handle);
+    payload.transformType = GetTraversableTransformType(handle);
 
     // Test 2: Get instance traversable from IAS
-    OptixTraversableHandle instanceHandle = optixGetInstanceTraversableFromIAS(handle, 0);
+    uint64_t instanceHandle = GetInstanceTraversable(handle, 0);
 
     // Test 3: Get instance ID
-    payload.instanceId = optixGetInstanceIdFromHandle(instanceHandle);
+    payload.instanceId = GetTraversableInstanceId(instanceHandle);
 
     // Test 4: Get child handle
-    OptixTraversableHandle childHandle = optixGetInstanceChildFromHandle(instanceHandle);
+    uint64_t childHandle = GetTraversableChild(instanceHandle);
 
     // Test 5 & 6: Get transforms (returned as pointers cast to uint64_t)
-    payload.transformPtr = optixGetInstanceTransformFromHandle(instanceHandle);
-    payload.inverseTransformPtr = optixGetInstanceInverseTransformFromHandle(instanceHandle);
+    payload.transformPtr = GetTraversableObjectToWorld(instanceHandle);
+    payload.inverseTransformPtr = GetTraversableWorldToObject(instanceHandle);
 
     // Use the child handle to make sure all intrinsics are called and not optimized out
-    payload.instanceId += optixGetInstanceIdFromHandle(childHandle);
+    payload.instanceId += GetTraversableInstanceId(childHandle);
 
     // Write results to output buffer to prevent optimization
     outputBuffer[0] = payload.transformType;

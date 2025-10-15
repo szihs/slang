@@ -18379,36 +18379,41 @@ static const uint HIT_KIND_TRIANGLE_FRONT_FACE = 254;
 static const uint HIT_KIND_TRIANGLE_BACK_FACE = 255;
 
 //
-// OptiX Multi-level Traversal Types and Intrinsics
+// Multi-level Traversal Intrinsics
 //
 
-/// Handle to an OptiX traversable object (acceleration structure, instance, etc.)
+/// Type representing transform types in multi-level traversal.
 /// @category raytracing
-typedef uint64_t OptixTraversableHandle;
-
-/// Enumeration of OptiX transform types used by multi-level traversal
-/// @category raytracing
-typedef uint OptixTransformType;
+typedef uint TRAVERSABLE_TRANSFORM_TYPE;
 
 /// No transformation applied
-static const uint OPTIX_TRANSFORM_TYPE_NONE = 0;
+/// @category raytracing
+static const TRAVERSABLE_TRANSFORM_TYPE TRAVERSABLE_TRANSFORM_TYPE_NONE = 0;
+
 /// Static matrix transformation
-static const uint OPTIX_TRANSFORM_TYPE_STATIC_TRANSFORM = 1;
-/// Matrix motion transformation  
-static const uint OPTIX_TRANSFORM_TYPE_MATRIX_MOTION_TRANSFORM = 2;
+/// @category raytracing
+static const TRAVERSABLE_TRANSFORM_TYPE TRAVERSABLE_TRANSFORM_TYPE_STATIC = 1;
+
+/// Matrix motion transformation
+/// @category raytracing
+static const TRAVERSABLE_TRANSFORM_TYPE TRAVERSABLE_TRANSFORM_TYPE_MATRIX_MOTION = 2;
+
 /// SRT (scale/rotation/translation) motion transformation
-static const uint OPTIX_TRANSFORM_TYPE_SRT_MOTION_TRANSFORM = 3;
+/// @category raytracing
+static const TRAVERSABLE_TRANSFORM_TYPE TRAVERSABLE_TRANSFORM_TYPE_SRT_MOTION = 3;
+
 /// Instance transformation
-static const uint OPTIX_TRANSFORM_TYPE_INSTANCE = 4;
+/// @category raytracing
+static const TRAVERSABLE_TRANSFORM_TYPE TRAVERSABLE_TRANSFORM_TYPE_INSTANCE = 4;
 
 /// Returns the transform type of a traversable handle from a transform list.
 /// @param handle Traversable handle to query
 /// @return Transform type enumeration value
-/// @remarks Available in all OptiX program types
+/// @remarks Currently only supported on CUDA/OptiX
 /// @category raytracing
 [__readNone]
-[require(cuda)]
-OptixTransformType optixGetTransformTypeFromHandle(OptixTraversableHandle handle)
+[require(optix_multilevel_traversal)]
+TRAVERSABLE_TRANSFORM_TYPE GetTraversableTransformType(uint64_t handle)
 {
     __target_switch
     {
@@ -18421,10 +18426,11 @@ OptixTransformType optixGetTransformTypeFromHandle(OptixTraversableHandle handle
 /// @param instIdx Instance index
 /// @return Traversable handle for the specified instance
 /// @remarks IAS must be built with OPTIX_BUILD_FLAG_ALLOW_RANDOM_INSTANCE_ACCESS
+/// @remarks Currently only supported on CUDA/OptiX
 /// @category raytracing
 [__readNone]
-[require(cuda)]
-OptixTraversableHandle optixGetInstanceTraversableFromIAS(OptixTraversableHandle ias, uint instIdx)
+[require(optix_multilevel_traversal)]
+uint64_t GetInstanceTraversable(uint64_t ias, uint instIdx)
 {
     __target_switch
     {
@@ -18432,14 +18438,14 @@ OptixTraversableHandle optixGetInstanceTraversableFromIAS(OptixTraversableHandle
     }
 }
 
-/// Returns the instance ID from an OptixInstance traversable.
+/// Returns the instance ID from a traversable handle.
 /// @param handle Traversable handle to query
-/// @return Instance ID, or 0 if handle does not reference an OptixInstance
-/// @remarks Available in all OptiX program types
+/// @return Instance ID, or 0 if handle does not reference an instance
+/// @remarks Currently only supported on CUDA/OptiX
 /// @category raytracing
 [__readNone]
-[require(cuda)]
-uint optixGetInstanceIdFromHandle(OptixTraversableHandle handle)
+[require(optix_multilevel_traversal)]
+uint GetTraversableInstanceId(uint64_t handle)
 {
     __target_switch
     {
@@ -18447,14 +18453,14 @@ uint optixGetInstanceIdFromHandle(OptixTraversableHandle handle)
     }
 }
 
-/// Returns the child traversable handle from an OptixInstance traversable.
+/// Returns the child traversable handle from an instance traversable.
 /// @param handle Instance traversable handle to query
-/// @return Child traversable handle, or 0 if handle does not reference an OptixInstance
-/// @remarks Available in all OptiX program types
+/// @return Child traversable handle, or 0 if handle does not reference an instance
+/// @remarks Currently only supported on CUDA/OptiX
 /// @category raytracing
 [__readNone]
-[require(cuda)]
-OptixTraversableHandle optixGetInstanceChildFromHandle(OptixTraversableHandle handle)
+[require(optix_multilevel_traversal)]
+uint64_t GetTraversableChild(uint64_t handle)
 {
     __target_switch
     {
@@ -18462,14 +18468,14 @@ OptixTraversableHandle optixGetInstanceChildFromHandle(OptixTraversableHandle ha
     }
 }
 
-/// Returns the object-to-world transform from an OptixInstance traversable.
+/// Returns the object-to-world transform from an instance traversable.
 /// @param handle Instance traversable handle to query
-/// @return Pointer to 3x4 transform matrix (12 floats), or 0 if handle does not reference an OptixInstance
-/// @remarks Available in all OptiX program types
+/// @return Pointer to 3x4 transform matrix (12 floats), or 0 if handle does not reference an instance
+/// @remarks Currently only supported on CUDA/OptiX
 /// @category raytracing
 [__readNone]
-[require(cuda)]
-uint64_t optixGetInstanceTransformFromHandle(OptixTraversableHandle handle)
+[require(optix_multilevel_traversal)]
+uint64_t GetTraversableObjectToWorld(uint64_t handle)
 {
     __target_switch
     {
@@ -18477,14 +18483,14 @@ uint64_t optixGetInstanceTransformFromHandle(OptixTraversableHandle handle)
     }
 }
 
-/// Returns the world-to-object transform from an OptixInstance traversable.
+/// Returns the world-to-object transform from an instance traversable.
 /// @param handle Instance traversable handle to query
-/// @return Pointer to 3x4 transform matrix (12 floats), or 0 if handle does not reference an OptixInstance
-/// @remarks Available in all OptiX program types
+/// @return Pointer to 3x4 transform matrix (12 floats), or 0 if handle does not reference an instance
+/// @remarks Currently only supported on CUDA/OptiX
 /// @category raytracing
 [__readNone]
-[require(cuda)]
-uint64_t optixGetInstanceInverseTransformFromHandle(OptixTraversableHandle handle)
+[require(optix_multilevel_traversal)]
+uint64_t GetTraversableWorldToObject(uint64_t handle)
 {
     __target_switch
     {
