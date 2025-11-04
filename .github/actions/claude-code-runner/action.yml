@@ -267,31 +267,49 @@ runs:
         fi
         echo "- **Security Cleanup**: ✅ Completed" >> $GITHUB_STEP_SUMMARY
 
+    # Prepare MCP configuration file if provided
+    - name: Prepare MCP Configuration
+      id: mcp-setup
+      if: inputs.mcp-config != ''
+      shell: bash
+      run: |
+        set -euo pipefail
+
+        echo "📝 Writing MCP configuration to file..."
+        cat > /tmp/mcp-config.json << 'EOF'
+        ${{ inputs.mcp-config }}
+        EOF
+
+        echo "✅ MCP configuration prepared"
+
     # Execute Claude Code Action
     - name: Execute Claude Code Action
       id: claude-action
-      uses: anthropics/claude-code-action@beta
+      uses: anthropics/claude-code-action@v1
       with:
-        custom_instructions: ${{ inputs.custom-instructions }}
-        mcp_config: ${{ inputs.mcp-config }}
-        allowed_tools: ${{ inputs.allowed-tools }}
-        trigger_phrase: ${{ inputs.trigger-phrase }}
-        assignee_trigger: ${{ inputs.assignee-trigger }}
-        timeout_minutes: ${{ inputs.timeout-minutes }}
         github_token: ${{ steps.auth-config.outputs.github-token }}
-        use_bedrock: ${{ inputs.use-bedrock }}
-        model: ${{ inputs.model }}
-        max_turns: ${{ inputs.max-turns }}
-        # Use claude_env for custom environment variables
-        claude_env: |
-          ANTHROPIC_BEDROCK_BASE_URL: ${{ inputs.bedrock-base-url }}
-          ANTHROPIC_SMALL_FAST_MODEL: ${{ inputs.small-fast-model }}
-          AWS_REGION: ${{ inputs.aws-region }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          GITHUB_EVENT_NAME: ${{ github.event_name }}
-          GITHUB_ACTOR: ${{ github.actor }}
-          ANTHROPIC_AUTH_TOKEN: ${{ steps.auth-token.outputs.token }}
-          DISABLE_TELEMETRY: 1
+        # Consolidated CLI arguments for Claude
+        claude_args: |
+          --system-prompt "${{ inputs.custom-instructions }}"
+          --model ${{ inputs.model }}
+          --max-turns ${{ inputs.max-turns }}
+          --allowedTools ${{ inputs.allowed-tools }}
+          ${{ inputs.mcp-config != '' && '--mcp-config /tmp/mcp-config.json' || '' }}
+        # Settings with environment variables
+        settings: |
+          {
+            "env": {
+              "ANTHROPIC_BEDROCK_BASE_URL": "${{ inputs.bedrock-base-url }}",
+              "ANTHROPIC_SMALL_FAST_MODEL": "${{ inputs.small-fast-model }}",
+              "AWS_REGION": "${{ inputs.aws-region }}",
+              "GITHUB_REPOSITORY": "${{ github.repository }}",
+              "GITHUB_EVENT_NAME": "${{ github.event_name }}",
+              "GITHUB_ACTOR": "${{ github.actor }}",
+              "ANTHROPIC_AUTH_TOKEN": "${{ steps.auth-token.outputs.token }}",
+              "DISABLE_TELEMETRY": "1",
+              "USE_BEDROCK": "${{ inputs.use-bedrock }}"
+            }
+          }
       continue-on-error: true
 
     # Handle Claude results
