@@ -55,6 +55,15 @@ runs:
           esac
         fi
 
+        # Install jq (required for claude-code-action output processing on Windows)
+        if ! command -v jq; then
+          case "${{inputs.os}}" in
+            linux*) sudo apt-get install -y jq;;
+            windows*) choco install jq -y;;
+            macos*) brew install jq;;
+          esac
+        fi
+
         # Install cross tools on Ubuntu
         if [[ "${{inputs.os}}" == linux* && "${{inputs.platform}}" == "aarch64" && "$(uname -m)" != "aarch64" ]]; then
           sudo apt-get install -y crossbuild-essential-arm64
