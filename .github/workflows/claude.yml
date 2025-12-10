@@ -108,10 +108,6 @@ jobs:
             exit 1
           }
 
-      # Note: jq is not installed on Windows - the claude-code-action has a bug with
-      # Windows cmd quoting for jq commands. The action's output formatting will show
-      # a warning but Claude itself runs successfully.
-
       # Format setup and environment preparation
       - name: Checkout repository
         uses: actions/checkout@v4
