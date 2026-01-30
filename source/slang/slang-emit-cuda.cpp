@@ -73,17 +73,18 @@ UnownedStringSlice CUDASourceEmitter::getBuiltinTypeName(IROp op)
         return UnownedStringSlice("uint");
     case kIROp_UInt64Type:
         return UnownedStringSlice("ulonglong");
-#if SLANG_PTR_IS_64
+
     case kIROp_IntPtrType:
-        return UnownedStringSlice("int64_t");
+        if (getPointerSize(getTargetReq()) == sizeof(uint64_t))
+            return UnownedStringSlice("int64_t");
+        else
+            return UnownedStringSlice("int");
+
     case kIROp_UIntPtrType:
-        return UnownedStringSlice("uint64_t");
-#else
-    case kIROp_IntPtrType:
-        return UnownedStringSlice("int");
-    case kIROp_UIntPtrType:
-        return UnownedStringSlice("uint");
-#endif
+        if (getPointerSize(getTargetReq()) == sizeof(uint64_t))
+            return UnownedStringSlice("uint64_t");
+        else
+            return UnownedStringSlice("uint");
 
     case kIROp_HalfType:
         return UnownedStringSlice("__half");
@@ -123,17 +124,17 @@ UnownedStringSlice CUDASourceEmitter::getVectorPrefix(IROp op)
     case kIROp_UInt64Type:
         return UnownedStringSlice("ulonglong");
 
-#if SLANG_PTR_IS_64
     case kIROp_IntPtrType:
-        return UnownedStringSlice("longlong");
+        if (getPointerSize(getTargetReq()) == sizeof(uint64_t))
+            return UnownedStringSlice("longlong");
+        else
+            return UnownedStringSlice("int");
+
     case kIROp_UIntPtrType:
-        return UnownedStringSlice("ulonglong");
-#else
-    case kIROp_IntPtrType:
-        return UnownedStringSlice("int");
-    case kIROp_UIntPtrType:
-        return UnownedStringSlice("uint");
-#endif
+        if (getPointerSize(getTargetReq()) == sizeof(uint64_t))
+            return UnownedStringSlice("ulonglong");
+        else
+            return UnownedStringSlice("uint");
 
     case kIROp_HalfType:
         return UnownedStringSlice("__half");
@@ -725,6 +726,17 @@ bool CUDASourceEmitter::tryEmitInstStmtImpl(IRInst* inst)
             m_writer->emit(", -1);\n");
             return true;
         }
+    case kIROp_SetOptiXPayloadRegister:
+        {
+            auto idxInst = as<IRIntLit>(inst->getOperand(0));
+            IRIntegerValue idx = idxInst->getValue();
+            m_writer->emit("optixSetPayload_");
+            m_writer->emit(idx);
+            m_writer->emit("(");
+            emitOperand(inst->getOperand(1), getInfo(EmitOp::General));
+            m_writer->emit(");\n");
+            return true;
+        }
     default:
         return false;
     }
@@ -857,6 +869,16 @@ bool CUDASourceEmitter::tryEmitInstExprImpl(IRInst* inst, const EmitOpInfo& inOu
             m_writer->emit(")");
             return true;
         }
+    case kIROp_MakeCoopMatrixFromScalar:
+        {
+            StringBuilder typeSB;
+            emitWMMAFragmentType(as<IRCoopMatrixType>(inst->getDataType()), typeSB);
+            m_writer->emit(typeSB);
+            m_writer->emit("(");
+            emitOperand(inst->getOperand(0), getInfo(EmitOp::General));
+            m_writer->emit(")");
+            return true;
+        }
     case kIROp_MakeArray:
         {
             IRType* dataType = inst->getDataType();
@@ -928,6 +950,15 @@ bool CUDASourceEmitter::tryEmitInstExprImpl(IRInst* inst, const EmitOpInfo& inOu
             m_writer->emit("((");
             emitType(inst->getDataType());
             m_writer->emit(")optixGetSbtDataPointer())");
+            return true;
+        }
+    case kIROp_GetOptiXPayloadRegister:
+        {
+            auto idxInst = as<IRIntLit>(inst->getOperand(0));
+            IRIntegerValue idx = idxInst->getValue();
+            m_writer->emit("optixGetPayload_");
+            m_writer->emit(idx);
+            m_writer->emit("()");
             return true;
         }
     case kIROp_DispatchKernel:

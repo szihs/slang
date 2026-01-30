@@ -17,6 +17,7 @@
 #include "slang-ast-synthesis.h"
 #include "slang-lookup.h"
 #include "slang-parser.h"
+#include "slang-rich-diagnostics.h"
 #include "slang-syntax.h"
 
 #include <limits>
@@ -2146,9 +2147,11 @@ void SemanticsDeclHeaderVisitor::checkVarDeclCommon(VarDeclBase* varDecl)
             // the differentiable context is preserved.
             // This ensures that calls in the initializer (like `dot`) get properly marked
             // with TreatAsDifferentiableExpr, which is needed for the IR lowering to add
-            // the differentiableCallDecoration
+            // the differentiableCallDecoration, also allows us to properly check the lambda
+            // expressions nested in AST locations like: `let x = someFunc((int y)=>{...});
+            // (checking of lambda exprs requires parentFunc to be available).
             auto parentFunc = getParentFunc(varDecl);
-            if (parentFunc && parentFunc->findModifier<DifferentiableAttribute>())
+            if (parentFunc != m_parentFunc)
                 contextToUse = contextToUse.withParentFunc(parentFunc);
 
             SemanticsVisitor subVisitor(contextToUse);
@@ -2790,6 +2793,11 @@ void SemanticsDeclBodyVisitor::checkVarDeclCommon(VarDeclBase* varDecl)
         overloadContext.loc = varDecl->nameAndLoc.loc;
         overloadContext.mode = OverloadResolveContext::Mode::JustTrying;
         overloadContext.sourceScope = m_outerScope;
+
+        // Overload resolution can give us a valid expression with >0 arguments when the type has
+        // parameter pack arguments. This is primarily relevant for Tuple<>
+        List<Expr*> argExprs;
+        overloadContext.args = &argExprs;
 
         auto type = varDecl->getType();
         ImplicitCastMethodKey key = ImplicitCastMethodKey(QualType(), type, nullptr);
@@ -5692,6 +5700,7 @@ bool SemanticsVisitor::trySynthesizeMethodRequirementWitness(
         {
             if (auto callee = as<CallableDecl>(declRefExpr->declRef))
             {
+                synFuncDecl->loc = callee.getDecl()->loc;
                 auto synParams = synFuncDecl->getParameters();
                 auto calleeParams = callee.getDecl()->getParameters();
                 auto synParamIter = synParams.begin();
@@ -8311,14 +8320,12 @@ bool SemanticsVisitor::isIntValueInRangeOfType(IntegerLiteralValue value, Type* 
     case BaseType::UInt16:
         return (value >= 0 && value <= std::numeric_limits<uint16_t>::max()) || (value == -1);
     case BaseType::UInt:
-#if SLANG_PTR_IS_32
-    case BaseType::UIntPtr:
-#endif
         return (value >= 0 && value <= std::numeric_limits<uint32_t>::max()) || (value == -1);
     case BaseType::UInt64:
-#if SLANG_PTR_IS_64
+        // IntPtr & UIntPtr are assumed to be 64-bit, because we don't want
+        // spurious warnings from assuming a smaller size than what's possible
+        // at this point during compilation.
     case BaseType::UIntPtr:
-#endif
         return true;
     case BaseType::Int8:
         return value >= std::numeric_limits<int8_t>::min() &&
@@ -8327,15 +8334,10 @@ bool SemanticsVisitor::isIntValueInRangeOfType(IntegerLiteralValue value, Type* 
         return value >= std::numeric_limits<int16_t>::min() &&
                value <= std::numeric_limits<int16_t>::max();
     case BaseType::Int:
-#if SLANG_PTR_IS_32
-    case BaseType::IntPtr:
-#endif
         return value >= std::numeric_limits<int32_t>::min() &&
                value <= std::numeric_limits<int32_t>::max();
     case BaseType::Int64:
-#if SLANG_PTR_IS_64
     case BaseType::IntPtr:
-#endif
         return value >= std::numeric_limits<int64_t>::min() &&
                value <= std::numeric_limits<int64_t>::max();
 
@@ -9396,31 +9398,56 @@ Result SemanticsVisitor::checkFuncRedeclaration(FuncDecl* newDecl, FuncDecl* old
         _addTargetModifiers(newDecl, newTargets);
 
         bool hasConflict = false;
+
+        //
+        // Example testcase for new diagnostics, the flow below is very much as
+        // it was except instead of emitting diagnostics as we go, we build up
+        // this Diagnositcs::FunctionRedefinition struct and emit it at the end
+        //
+        Diagnostics::FunctionRedefinition diagnostic;
+
         for (auto& [target, value] : newTargets)
         {
             auto found = currentTargets.tryGetValue(target);
             if (found)
             {
-                // Redefinition
-                if (!hasConflict)
+                if (getOptionSet().shouldEmitRichDiagnostics())
                 {
+                    if (!hasConflict)
+                    {
+                        diagnostic = Diagnostics::FunctionRedefinition{.function = newDecl};
+                    }
+                    auto prevDecl = *found;
+                    diagnostic.original = prevDecl;
+                }
+                else
+                {
+                    // Redefinition
+                    if (!hasConflict)
+                    {
+                        getSink()->diagnose(
+                            newDecl,
+                            Diagnostics::functionRedefinition,
+                            newDecl->getName());
+                    }
+
+                    auto prevDecl = *found;
                     getSink()->diagnose(
-                        newDecl,
-                        Diagnostics::functionRedefinition,
-                        newDecl->getName());
-                    hasConflict = true;
+                        prevDecl,
+                        Diagnostics::seePreviousDefinitionOf,
+                        prevDecl->getName());
                 }
 
-                auto prevDecl = *found;
-                getSink()->diagnose(
-                    prevDecl,
-                    Diagnostics::seePreviousDefinitionOf,
-                    prevDecl->getName());
+                hasConflict = true;
             }
         }
 
         if (hasConflict)
         {
+            if (getOptionSet().shouldEmitRichDiagnostics())
+            {
+                getSink()->diagnose(diagnostic);
+            }
             return SLANG_FAIL;
         }
     }
@@ -12773,7 +12800,8 @@ void checkDerivativeAttributeImpl(
                 // `this` type matches the expected type. This will ensure that after lowering
                 // to IR, the two functions are compatible.
                 //
-                if (!areTypesCompatibile(visitor, funcThisType, derivativeFuncThisType))
+                if (funcThisType &&
+                    !areTypesCompatibile(visitor, funcThisType, derivativeFuncThisType))
                 {
                     visitor->getSink()->diagnose(
                         attr,
@@ -13848,7 +13876,7 @@ void SemanticsDeclAttributesVisitor::visitStructDecl(StructDecl* structDecl)
 
         // The bit width of this member, and the member type width
         const auto thisFieldWidth = bfm->width;
-        const auto thisFieldTypeWidth = getTypeBitSize(b);
+        const auto thisFieldTypeWidth = getMaximumTypeBitSize(b);
         SLANG_ASSERT(thisFieldTypeWidth != 0);
         if (thisFieldWidth > thisFieldTypeWidth)
         {

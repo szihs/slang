@@ -568,6 +568,18 @@ bool isFuncParam(IRParam* param)
     return (paramFunc && paramFunc->getFirstBlock() == paramBlock);
 }
 
+bool isPublicFunc(IRFunc* func)
+{
+    if (func->findDecoration<IRDllExportDecoration>() ||
+        func->findDecoration<IRExternCDecoration>() ||
+        func->findDecoration<IRExternCppDecoration>())
+    {
+        return true;
+    }
+
+    return false;
+}
+
 // Helper to test if a function or generic contains a body (i.e. is intrinsic/external)
 // For the purposes of type-flow, if a function body is not available, we can't analyze it.
 //
@@ -1174,6 +1186,9 @@ struct TypeFlowSpecializationContext
         case kIROp_FieldExtract:
             info = analyzeFieldExtract(context, as<IRFieldExtract>(inst));
             break;
+        case kIROp_GetElement:
+            info = analyzeGetElement(context, as<IRGetElement>(inst));
+            break;
         case kIROp_MakeOptionalNone:
             info = analyzeMakeOptionalNone(context, as<IRMakeOptionalNone>(inst));
             break;
@@ -1732,6 +1747,26 @@ struct TypeFlowSpecializationContext
         return none();
     }
 
+    IRInst* analyzeGetElement(IRInst* context, IRGetElement* getElement)
+    {
+        // If the base info is an array of some type, we can return that element type.
+        // as the info for the get-element inst.
+        //
+
+        IRBuilder builder(module);
+
+        auto baseInfo = tryGetInfo(context, getElement->getBase());
+        if (!baseInfo)
+            return none();
+
+        if (auto arrayInfo = as<IRArrayType>(baseInfo))
+        {
+            return arrayInfo->getElementType();
+        }
+
+        return none();
+    }
+
     // Get the witness table inst to be used for the 'none' case of
     // an optional witness table.
     //
@@ -2196,6 +2231,14 @@ struct TypeFlowSpecializationContext
 
             IRBuilder builder(module);
             auto setOp = getSetOpFromType(inst->getDataType());
+
+            // There are a few types of specializations (particularly with generics that return
+            // values), that we don't handle in the type-flow pass. We'll just avoid specializing
+            // these.
+            //
+            if (setOp == kIROp_Invalid)
+                return none();
+
             auto resultSetType = makeElementOfSetType(builder.getSet(setOp, specializedSet));
             module->getContainerPool().free(&specializedSet);
             module->getContainerPool().free(&specializationArgs);
@@ -2493,21 +2536,29 @@ struct TypeFlowSpecializationContext
         }
         else if (auto param = as<IRParam>(inst))
         {
-            // We'll also update function parameters,
-            // but first change the info from PtrTypeBase<T>
-            // to the specific pointer type for the parameter.
-            //
-            // (e.g. parameter may use a BorrowInOutType, but the info
-            // may be some other PtrType)
-            //
-            // This is one of the base cases for the recursion.
-            //
-            IRBuilder builder(param->getModule());
-            auto newInfo = builder.getPtrTypeWithAddressSpace(
-                (IRType*)as<IRPtrTypeBase>(info)->getValueType(),
-                as<IRPtrTypeBase>(param->getDataType()));
+            if (isFuncParam(param) && isPublicFunc(getParentFunc(param)))
+            {
+                // Do nothing, since we should not by modifying public function parameters.
+                return;
+            }
+            else
+            {
+                // We'll also update function parameters,
+                // but first change the info from PtrTypeBase<T>
+                // to the specific pointer type for the parameter.
+                //
+                // (e.g. parameter may use a BorrowInOutType, but the info
+                // may be some other PtrType)
+                //
+                // This is one of the base cases for the recursion.
+                //
+                IRBuilder builder(param->getModule());
+                auto newInfo = builder.getPtrTypeWithAddressSpace(
+                    (IRType*)as<IRPtrTypeBase>(info)->getValueType(),
+                    as<IRPtrTypeBase>(param->getDataType()));
 
-            updateInfo(context, param, newInfo, true, workQueue);
+                updateInfo(context, param, newInfo, true, workQueue);
+            }
         }
         else
         {
@@ -3691,14 +3742,34 @@ struct TypeFlowSpecializationContext
             }
             else if (isSetSpecializedGeneric(setTag->getSet()->getElement(0)))
             {
-                // Single element which is a set specialized generic.
-                addArgsForSetSpecializedGeneric(cast<IRSpecialize>(callee), callArgs);
-                callee = setTag->getSet()->getElement(0);
-
-                auto funcType = getEffectiveFuncType(callee);
                 IRBuilder builder(module);
                 builder.setInsertInto(module);
-                callee = builder.replaceOperand(&callee->typeUse, funcType);
+
+                // Check if the original callee inst has a dis-allow existential specialization
+                // decoration.
+                //
+                if (inst->getCallee()
+                        ->findDecoration<IRDisallowSpecializationWithExistentialsDecoration>())
+                {
+                    // In Slang 2025 and later, specializing a generic with multiple types is not
+                    // allowed, so we'll throw a diagnostic message.
+                    //
+                    sink->diagnose(
+                        inst->sourceLoc,
+                        Diagnostics::cannotSpecializeGenericWithExistential,
+                        as<IRSpecialize>(callee)->getBase());
+                    return false;
+                }
+                else
+                {
+                    // Otherwise, we have a single element which is a set specialized generic.
+                    // Add in the arguments for the set specialization.
+                    //
+                    addArgsForSetSpecializedGeneric(cast<IRSpecialize>(callee), callArgs);
+                    callee = setTag->getSet()->getElement(0);
+                    auto funcType = getEffectiveFuncType(callee);
+                    callee = builder.replaceOperand(&callee->typeUse, funcType);
+                }
             }
             else
             {
@@ -3829,6 +3900,7 @@ struct TypeFlowSpecializationContext
 
         if (changed)
         {
+            IRBuilderSourceLocRAII builderSourceLocRAII(&builder, inst->sourceLoc);
             auto newCall = builder.emitCallInst(calleeFuncType->getResultType(), callee, callArgs);
             inst->replaceUsesWith(newCall);
             inst->removeAndDeallocate();
@@ -4269,8 +4341,6 @@ struct TypeFlowSpecializationContext
         IRType* specializedType = (IRType*)getLoweredType(valInfo);
         if (ptrValType != specializedType)
         {
-            SLANG_ASSERT(!as<IRParam>(inst));
-
             if (as<IRInterfaceType>(ptrValType) && !isComInterfaceType(ptrValType) &&
                 !isBuiltin(ptrValType))
             {
@@ -4355,6 +4425,21 @@ struct TypeFlowSpecializationContext
 
         IRBuilder builder(context);
         builder.setInsertBefore(inst);
+
+        if (as<IRInterfaceType>(ptrInfo) && as<IRTaggedUnionType>(inst->getVal()->getDataType()))
+        {
+            // Cast the interface pointer to a tagged-union pointer, and then emit the store.
+            auto newPtr = builder.emitIntrinsicInst(
+                builder.getPtrTypeWithAddressSpace(
+                    inst->getVal()->getDataType(),
+                    as<IRPtrTypeBase>(ptr->getDataType())),
+                kIROp_CastInterfaceToTaggedUnionPtr,
+                1,
+                &ptr);
+            builder.replaceOperand(inst->getPtrUse(), newPtr);
+            return true;
+        }
+
         auto specializedVal = upcastSet(&builder, inst->getVal(), ptrInfo);
 
         if (specializedVal != inst->getVal())

@@ -715,5 +715,9 @@ return {
 	["UninitializedWitnessTableElement"] = 713,
 	["NoneTypeElement"] = 714,
 	["NoneWitnessTableElement"] = 715,
-	["GetTagForSubSet"] = 716
+	["GetTagForSubSet"] = 716,
+	["Decoration.DisallowSpecializationWithExistentialsDecoration"] = 717,
+	["makeCoopMatrixFromScalar"] = 718,
+	["getOptiXPayloadRegister"] = 719,
+	["setOptiXPayloadRegister"] = 720
 }

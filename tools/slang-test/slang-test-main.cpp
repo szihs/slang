@@ -397,7 +397,7 @@ static SlangResult _parseArg(const char** ioCursor, UnownedStringSlice& outArg)
         case '\t':
             {
                 char const* argEnd = cursor;
-                assert(argBegin != argEnd);
+                SLANG_ASSERT(argBegin != argEnd);
 
                 outArg = UnownedStringSlice(argBegin, argEnd);
                 *ioCursor = cursor;
@@ -1216,6 +1216,10 @@ static PassThroughFlags _getPassThroughFlagsForTarget(SlangCompileTarget target)
     case SLANG_METAL:
     case SLANG_WGSL:
     case SLANG_HOST_VM:
+    case SLANG_HOST_LLVM_IR:
+    case SLANG_HOST_OBJECT_CODE:
+    case SLANG_SHADER_LLVM_IR:
+    case SLANG_OBJECT_CODE:
         {
             return 0;
         }
@@ -1380,6 +1384,11 @@ static SlangResult _extractRenderTestRequirements(
         target = SLANG_WGSL;
         nativeLanguage = SLANG_SOURCE_LANGUAGE_WGSL;
         passThru = SLANG_PASS_THROUGH_TINT;
+        break;
+    case RenderApiType::LLVM:
+        target = SLANG_SHADER_HOST_CALLABLE;
+        nativeLanguage = SLANG_SOURCE_LANGUAGE_LLVM;
+        passThru = SLANG_PASS_THROUGH_NONE;
         break;
     }
 
@@ -1957,6 +1966,7 @@ static bool _areDiagnosticsEqual(const UnownedStringSlice& a, const UnownedStrin
     if (SLANG_FAILED(ParseDiagnosticUtil::parseOutputInfo(a, outA)) ||
         SLANG_FAILED(ParseDiagnosticUtil::parseOutputInfo(b, outB)))
     {
+        fprintf(stderr, "Error: Unable to parse diagnostics for diagnostic test\n");
         return false;
     }
 
@@ -3141,19 +3151,27 @@ static TestResult runCPPCompilerExecute(TestContext* context, TestInput& input)
     options.modulePath = SliceUtil::asTerminatedCharSlice(modulePath);
 
     ComPtr<IArtifact> artifact;
-    if (SLANG_FAILED(compiler->compile(options, artifact.writeRef())))
-    {
-        return TestResult::Fail;
-    }
+    SlangResult compileResult = compiler->compile(options, artifact.writeRef());
 
     String actualOutput;
 
-    auto diagnostics = findAssociatedRepresentation<IArtifactDiagnostics>(artifact);
+    // Check if artifact is valid before trying to find diagnostics
+    auto diagnostics =
+        artifact ? findAssociatedRepresentation<IArtifactDiagnostics>(artifact) : nullptr;
 
     // If the actual compilation failed, then the output will be the summary
-    if (diagnostics && SLANG_FAILED(diagnostics->getResult()))
+    if (SLANG_FAILED(compileResult) || (diagnostics && SLANG_FAILED(diagnostics->getResult())))
     {
-        actualOutput = _calcSummary(diagnostics);
+        // Generate summary from diagnostics if available
+        if (diagnostics)
+        {
+            actualOutput = _calcSummary(diagnostics);
+        }
+        else
+        {
+            // No diagnostics available, but compile failed
+            actualOutput = "Compile: Error\n";
+        }
     }
     else
     {
@@ -4823,6 +4841,22 @@ static bool shouldRunTest(TestContext* context, String filePath)
                     TestMessageType::Info,
                     "%s file is excluded from the test because it is found from the exclusion "
                     "list\n",
+                    filePath.getBuffer());
+            }
+            return false;
+        }
+    }
+
+    // Check skip list - if any entry matches, skip the test
+    for (auto& skipEntry : context->options.skipList)
+    {
+        if (filePath.startsWith(skipEntry))
+        {
+            if (context->options.verbosity == VerbosityLevel::Verbose)
+            {
+                context->getTestReporter()->messageFormat(
+                    TestMessageType::Info,
+                    "%s file is skipped because it is found in the skip list\n",
                     filePath.getBuffer());
             }
             return false;

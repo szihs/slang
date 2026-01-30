@@ -1,8 +1,10 @@
 // slang-ir-layout.cpp
 #include "slang-ir-layout.h"
 
+#include "slang-compiler-options.h"
 #include "slang-ir-insts.h"
 #include "slang-ir-util.h"
+#include "slang-target.h"
 
 // This file implements facilities for computing and caching layout
 // information on IR types.
@@ -50,7 +52,7 @@
 namespace Slang
 {
 static Result _calcArraySizeAndAlignment(
-    CompilerOptionSet& optionSet,
+    TargetRequest* targetReq,
     IRTypeLayoutRules* rules,
     IRType* elementType,
     IRInst* elementCountInst,
@@ -68,7 +70,7 @@ static Result _calcArraySizeAndAlignment(
     }
 
     IRSizeAndAlignment elementTypeLayout;
-    SLANG_RETURN_ON_FAIL(getSizeAndAlignment(optionSet, rules, elementType, &elementTypeLayout));
+    SLANG_RETURN_ON_FAIL(getSizeAndAlignment(targetReq, rules, elementType, &elementTypeLayout));
 
     elementTypeLayout = rules->alignCompositeElement(elementTypeLayout);
     *outSizeAndAlignment = IRSizeAndAlignment(
@@ -84,20 +86,11 @@ IRIntegerValue getIntegerValueFromInst(IRInst* inst)
 }
 
 Result IRTypeLayoutRules::calcSizeAndAlignment(
-    CompilerOptionSet& optionSet,
+    TargetRequest* targetReq,
     IRType* type,
     IRSizeAndAlignment* outSizeAndAlignment)
 {
-    int kPointerSize = 8;
-    switch (optionSet.getTarget())
-    {
-    case CodeGenTarget::HostCPPSource:
-    case CodeGenTarget::HostHostCallable:
-    case CodeGenTarget::HostExecutable:
-    case CodeGenTarget::HostSharedLibrary:
-        kPointerSize = (int)sizeof(void*);
-        break;
-    }
+    TargetBuiltinTypeLayoutInfo builtinTypeInfo = getBuiltinTypeLayoutInfo(targetReq);
 
     switch (type->getOp())
     {
@@ -123,8 +116,6 @@ Result IRTypeLayoutRules::calcSizeAndAlignment(
 
         BASE(Int64, 8);
         BASE(UInt64, 8);
-        BASE(IntPtr, kPointerSize);
-        BASE(UIntPtr, kPointerSize);
         BASE(Double, 8);
 
         // We are currently handling `bool` following the HLSL
@@ -158,7 +149,7 @@ Result IRTypeLayoutRules::calcSizeAndAlignment(
 
                 IRSizeAndAlignment fieldTypeLayout;
                 SLANG_RETURN_ON_FAIL(
-                    getSizeAndAlignment(optionSet, this, field->getFieldType(), &fieldTypeLayout));
+                    getSizeAndAlignment(targetReq, this, field->getFieldType(), &fieldTypeLayout));
                 seenFinalUnsizedArrayField =
                     fieldTypeLayout.size == IRSizeAndAlignment::kIndeterminateSize;
 
@@ -213,7 +204,7 @@ Result IRTypeLayoutRules::calcSizeAndAlignment(
             auto arrayType = cast<IRArrayType>(type);
 
             return _calcArraySizeAndAlignment(
-                optionSet,
+                targetReq,
                 this,
                 arrayType->getElementType(),
                 arrayType->getElementCount(),
@@ -224,7 +215,7 @@ Result IRTypeLayoutRules::calcSizeAndAlignment(
     case kIROp_AtomicType:
         {
             auto atomicType = cast<IRAtomicType>(type);
-            calcSizeAndAlignment(optionSet, atomicType->getElementType(), outSizeAndAlignment);
+            calcSizeAndAlignment(targetReq, atomicType->getElementType(), outSizeAndAlignment);
             return SLANG_OK;
         }
         break;
@@ -233,7 +224,7 @@ Result IRTypeLayoutRules::calcSizeAndAlignment(
         {
             auto unsizedArrayType = cast<IRUnsizedArrayType>(type);
             getSizeAndAlignment(
-                optionSet,
+                targetReq,
                 this,
                 unsizedArrayType->getElementType(),
                 outSizeAndAlignment);
@@ -246,7 +237,7 @@ Result IRTypeLayoutRules::calcSizeAndAlignment(
         {
             auto vecType = cast<IRVectorType>(type);
             IRSizeAndAlignment elementTypeLayout;
-            getSizeAndAlignment(optionSet, this, vecType->getElementType(), &elementTypeLayout);
+            getSizeAndAlignment(targetReq, this, vecType->getElementType(), &elementTypeLayout);
             *outSizeAndAlignment = getVectorSizeAndAlignment(
                 elementTypeLayout,
                 getIntegerValueFromInst(vecType->getElementCount()));
@@ -273,7 +264,7 @@ Result IRTypeLayoutRules::calcSizeAndAlignment(
                 auto elementType = tupleType->getOperand(i);
                 IRSizeAndAlignment fieldTypeLayout;
                 SLANG_RETURN_ON_FAIL(
-                    getSizeAndAlignment(optionSet, this, (IRType*)elementType, &fieldTypeLayout));
+                    getSizeAndAlignment(targetReq, this, (IRType*)elementType, &fieldTypeLayout));
                 resultLayout.size = adjustOffset(
                     resultLayout.size,
                     fieldTypeLayout.size,
@@ -329,7 +320,7 @@ Result IRTypeLayoutRules::calcSizeAndAlignment(
                 auto colVector =
                     builder.getVectorType(matType->getElementType(), matType->getRowCount());
                 return _calcArraySizeAndAlignment(
-                    optionSet,
+                    targetReq,
                     this,
                     colVector,
                     matType->getColumnCount(),
@@ -340,7 +331,7 @@ Result IRTypeLayoutRules::calcSizeAndAlignment(
                 auto rowVector =
                     builder.getVectorType(matType->getElementType(), matType->getColumnCount());
                 return _calcArraySizeAndAlignment(
-                    optionSet,
+                    targetReq,
                     this,
                     rowVector,
                     matType->getRowCount(),
@@ -348,6 +339,8 @@ Result IRTypeLayoutRules::calcSizeAndAlignment(
             }
         }
         break;
+    case kIROp_IntPtrType:
+    case kIROp_UIntPtrType:
     case kIROp_OutParamType:
     case kIROp_BorrowInOutParamType:
     case kIROp_RefParamType:
@@ -359,8 +352,13 @@ Result IRTypeLayoutRules::calcSizeAndAlignment(
     case kIROp_NativeStringType:
     case kIROp_RaytracingAccelerationStructureType:
     case kIROp_FuncType:
+        // If we don't know the target, we can't tell the size of these types
+        // yet as it is target-dependent.
+        if (targetReq)
         {
-            *outSizeAndAlignment = IRSizeAndAlignment(kPointerSize, kPointerSize);
+            *outSizeAndAlignment = IRSizeAndAlignment(
+                builtinTypeInfo.genericPointerSize,
+                builtinTypeInfo.genericPointerSize);
             return SLANG_OK;
         }
         break;
@@ -373,18 +371,49 @@ Result IRTypeLayoutRules::calcSizeAndAlignment(
         return SLANG_OK;
     case kIROp_DescriptorHandleType:
         {
+            // Check for spvBindlessTextureNV capability
+            bool hasBindlessTextureNV = false;
+            for (auto atomVal : targetReq->getOptionSet().getArray(CompilerOptionName::Capability))
+            {
+                if (atomVal.kind == CompilerOptionValueKind::Int &&
+                    atomVal.intValue == (int)CapabilityName::spvBindlessTextureNV)
+                {
+                    hasBindlessTextureNV = true;
+                    break;
+                }
+            }
+
+            if (hasBindlessTextureNV)
+            {
+                // For spvBindlessTextureNV, DescriptorHandle<T> is uint64_t
+                *outSizeAndAlignment = IRSizeAndAlignment(8, 8);
+                return SLANG_OK;
+            }
+
+            // Check for bindless targets (CPU, CUDA, Metal)
+            if (areResourceTypesBindlessOnTarget(targetReq))
+            {
+                // On bindless targets, DescriptorHandle<T> has the layout of T
+                auto descriptorHandleType = cast<IRDescriptorHandleType>(type);
+                return calcSizeAndAlignment(
+                    targetReq,
+                    descriptorHandleType->getResourceType(),
+                    outSizeAndAlignment);
+            }
+
+            // Non-bindless targets: DescriptorHandle<T> is uint2 (8 bytes, 4-byte alignment)
             IRBuilder builder(type);
             builder.setInsertBefore(type);
             auto uintType = builder.getUIntType();
             auto uint2Type = builder.getVectorType(uintType, 2);
-            return getSizeAndAlignment(optionSet, this, uint2Type, outSizeAndAlignment);
+            return getSizeAndAlignment(targetReq, this, uint2Type, outSizeAndAlignment);
         }
     case kIROp_AttributedType:
         {
             auto attributedType = cast<IRAttributedType>(type);
             SLANG_ASSERT(attributedType->getAttr()->getOp() == kIROp_NoDiffAttr);
             return getSizeAndAlignment(
-                optionSet,
+                targetReq,
                 this,
                 attributedType->getBaseType(),
                 outSizeAndAlignment);
@@ -393,12 +422,28 @@ Result IRTypeLayoutRules::calcSizeAndAlignment(
         {
             auto enumType = cast<IREnumType>(type);
             auto tagType = enumType->getTagType();
-            return calcSizeAndAlignment(optionSet, tagType, outSizeAndAlignment);
+            return calcSizeAndAlignment(targetReq, tagType, outSizeAndAlignment);
         }
         break;
     default:
         break;
     }
+
+    // Handle StructuredBuffer types
+    if (as<IRHLSLStructuredBufferTypeBase>(type))
+    {
+        // On CPU and CUDA, StructuredBuffer is a struct with a pointer and a count
+        // (T* data + size_t count = 16 bytes, 8-byte alignment)
+        if (isCPUTarget(targetReq) || isCUDATarget(targetReq))
+        {
+            *outSizeAndAlignment = IRSizeAndAlignment(16, 8);
+            return SLANG_OK;
+        }
+        // On other targets (including Metal), use default resource size (8 bytes)
+        *outSizeAndAlignment = IRSizeAndAlignment(8, 8);
+        return SLANG_OK;
+    }
+
     if (as<IRResourceTypeBase>(type) || as<IRSamplerStateTypeBase>(type))
     {
         *outSizeAndAlignment = IRSizeAndAlignment(8, 8);
@@ -424,7 +469,7 @@ IRSizeAndAlignmentDecoration* findSizeAndAlignmentDecorationForLayout(
 }
 
 Result getSizeAndAlignment(
-    CompilerOptionSet& optionSet,
+    TargetRequest* targetReq,
     IRTypeLayoutRules* rules,
     IRType* type,
     IRSizeAndAlignment* outSizeAndAlignment)
@@ -436,7 +481,7 @@ Result getSizeAndAlignment(
     }
 
     IRSizeAndAlignment sizeAndAlignment;
-    SLANG_RETURN_ON_FAIL(rules->calcSizeAndAlignment(optionSet, type, &sizeAndAlignment));
+    SLANG_RETURN_ON_FAIL(rules->calcSizeAndAlignment(targetReq, type, &sizeAndAlignment));
 
     if (auto module = type->getModule())
     {
@@ -471,7 +516,7 @@ IROffsetDecoration* findOffsetDecorationForLayout(
 }
 
 Result getOffset(
-    CompilerOptionSet& optionSet,
+    TargetRequest* targetReq,
     IRTypeLayoutRules* rules,
     IRStructField* field,
     IRIntegerValue* outOffset)
@@ -492,7 +537,7 @@ Result getOffset(
         return SLANG_FAIL;
 
     IRSizeAndAlignment structTypeLayout;
-    SLANG_RETURN_ON_FAIL(getSizeAndAlignment(optionSet, rules, structType, &structTypeLayout));
+    SLANG_RETURN_ON_FAIL(getSizeAndAlignment(targetReq, rules, structType, &structTypeLayout));
 
     if (auto decor = findOffsetDecorationForLayout(field, rules->ruleName))
     {
@@ -540,7 +585,7 @@ struct CLayoutRules : IRTypeLayoutRules
     CLayoutRules() { ruleName = IRTypeLayoutRuleName::C; }
 
     virtual Result calcSizeAndAlignment(
-        CompilerOptionSet& optionSet,
+        TargetRequest* targetReq,
         IRType* type,
         IRSizeAndAlignment* outSizeAndAlignment)
     {
@@ -549,7 +594,7 @@ struct CLayoutRules : IRTypeLayoutRules
             *outSizeAndAlignment = IRSizeAndAlignment(1, 1);
             return SLANG_OK;
         }
-        return IRTypeLayoutRules::calcSizeAndAlignment(optionSet, type, outSizeAndAlignment);
+        return IRTypeLayoutRules::calcSizeAndAlignment(targetReq, type, outSizeAndAlignment);
     }
 
     virtual IRIntegerValue adjustOffset(
@@ -692,24 +737,68 @@ struct Std140LayoutRules : IRTypeLayoutRules
     }
 };
 
+struct LLVMLayoutRules : IRTypeLayoutRules
+{
+    LLVMLayoutRules() { ruleName = IRTypeLayoutRuleName::LLVM; }
+
+    virtual Result calcSizeAndAlignment(
+        TargetRequest* targetReq,
+        IRType* type,
+        IRSizeAndAlignment* outSizeAndAlignment)
+    {
+        if (type->getOp() == kIROp_BoolType)
+        {
+            *outSizeAndAlignment = IRSizeAndAlignment(1, 1);
+            return SLANG_OK;
+        }
+        return IRTypeLayoutRules::calcSizeAndAlignment(targetReq, type, outSizeAndAlignment);
+    }
+
+    virtual IRIntegerValue adjustOffset(
+        IRIntegerValue offset,
+        IRIntegerValue elementSize,
+        IRType* lastFieldType,
+        IRIntegerValue lastFieldAlignment)
+    {
+        SLANG_UNUSED(elementSize);
+        SLANG_UNUSED(lastFieldType);
+        return align(offset, (int)lastFieldAlignment);
+    }
+
+    virtual IRSizeAndAlignment alignCompositeElement(IRSizeAndAlignment elementSize)
+    {
+        IRSizeAndAlignment alignedSize = elementSize;
+        alignedSize.size = align(alignedSize.size, alignedSize.alignment);
+        return alignedSize;
+    }
+
+    virtual IRSizeAndAlignment getVectorSizeAndAlignment(
+        IRSizeAndAlignment element,
+        IRIntegerValue count)
+    {
+        // Round alignment to next power of two
+        IRIntegerValue alignment = element.alignment;
+        while (alignment < element.size * count)
+            alignment *= 2;
+        return IRSizeAndAlignment(element.size * count, (int)alignment);
+    }
+};
+
 Result getNaturalSizeAndAlignment(
-    CompilerOptionSet& optionSet,
+    TargetRequest* targetReq,
     IRType* type,
     IRSizeAndAlignment* outSizeAndAlignment)
 {
     return getSizeAndAlignment(
-        optionSet,
+        targetReq,
         IRTypeLayoutRules::getNatural(),
         type,
         outSizeAndAlignment);
 }
 
-Result getNaturalOffset(
-    CompilerOptionSet& optionSet,
-    IRStructField* field,
-    IRIntegerValue* outOffset)
+Result getNaturalOffset(TargetRequest* targetReq, IRStructField* field, IRIntegerValue* outOffset)
 {
-    return getOffset(optionSet, IRTypeLayoutRules::getNatural(), field, outOffset);
+    return getOffset(targetReq, IRTypeLayoutRules::getNatural(), field, outOffset);
 }
 
 
@@ -718,23 +807,20 @@ Result getNaturalOffset(
 //////////////////////////
 
 Result getStd430SizeAndAlignment(
-    CompilerOptionSet& optionSet,
+    TargetRequest* targetReq,
     IRType* type,
     IRSizeAndAlignment* outSizeAndAlignment)
 {
     return getSizeAndAlignment(
-        optionSet,
+        targetReq,
         IRTypeLayoutRules::getStd430(),
         type,
         outSizeAndAlignment);
 }
 
-Result getStd430Offset(
-    CompilerOptionSet& optionSet,
-    IRStructField* field,
-    IRIntegerValue* outOffset)
+Result getStd430Offset(TargetRequest* targetReq, IRStructField* field, IRIntegerValue* outOffset)
 {
-    return getOffset(optionSet, IRTypeLayoutRules::getStd430(), field, outOffset);
+    return getOffset(targetReq, IRTypeLayoutRules::getStd430(), field, outOffset);
 }
 
 IRTypeLayoutRules* IRTypeLayoutRules::getStd430()
@@ -759,6 +845,12 @@ IRTypeLayoutRules* IRTypeLayoutRules::getC()
     return &rules;
 }
 
+IRTypeLayoutRules* IRTypeLayoutRules::getLLVM()
+{
+    static LLVMLayoutRules rules;
+    return &rules;
+}
+
 IRTypeLayoutRules* IRTypeLayoutRules::getConstantBuffer()
 {
     static ConstantBufferLayoutRules rules;
@@ -780,6 +872,8 @@ IRTypeLayoutRules* IRTypeLayoutRules::get(IRTypeLayoutRuleName name)
         return getC();
     case IRTypeLayoutRuleName::D3DConstantBuffer:
         return getConstantBuffer();
+    case IRTypeLayoutRuleName::LLVM:
+        return getLLVM();
     default:
         return nullptr;
     }

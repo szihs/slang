@@ -115,7 +115,7 @@ static void emitReflectionVarBindingInfoJSON(
 
         default:
             writer << "unknown";
-            assert(!"unhandled case");
+            SLANG_ASSERT(!"unhandled case");
             break;
         }
         writer << "\"";
@@ -421,7 +421,10 @@ static void emitReflectionVarLayoutJSON(PrettyWriter& writer, slang::VariableLay
         emitReflectionTypeLayoutJSON(writer, var->getTypeLayout());
     }
 
-    emitReflectionModifierInfoJSON(writer, var->getVariable());
+    if (auto variable = var->getVariable())
+    {
+        emitReflectionModifierInfoJSON(writer, variable);
+    }
 
     emitReflectionVarBindingInfoJSON(writer, var);
     writer.dedent();
@@ -435,7 +438,7 @@ static void emitReflectionScalarTypeInfoJSON(PrettyWriter& writer, SlangScalarTy
     {
     default:
         writer << "unknown";
-        assert(!"unhandled case");
+        SLANG_ASSERT(!"unhandled case");
         break;
 #define CASE(TAG, ID)                                                          \
     case static_cast<SlangScalarType>(slang::TypeReflection::ScalarType::TAG): \
@@ -475,7 +478,7 @@ static void emitReflectionResourceTypeBaseInfoJSON(
     {
     default:
         writer << "unknown";
-        assert(!"unhandled case");
+        SLANG_ASSERT(!"unhandled case");
         break;
 
 #define CASE(SHAPE, NAME)             \
@@ -522,7 +525,7 @@ static void emitReflectionResourceTypeBaseInfoJSON(
         {
         default:
             writer << "unknown";
-            assert(!"unhandled case");
+            SLANG_ASSERT(!"unhandled case");
             break;
 
         case SLANG_RESOURCE_ACCESS_READ:
@@ -721,10 +724,6 @@ static void emitReflectionTypeInfoJSON(PrettyWriter& writer, slang::TypeReflecti
         writer.maybeComma();
         writer << "\"kind\": \"DynamicResource\"";
         break;
-    case slang::TypeReflection::Kind::OutputStream:
-        writer.maybeComma();
-        writer << "\"kind\": \"OutputStream\"";
-        break;
     case slang::TypeReflection::Kind::MeshOutput:
         writer.maybeComma();
         writer << "\"kind\": \"MeshOutput\"";
@@ -916,6 +915,10 @@ static void emitReflectionTypeLayoutInfoJSON(
         emitReflectionParameterGroupTypeLayoutInfoJSON(writer, typeLayout, "constantBuffer");
         break;
 
+    case slang::TypeReflection::Kind::OutputStream:
+        emitReflectionParameterGroupTypeLayoutInfoJSON(writer, typeLayout, "outputStream");
+        break;
+
     case slang::TypeReflection::Kind::ParameterBlock:
         emitReflectionParameterGroupTypeLayoutInfoJSON(writer, typeLayout, "parameterBlock");
         break;
@@ -1039,7 +1042,10 @@ static void emitReflectionParamJSON(PrettyWriter& writer, slang::VariableLayoutR
         emitReflectionNameInfoJSON(writer, name);
     }
 
-    emitReflectionModifierInfoJSON(writer, param->getVariable());
+    if (auto var = param->getVariable())
+    {
+        emitReflectionModifierInfoJSON(writer, var);
+    }
 
     emitReflectionVarBindingInfoJSON(writer, param);
 
