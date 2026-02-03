@@ -192,6 +192,14 @@ bool isResourceType(IRType* type)
     {
         return true;
     }
+    else if (const auto dynamicResourceType = as<IRDynamicResourceType>(type))
+    {
+        return true;
+    }
+    else if (const auto descriptorHandleType = as<IRDescriptorHandleType>(type))
+    {
+        return true;
+    }
 
     // TODO: need more comprehensive coverage here
 
