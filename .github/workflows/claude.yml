@@ -43,8 +43,9 @@ jobs:
       (github.event_name == 'issues' && github.event.action == 'labeled' && github.event.label.name == 'claude') ||
       (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'claude')
 
-    runs-on: [Windows, self-hosted, GCP-T4]
-    timeout-minutes: 360
+    # TODO: Change back to [Windows, self-hosted, GCP-T4] once fork runner permissions are configured
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
 
     # Cancel previous runs on new pushes
     concurrency:
@@ -227,48 +228,34 @@ jobs:
           # Path to pre-installed Claude Code executable (Windows only)
           claude-code-executable-path: ${{ steps.install-claude.outputs.claude-exe-path || '' }}
 
-          # Repository-specific setup (Windows)
+          # Repository-specific setup (Linux - no build, read-only analysis)
+          # TODO: Restore Windows build commands when switching back to self-hosted runners
           setup-commands: |
             set -euo pipefail
-            echo "🏗️ Setting up Windows environment..."
-
-            # Windows self-hosted runners have pre-installed:
-            # - Visual Studio 2022
-            # - CUDA toolkit
-            # - Vulkan SDK
-            # - NVIDIA GPU drivers
-
-            # Configure and build the project (use cmake.exe for Windows)
-            cmake.exe --preset vs2022 --fresh
-            cmake.exe --build --preset release
-
-            echo "✅ Environment setup completed"
+            echo "🏗️ Setting up Linux environment..."
+            echo "Note: Running on ubuntu-latest without GPU. Build/test commands disabled."
+            echo "✅ Environment setup completed (read-only mode)"
 
           # Custom instructions for Slang
           custom-instructions: |
-            ### **Build System Information:**
-            - OS: Windows Server 2022 (self-hosted runner with NVIDIA T4 GPU)
-            - GPU: NVIDIA T4 available for GPU tests (D3D12, Vulkan)
-            - Build commands: Configure `cmake.exe --preset vs2022`, Build `cmake.exe --build --preset release`
-            - Test: `./build/Release/bin/slang-test.exe tests/path/to/test.slang`
-            - GPU tests: Can use `-api dx12` or `-api vk` flags for GPU-specific tests
-            - Project is pre-built and ready for development tasks
+            ### **Environment Information:**
+            - OS: Ubuntu (GitHub-hosted runner, no GPU)
+            - Mode: Read-only analysis (build/test disabled)
+            - NOTE: Build and GPU tests not available on this runner
 
-            ### **IMPORTANT: Windows-Specific Notes**
-            - Always use `cmake.exe` (not `cmake`) to ensure proper execution
-            - Use forward slashes in paths for bash scripts, backslashes for PowerShell
-            - The runner has Visual Studio 2022, CUDA toolkit, and Vulkan SDK pre-installed
+            ### **Repository Knowledge**
+            Use `mcp__deepwiki__ask_question` with repoName "shader-slang/slang" for architectural insights.
 
-            ### **IMPORTANT: Deep Repository Knowledge & Debugging**
-            **Repository Knowledge Tool**: Use `mcp__deepwiki__ask_question` with repoName "shader-slang/slang" for architectural insights and implementation patterns.
+            ### **What You Can Do:**
+            - Code review and analysis
+            - Read files, search patterns, check git history
+            - Suggest fixes and improvements
+            - Answer questions about the codebase
 
-            **Implementation Guidelines:**
-            - Use git history (`git log -S "keyword"`) to find related features but don't spend excessive time
-            - Use deepwiki for expert insights and architectural patterns
-            - Think carefully about the user's request before implementing
-
-            ### **Test-Driven Development - Strongly Encouraged**
-            Write failing tests in `tests/` directory, implement fixes and verify both tests and builds succeed before submitting.
+            ### **What's NOT Available:**
+            - Building the project (no Visual Studio)
+            - Running tests (no GPU)
+            - Compiling shaders
 
           # MCP configuration for deepwiki
           mcp-config: |

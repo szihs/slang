@@ -140,18 +140,18 @@ outputs:
   auth-token:
     description: "Generated authentication token"
     value: ${{ steps.auth-token.outputs.token }}
+  auth-provider:
+    description: "Authentication provider used (llmgw or nv-inference)"
+    value: ${{ steps.auth-token.outputs.auth-provider }}
   github-token:
-    description: "Final GitHub token (App or fallback)"
+    description: "GitHub token for API access"
     value: ${{ steps.auth-config.outputs.github-token }}
   token-expires:
-    description: "Token expiration time (if available)"
+    description: "Token expiration time (if available, LLMGW only)"
     value: ${{ steps.auth-token.outputs.token-expires }}
-  github-app-token-outcome:
-    description: "Outcome of GitHub App token generation"
-    value: ${{ steps.github-app-token.outcome }}
   claude-outcome:
     description: "Outcome of Claude Code execution"
-    value: ${{ steps.claude-action.outcome }}
+    value: ${{ steps.claude-action.outputs.outcome }}
 
 runs:
   using: "composite"
@@ -322,21 +322,17 @@ runs:
           rm -f "$TOKEN_FILE"
         fi
 
-    # Configure authentication
-    - name: Configure Authentication
+    # Configure GitHub authentication
+    - name: Configure GitHub Authentication
       id: auth-config
       shell: bash
       run: |
         set -euo pipefail
 
-        # Use GitHub App token if available, otherwise use GITHUB_TOKEN
-        if [ -n "${{ steps.github-app-token.outputs.token }}" ]; then
-          echo "github-token=${{ steps.github-app-token.outputs.token }}" >> $GITHUB_OUTPUT
-          echo "✅ Using GitHub App authentication"
-        else
-          echo "github-token=${{ inputs.github-token-fallback }}" >> $GITHUB_OUTPUT
-          echo "⚠️  Using fallback GITHUB_TOKEN authentication"
-        fi
+        # Use the provided GitHub token fallback (GITHUB_TOKEN)
+        # Note: GitHub App token integration can be added later if needed
+        echo "github-token=${{ inputs.github-token-fallback }}" >> $GITHUB_OUTPUT
+        echo "✅ Using GitHub token authentication"
 
     # Run setup commands if provided
     - name: Run setup commands
@@ -384,7 +380,7 @@ runs:
         else
           echo "- **Token Expiry**: ${{ steps.auth-token.outputs.token-expires || 'Not provided' }}" >> $GITHUB_STEP_SUMMARY
         fi
-        echo "- **GitHub Token**: ${{ steps.github-app-token.outcome == 'success' && '✅ GitHub App' || '⚠️ Fallback' }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **GitHub Token**: ✅ Configured" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "### Configuration" >> $GITHUB_STEP_SUMMARY
         echo "- **Model**: ${{ inputs.model }}" >> $GITHUB_STEP_SUMMARY
@@ -402,16 +398,37 @@ runs:
         echo "- **Setup Result**: ${{ steps.setup-commands.outcome || 'Skipped' }}" >> $GITHUB_STEP_SUMMARY
         echo "- **Security Cleanup**: ✅ Completed" >> $GITHUB_STEP_SUMMARY
 
+    # Determine model based on auth provider
+    - name: Determine Model
+      id: determine-model
+      shell: bash
+      run: |
+        AUTH_PROVIDER="${{ inputs.auth-provider }}"
+
+        if [ "$AUTH_PROVIDER" = "nv-inference" ]; then
+          # Use NV Inference Portal model format (aws/anthropic/...)
+          # Default to Opus for best quality
+          MODEL="${{ inputs.nv-inference-opus-model }}"
+          echo "Using NV Inference model (Opus): $MODEL"
+        else
+          # Use Bedrock model format (us.anthropic....)
+          MODEL="${{ inputs.model }}"
+          echo "Using Bedrock model: $MODEL"
+        fi
+
+        echo "model=$MODEL" >> $GITHUB_OUTPUT
+
     # Execute Claude Code Action (v1) - NVIDIA Inference Portal
     - name: Execute Claude Code Action (NV Inference)
       id: claude-action-nv
       if: inputs.auth-provider == 'nv-inference'
       uses: anthropics/claude-code-action@v1
       env:
-        # NV Inference Portal uses direct API authentication
+        # NV Inference Portal uses custom base URL - SDK redirects API calls there
         ANTHROPIC_BASE_URL: ${{ inputs.nv-inference-url }}
-        ANTHROPIC_AUTH_TOKEN: ${{ steps.auth-token.outputs.token }}
       with:
+        # Pass API key via the action's input (not env) - action sets ANTHROPIC_API_KEY internally
+        anthropic_api_key: ${{ steps.auth-token.outputs.token }}
         github_token: ${{ steps.auth-config.outputs.github-token }}
         trigger_phrase: ${{ inputs.trigger-phrase }}
         prompt: ${{ inputs.prompt }}
@@ -423,15 +440,13 @@ runs:
         additional_permissions: "actions: read"
         claude_args: |
           --system-prompt "${{ inputs.custom-instructions }}"
-          --model ${{ inputs.model }}
+          --model ${{ steps.determine-model.outputs.model }}
           --max-turns ${{ inputs.max-turns }}
           --allowedTools ${{ inputs.allowed-tools }}
           --mcp-config '${{ inputs.mcp-config }}'
         settings: |
           {
             "env": {
-              "ANTHROPIC_BASE_URL": "${{ inputs.nv-inference-url }}",
-              "ANTHROPIC_AUTH_TOKEN": "${{ steps.auth-token.outputs.token }}",
               "ANTHROPIC_DEFAULT_OPUS_MODEL": "${{ inputs.nv-inference-opus-model }}",
               "ANTHROPIC_DEFAULT_SONNET_MODEL": "${{ inputs.nv-inference-sonnet-model }}",
               "ANTHROPIC_DEFAULT_HAIKU_MODEL": "${{ inputs.nv-inference-haiku-model }}",
@@ -466,7 +481,7 @@ runs:
         additional_permissions: "actions: read"
         claude_args: |
           --system-prompt "${{ inputs.custom-instructions }}"
-          --model ${{ inputs.model }}
+          --model ${{ steps.determine-model.outputs.model }}
           --max-turns ${{ inputs.max-turns }}
           --allowedTools ${{ inputs.allowed-tools }}
           --mcp-config '${{ inputs.mcp-config }}'
