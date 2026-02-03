@@ -1,16 +1,49 @@
 name: "Claude Code Runner"
 description: "Complete Claude Code execution with authentication, setup, execution, and results handling"
 inputs:
-  # Authentication inputs
+  # Authentication provider selection
+  auth-provider:
+    description: "Authentication provider: 'llmgw' (LLM Gateway) or 'nv-inference' (NVIDIA Inference Portal)"
+    required: false
+    default: "llmgw"
+
+  # LLM Gateway authentication inputs (used when auth-provider=llmgw)
   llmgw-id:
-    description: "LLMGW ID for token generation"
-    required: true
+    description: "LLMGW ID for token generation (required for auth-provider=llmgw)"
+    required: false
+    default: ""
   llmgw-secret:
-    description: "LLMGW secret for token generation"
-    required: true
+    description: "LLMGW secret for token generation (required for auth-provider=llmgw)"
+    required: false
+    default: ""
   llmgw-token-url:
-    description: "LLMGW token URL for authentication"
-    required: true
+    description: "LLMGW token URL for authentication (required for auth-provider=llmgw)"
+    required: false
+    default: ""
+
+  # NVIDIA Inference Portal authentication inputs (used when auth-provider=nv-inference)
+  nv-inference-url:
+    description: "NVIDIA Inference Portal base URL (required for auth-provider=nv-inference)"
+    required: false
+    default: "https://inference-api.nvidia.com"
+  nv-inference-token:
+    description: "NVIDIA Inference Portal API token (required for auth-provider=nv-inference)"
+    required: false
+    default: ""
+  nv-inference-opus-model:
+    description: "Opus model name for NV Inference Portal"
+    required: false
+    default: "aws/anthropic/claude-opus-4-5"
+  nv-inference-sonnet-model:
+    description: "Sonnet model name for NV Inference Portal"
+    required: false
+    default: "aws/anthropic/bedrock-claude-sonnet-4-5-v1"
+  nv-inference-haiku-model:
+    description: "Haiku model name for NV Inference Portal"
+    required: false
+    default: "aws/anthropic/claude-haiku-4-5-v1"
+
+  # Common authentication
   github-token-fallback:
     description: "Fallback GitHub token if App token fails"
     required: false
@@ -142,103 +175,152 @@ runs:
       run: |
         set -euo pipefail
 
-        # Check required secrets
-        if [ -z "${{ inputs.llmgw-id }}" ] || [ -z "${{ inputs.llmgw-secret }}" ] || [ -z "${{ inputs.llmgw-token-url }}" ]; then
-          echo "::error::Missing required secrets: LLMGW_ID or LLMGW_SECRET or LLMGW_TOKEN_URL"
+        AUTH_PROVIDER="${{ inputs.auth-provider }}"
+        echo "🔍 Validating environment for auth provider: $AUTH_PROVIDER"
+
+        if [ "$AUTH_PROVIDER" = "llmgw" ]; then
+          # Check LLMGW required secrets
+          if [ -z "${{ inputs.llmgw-id }}" ] || [ -z "${{ inputs.llmgw-secret }}" ] || [ -z "${{ inputs.llmgw-token-url }}" ]; then
+            echo "::error::Missing required secrets for LLMGW: llmgw-id, llmgw-secret, or llmgw-token-url"
+            exit 1
+          fi
+          # Check required tools (curl only - jq replaced with portable parsing)
+          command -v curl >/dev/null 2>&1 || { echo "::error::curl is required but not installed"; exit 1; }
+        elif [ "$AUTH_PROVIDER" = "nv-inference" ]; then
+          # Check NV Inference Portal required secrets
+          if [ -z "${{ inputs.nv-inference-token }}" ]; then
+            echo "::error::Missing required secret for NV Inference Portal: nv-inference-token"
+            exit 1
+          fi
+        else
+          echo "::error::Unknown auth-provider: $AUTH_PROVIDER. Must be 'llmgw' or 'nv-inference'"
           exit 1
         fi
 
-        # Check required tools (curl only - jq replaced with portable parsing)
-        command -v curl >/dev/null 2>&1 || { echo "::error::curl is required but not installed"; exit 1; }
+        echo "✅ Environment validation passed for $AUTH_PROVIDER"
 
-        echo "✅ Environment validation passed"
-
-    # Generate custom auth token
-    - name: Generate Custom Auth Token
+    # Generate/configure auth token based on provider
+    - name: Configure Auth Token
       id: auth-token
       shell: bash
       run: |
         set -euo pipefail
 
-        echo "🔐 Generating authentication token..."
+        AUTH_PROVIDER="${{ inputs.auth-provider }}"
+        echo "🔐 Configuring authentication for provider: $AUTH_PROVIDER"
 
-        # Use portable temp directory (works on both Linux and Windows)
-        TEMP_DIR="${RUNNER_TEMP:-/tmp}"
-        TOKEN_FILE="$TEMP_DIR/token_response.json"
+        if [ "$AUTH_PROVIDER" = "nv-inference" ]; then
+          #############################################
+          # NV Inference Portal - Direct token usage
+          #############################################
+          echo "Using NVIDIA Inference Portal authentication (direct token)"
 
-        # Set up error handling
-        cleanup() {
-          local exit_code=$?
-          echo "🧹 Cleaning up temporary files..."
-          rm -f "$TOKEN_FILE" 2>/dev/null || true
-          if [ $exit_code -ne 0 ]; then
-            echo "::error::Authentication failed - check your credentials and endpoint"
+          ANTHROPIC_AUTH_TOKEN="${{ inputs.nv-inference-token }}"
+
+          # CRITICAL: Mask the token BEFORE any output
+          echo "::add-mask::$ANTHROPIC_AUTH_TOKEN"
+
+          # Validate token
+          if [ -z "$ANTHROPIC_AUTH_TOKEN" ]; then
+            echo "::error::NV Inference token is empty"
+            exit 1
           fi
-          exit $exit_code
-        }
-        trap cleanup EXIT
 
-        # Generate token with comprehensive error handling (using Basic auth like original)
-        # Note: Use 'base64 | tr -d' instead of 'base64 -w0' for Windows Git Bash compatibility
-        HTTP_CODE=$(curl -s -w "%{http_code}" -o "$TOKEN_FILE" --fail-with-body \
-          --max-time 30 \
-          --retry 3 \
-          --retry-delay 2 \
-          --location "${{ inputs.llmgw-token-url }}" \
-          --header 'Content-Type: application/x-www-form-urlencoded' \
-          --header "Authorization: Basic $(echo -n ${{ inputs.llmgw-id }}:${{ inputs.llmgw-secret }} | base64 | tr -d '\n\r')" \
-          --data-urlencode 'grant_type=client_credentials' \
-          --data-urlencode 'scope=awsanthropic-readwrite azureopenai-readwrite' \
-          2>/dev/null)
-
-        # Check HTTP response code
-        if [ "$HTTP_CODE" -ne 200 ]; then
-          echo "::error::Authentication failed with HTTP code: $HTTP_CODE"
-          if [ -f "$TOKEN_FILE" ]; then
-            echo "::error::Response: $(cat "$TOKEN_FILE" | head -c 200)"
+          if [ ${#ANTHROPIC_AUTH_TOKEN} -lt 10 ]; then
+            echo "::error::Token appears to be too short"
+            exit 1
           fi
-          exit 1
+
+          # Set outputs
+          echo "token=$ANTHROPIC_AUTH_TOKEN" >> $GITHUB_OUTPUT
+          echo "auth-provider=nv-inference" >> $GITHUB_OUTPUT
+          echo "base-url=${{ inputs.nv-inference-url }}" >> $GITHUB_OUTPUT
+
+          echo "✅ NV Inference Portal token configured and masked"
+
+        else
+          #############################################
+          # LLM Gateway - OAuth token generation
+          #############################################
+          echo "Using LLM Gateway authentication (OAuth)"
+
+          # Use portable temp directory (works on both Linux and Windows)
+          TEMP_DIR="${RUNNER_TEMP:-/tmp}"
+          TOKEN_FILE="$TEMP_DIR/token_response.json"
+
+          # Set up error handling
+          cleanup() {
+            local exit_code=$?
+            echo "🧹 Cleaning up temporary files..."
+            rm -f "$TOKEN_FILE" 2>/dev/null || true
+            if [ $exit_code -ne 0 ]; then
+              echo "::error::Authentication failed - check your credentials and endpoint"
+            fi
+            exit $exit_code
+          }
+          trap cleanup EXIT
+
+          # Generate token with comprehensive error handling (using Basic auth)
+          # Note: Use 'base64 | tr -d' instead of 'base64 -w0' for Windows Git Bash compatibility
+          HTTP_CODE=$(curl -s -w "%{http_code}" -o "$TOKEN_FILE" --fail-with-body \
+            --max-time 30 \
+            --retry 3 \
+            --retry-delay 2 \
+            --location "${{ inputs.llmgw-token-url }}" \
+            --header 'Content-Type: application/x-www-form-urlencoded' \
+            --header "Authorization: Basic $(echo -n ${{ inputs.llmgw-id }}:${{ inputs.llmgw-secret }} | base64 | tr -d '\n\r')" \
+            --data-urlencode 'grant_type=client_credentials' \
+            --data-urlencode 'scope=awsanthropic-readwrite azureopenai-readwrite' \
+            2>/dev/null)
+
+          # Check HTTP response code
+          if [ "$HTTP_CODE" -ne 200 ]; then
+            echo "::error::Authentication failed with HTTP code: $HTTP_CODE"
+            if [ -f "$TOKEN_FILE" ]; then
+              echo "::error::Response: $(cat "$TOKEN_FILE" | head -c 200)"
+            fi
+            exit 1
+          fi
+
+          # Extract and validate token
+          if [ ! -f "$TOKEN_FILE" ]; then
+            echo "::error::No response file generated"
+            exit 1
+          fi
+
+          # Parse JSON without jq (portable for Windows Git Bash)
+          ANTHROPIC_AUTH_TOKEN=$(grep -o '"access_token"[[:space:]]*:[[:space:]]*"[^"]*"' "$TOKEN_FILE" | sed 's/.*"access_token"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/' 2>/dev/null || true)
+
+          # Validate token format and length
+          if [ -z "$ANTHROPIC_AUTH_TOKEN" ] || [ "$ANTHROPIC_AUTH_TOKEN" = "null" ]; then
+            echo "::error::Failed to extract access token from response"
+            exit 1
+          fi
+
+          # CRITICAL: Mask the token BEFORE any output
+          echo "::add-mask::$ANTHROPIC_AUTH_TOKEN"
+
+          if [ ${#ANTHROPIC_AUTH_TOKEN} -lt 10 ]; then
+            echo "::error::Token appears to be too short (${#ANTHROPIC_AUTH_TOKEN} characters)"
+            exit 1
+          fi
+
+          # Set outputs
+          echo "token=$ANTHROPIC_AUTH_TOKEN" >> $GITHUB_OUTPUT
+          echo "auth-provider=llmgw" >> $GITHUB_OUTPUT
+
+          # Set token expiry if available (parse without jq)
+          TOKEN_EXPIRES=$(grep -o '"expires_in"[[:space:]]*:[[:space:]]*[0-9]*' "$TOKEN_FILE" | sed 's/.*"expires_in"[[:space:]]*:[[:space:]]*\([0-9]*\).*/\1/' 2>/dev/null || true)
+          if [ -n "$TOKEN_EXPIRES" ]; then
+            echo "::add-mask::$TOKEN_EXPIRES"
+            echo "token-expires=$TOKEN_EXPIRES" >> $GITHUB_OUTPUT
+          fi
+
+          echo "✅ LLM Gateway token generated and masked successfully"
+
+          # Clean up response file
+          rm -f "$TOKEN_FILE"
         fi
-
-        # Extract and validate token
-        if [ ! -f "$TOKEN_FILE" ]; then
-          echo "::error::No response file generated"
-          exit 1
-        fi
-
-        # Parse JSON without jq (portable for Windows Git Bash)
-        # Extract access_token value from JSON response
-        ANTHROPIC_AUTH_TOKEN=$(grep -o '"access_token"[[:space:]]*:[[:space:]]*"[^"]*"' "$TOKEN_FILE" | sed 's/.*"access_token"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/' 2>/dev/null || true)
-
-        # Validate token format and length
-        if [ -z "$ANTHROPIC_AUTH_TOKEN" ] || [ "$ANTHROPIC_AUTH_TOKEN" = "null" ]; then
-          echo "::error::Failed to extract access token from response"
-          exit 1
-        fi
-
-        # Basic token validation
-        if [ ${#ANTHROPIC_AUTH_TOKEN} -lt 10 ]; then
-          echo "::error::Token appears to be too short (${#ANTHROPIC_AUTH_TOKEN} characters)"
-          exit 1
-        fi
-
-        # CRITICAL: Mask the token BEFORE any output
-        echo "::add-mask::$ANTHROPIC_AUTH_TOKEN"
-
-        # Set outputs
-        echo "token=$ANTHROPIC_AUTH_TOKEN" >> $GITHUB_OUTPUT
-
-        # Set token expiry if available (parse without jq)
-        TOKEN_EXPIRES=$(grep -o '"expires_in"[[:space:]]*:[[:space:]]*[0-9]*' "$TOKEN_FILE" | sed 's/.*"expires_in"[[:space:]]*:[[:space:]]*\([0-9]*\).*/\1/' 2>/dev/null || true)
-        if [ -n "$TOKEN_EXPIRES" ]; then
-          echo "::add-mask::$TOKEN_EXPIRES"
-          echo "token-expires=$TOKEN_EXPIRES" >> $GITHUB_OUTPUT
-        fi
-
-        echo "✅ Authentication token generated and masked successfully"
-
-        # Clean up response file
-        rm -f "$TOKEN_FILE"
 
     # Configure authentication
     - name: Configure Authentication
@@ -295,17 +377,24 @@ runs:
         echo "## Claude Code Runner Summary" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "### Authentication" >> $GITHUB_STEP_SUMMARY
-        echo "- **Auth Token**: ✅ Generated" >> $GITHUB_STEP_SUMMARY
-        echo "- **Token Expiry**: ${{ steps.auth-token.outputs.token-expires || 'Not provided' }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Auth Provider**: ${{ inputs.auth-provider }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Auth Token**: ✅ Configured" >> $GITHUB_STEP_SUMMARY
+        if [ "${{ inputs.auth-provider }}" = "nv-inference" ]; then
+          echo "- **Base URL**: ${{ inputs.nv-inference-url }}" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "- **Token Expiry**: ${{ steps.auth-token.outputs.token-expires || 'Not provided' }}" >> $GITHUB_STEP_SUMMARY
+        fi
         echo "- **GitHub Token**: ${{ steps.github-app-token.outcome == 'success' && '✅ GitHub App' || '⚠️ Fallback' }}" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "### Configuration" >> $GITHUB_STEP_SUMMARY
         echo "- **Model**: ${{ inputs.model }}" >> $GITHUB_STEP_SUMMARY
         echo "- **Max Turns**: ${{ inputs.max-turns }}" >> $GITHUB_STEP_SUMMARY
         echo "- **Timeout**: ${{ inputs.timeout-minutes }} minutes" >> $GITHUB_STEP_SUMMARY
-        echo "- **Bedrock**: ${{ inputs.use-bedrock == 'true' && '✅ Enabled' || '❌ Disabled' }}" >> $GITHUB_STEP_SUMMARY
-        if [ "${{ inputs.use-bedrock }}" = "true" ]; then
-          echo "- **AWS Region**: ${{ inputs.aws-region || 'Default' }}" >> $GITHUB_STEP_SUMMARY
+        if [ "${{ inputs.auth-provider }}" = "llmgw" ]; then
+          echo "- **Bedrock**: ${{ inputs.use-bedrock == 'true' && '✅ Enabled' || '❌ Disabled' }}" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ inputs.use-bedrock }}" = "true" ]; then
+            echo "- **AWS Region**: ${{ inputs.aws-region || 'Default' }}" >> $GITHUB_STEP_SUMMARY
+          fi
         fi
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "### Setup" >> $GITHUB_STEP_SUMMARY
@@ -313,41 +402,74 @@ runs:
         echo "- **Setup Result**: ${{ steps.setup-commands.outcome || 'Skipped' }}" >> $GITHUB_STEP_SUMMARY
         echo "- **Security Cleanup**: ✅ Completed" >> $GITHUB_STEP_SUMMARY
 
-    # Execute Claude Code Action (v1)
-    # Breaking changes from beta: Parameters consolidated into claude_args and settings
-    # See: https://github.com/anthropics/claude-code-action/blob/main/docs/migration-guide.md
-    - name: Execute Claude Code Action
-      id: claude-action
+    # Execute Claude Code Action (v1) - NVIDIA Inference Portal
+    - name: Execute Claude Code Action (NV Inference)
+      id: claude-action-nv
+      if: inputs.auth-provider == 'nv-inference'
       uses: anthropics/claude-code-action@v1
       env:
-        # Use Bedrock with bearer token auth (not AWS SigV4)
-        # AWS_BEARER_TOKEN_BEDROCK enables bearer token auth for Bedrock-compatible endpoints
-        ANTHROPIC_BEDROCK_BASE_URL: ${{ inputs.bedrock-base-url }}
-        AWS_BEARER_TOKEN_BEDROCK: ${{ steps.auth-token.outputs.token }}
+        # NV Inference Portal uses direct API authentication
+        ANTHROPIC_BASE_URL: ${{ inputs.nv-inference-url }}
+        ANTHROPIC_AUTH_TOKEN: ${{ steps.auth-token.outputs.token }}
       with:
         github_token: ${{ steps.auth-config.outputs.github-token }}
-        # Enable Bedrock mode with bearer token authentication
-        use_bedrock: "true"
         trigger_phrase: ${{ inputs.trigger-phrase }}
-        # Direct prompt for workflow_dispatch testing (optional)
         prompt: ${{ inputs.prompt }}
-        # Path to pre-installed Claude Code executable (for Windows)
         path_to_claude_code_executable: ${{ inputs.claude-code-executable-path }}
-        # Progress and UI settings (v1 features)
         track_progress: ${{ inputs.track-progress }}
         include_fix_links: ${{ inputs.include-fix-links }}
         use_sticky_comment: ${{ inputs.use-sticky-comment }}
         branch_prefix: ${{ inputs.branch-prefix }}
-        # Request additional permissions for CI log access
         additional_permissions: "actions: read"
-        # Consolidated CLI arguments for v1
         claude_args: |
           --system-prompt "${{ inputs.custom-instructions }}"
           --model ${{ inputs.model }}
           --max-turns ${{ inputs.max-turns }}
           --allowedTools ${{ inputs.allowed-tools }}
           --mcp-config '${{ inputs.mcp-config }}'
-        # Environment variables in v1 settings format (JSON)
+        settings: |
+          {
+            "env": {
+              "ANTHROPIC_BASE_URL": "${{ inputs.nv-inference-url }}",
+              "ANTHROPIC_AUTH_TOKEN": "${{ steps.auth-token.outputs.token }}",
+              "ANTHROPIC_DEFAULT_OPUS_MODEL": "${{ inputs.nv-inference-opus-model }}",
+              "ANTHROPIC_DEFAULT_SONNET_MODEL": "${{ inputs.nv-inference-sonnet-model }}",
+              "ANTHROPIC_DEFAULT_HAIKU_MODEL": "${{ inputs.nv-inference-haiku-model }}",
+              "GITHUB_REPOSITORY": "${{ github.repository }}",
+              "GITHUB_EVENT_NAME": "${{ github.event_name }}",
+              "GITHUB_ACTOR": "${{ github.actor }}",
+              "DISABLE_TELEMETRY": "1",
+              "CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS": "1"
+            }
+          }
+      continue-on-error: true
+
+    # Execute Claude Code Action (v1) - LLM Gateway / Bedrock
+    - name: Execute Claude Code Action (LLMGW)
+      id: claude-action-llmgw
+      if: inputs.auth-provider == 'llmgw'
+      uses: anthropics/claude-code-action@v1
+      env:
+        # Use Bedrock with bearer token auth (not AWS SigV4)
+        ANTHROPIC_BEDROCK_BASE_URL: ${{ inputs.bedrock-base-url }}
+        AWS_BEARER_TOKEN_BEDROCK: ${{ steps.auth-token.outputs.token }}
+      with:
+        github_token: ${{ steps.auth-config.outputs.github-token }}
+        use_bedrock: "true"
+        trigger_phrase: ${{ inputs.trigger-phrase }}
+        prompt: ${{ inputs.prompt }}
+        path_to_claude_code_executable: ${{ inputs.claude-code-executable-path }}
+        track_progress: ${{ inputs.track-progress }}
+        include_fix_links: ${{ inputs.include-fix-links }}
+        use_sticky_comment: ${{ inputs.use-sticky-comment }}
+        branch_prefix: ${{ inputs.branch-prefix }}
+        additional_permissions: "actions: read"
+        claude_args: |
+          --system-prompt "${{ inputs.custom-instructions }}"
+          --model ${{ inputs.model }}
+          --max-turns ${{ inputs.max-turns }}
+          --allowedTools ${{ inputs.allowed-tools }}
+          --mcp-config '${{ inputs.mcp-config }}'
         settings: |
           {
             "env": {
@@ -360,6 +482,18 @@ runs:
             }
           }
       continue-on-error: true
+
+    # Consolidate Claude action outcome
+    - name: Set Claude Action Outcome
+      id: claude-action
+      if: always()
+      shell: bash
+      run: |
+        if [ "${{ inputs.auth-provider }}" = "nv-inference" ]; then
+          echo "outcome=${{ steps.claude-action-nv.outcome }}" >> $GITHUB_OUTPUT
+        else
+          echo "outcome=${{ steps.claude-action-llmgw.outcome }}" >> $GITHUB_OUTPUT
+        fi
 
     # Handle Claude results
     - name: Handle Claude Results

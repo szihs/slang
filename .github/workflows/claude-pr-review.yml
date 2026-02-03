@@ -51,10 +51,21 @@ jobs:
       - name: Run Claude Code Review
         uses: ./.github/actions/claude-code-runner
         with:
-          # Authentication
+          # Authentication provider selection (set via repository variable)
+          auth-provider: ${{ vars.CLAUDE_AUTH_PROVIDER || 'llmgw' }}
+
+          # LLM Gateway authentication (used when auth-provider=llmgw)
           llmgw-id: ${{ secrets.LLMGW_ID }}
           llmgw-secret: ${{ secrets.LLMGW_SECRET }}
           llmgw-token-url: ${{ secrets.LLMGW_TOKEN_URL }}
+
+          # NVIDIA Inference Portal authentication (used when auth-provider=nv-inference)
+          nv-inference-url: ${{ vars.NV_INFERENCE_URL || 'https://inference-api.nvidia.com' }}
+          nv-inference-token: ${{ secrets.NV_INFERENCE_TOKEN }}
+          nv-inference-opus-model: ${{ vars.NV_INFERENCE_OPUS_MODEL || 'aws/anthropic/claude-opus-4-5' }}
+          nv-inference-sonnet-model: ${{ vars.NV_INFERENCE_SONNET_MODEL || 'aws/anthropic/bedrock-claude-sonnet-4-5-v1' }}
+          nv-inference-haiku-model: ${{ vars.NV_INFERENCE_HAIKU_MODEL || 'aws/anthropic/claude-haiku-4-5-v1' }}
+
           github-token-fallback: ${{ secrets.GITHUB_TOKEN }}
 
           # AUTOMATION MODE - provide explicit prompt for automatic review
