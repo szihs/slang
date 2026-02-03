@@ -21,8 +21,9 @@ jobs:
     if: |
       github.event.workflow_run.conclusion == 'failure' &&
       github.event.workflow_run.event == 'pull_request'
-    runs-on: [Windows, self-hosted, GCP-T4]
-    timeout-minutes: 60
+    # TODO: Change back to [Windows, self-hosted, GCP-T4] once fork runner permissions are configured
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     concurrency:
       group: claude-fix-ci-${{ github.event.workflow_run.head_branch }}
@@ -145,6 +146,7 @@ jobs:
             }
 
           # Tool allowlist - includes git operations for fixes
+          # GitHub MCP: PR review tools for inline fix comments
           allowed-tools: |
             View,GlobTool,GrepTool,BatchTool,Write,
             Bash(cmake*),
@@ -163,6 +165,10 @@ jobs:
             Bash(gh pr comment*),
             Bash(gh run view*),
             Bash(gh api*),
+            mcp__github__create_pending_pull_request_review,
+            mcp__github__add_pull_request_review_comment_to_pending_review,
+            mcp__github__submit_pending_pull_request_review,
+            mcp__github__get_pull_request_diff,
             mcp__deepwiki__ask_question
 
           # Configuration

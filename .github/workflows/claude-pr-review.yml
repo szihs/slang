@@ -25,8 +25,9 @@ jobs:
     if: |
       github.event.pull_request.draft == false &&
       !contains(github.event.pull_request.user.login, '[bot]')
-    runs-on: [Windows, self-hosted, GCP-T4]
-    timeout-minutes: 60
+    # TODO: Change back to [Windows, self-hosted, GCP-T4] once fork runner permissions are configured
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     # Cancel previous runs for the same PR
     concurrency:
@@ -68,50 +69,36 @@ jobs:
 
           github-token-fallback: ${{ secrets.GITHUB_TOKEN }}
 
-          # AUTOMATION MODE - provide explicit prompt for automatic review
+          # AUTOMATION MODE - Systematic PR Analysis
+          # Follow the /pr-review-analysis command in .claude/commands/
           prompt: |
-            Perform an automated code review on this pull request.
+            Perform a **systematic PR analysis**. Use the `/pr-review-analysis` command as your guide.
 
-            ## Review Focus Areas (Slang-specific)
+            **IMPORTANT:** You MUST:
+            1. Execute actual tool calls (read files, search, run git commands)
+            2. Log every action you take
+            3. Output findings in the structured format with file:line references
+            4. Categorize issues as Bugs/Flags/Suggestions
 
-            1. **IR Consistency & Type Safety**
-               - Check slang-ir-*.cpp files for proper SSA form
-               - Verify type information preservation through passes
-               - Ensure IR instruction definitions match usage
+            Start by reading the PR diff and changed files, then investigate systematically.
 
-            2. **Error Handling & Diagnostics**
-               - Proper use of diagnostic macros
-               - Meaningful error messages
-               - No silent failures
-
-            3. **Test Coverage**
-               - New features should have tests under tests/
-               - Tests should use CPU or interpreter for CI without GPU:
-                 - `//TEST:COMPARE_COMPUTE(filecheck-buffer=CHECK):-cpu`
-                 - `//TEST:INTERPRET(filecheck=CHECK):`
-
-            4. **Slang CLI Conventions**
-               - Single-dash options: `-help` not `--help`
-               - `-target`, `-stage`, `-dump-ir`, etc.
-
-            5. **Memory Safety**
-               - Check for use-after-free in RefPtr/ComPtr usage
-               - Verify proper ownership semantics
-
-            ## Review Output
-            - Post inline comments for specific issues
-            - Provide a top-level summary of observations
-            - Be constructive and educational
-
-          # Custom instructions for Slang context
+          # Custom instructions for systematic review
           custom-instructions: |
-            You are reviewing Slang compiler code. Key context:
-            - Slang is a shading language compiler targeting SPIRV, HLSL, Metal, CUDA
-            - Uses custom SSA-based IR (not LLVM)
-            - IR instructions defined in slang-ir-insts.lua
-            - Generated files in build/source/slang/fiddle/
+            You are a **PR Analysis Agent**. Follow the methodology in `/pr-review-analysis`.
 
-            Use deepwiki for architectural insights about the codebase.
+            ## Process Overview
+            1. **Gather Context**: Read docs (CLAUDE.md, CONTRIBUTING.md), fetch PR, check history
+            2. **Investigate**: Search patterns, cross-reference, validate references
+            3. **Detect Issues**: Categorize as 🔴 Bugs / 🟡 Flags / 🔵 Suggestions
+            4. **Report**: Structured output with file:line refs, code snippets, investigation log
+
+            ## Output Requirements
+            - Every finding MUST have `file:line` reference
+            - Show problematic code AND suggested fix
+            - Log all investigation steps taken
+            - End with summary table and recommendation
+
+            Use available tools (read, search, git, gh) to investigate thoroughly.
 
           # MCP configuration for deepwiki
           mcp-config: |
@@ -124,15 +111,21 @@ jobs:
               }
             }
 
-          # Read-only tools for review (no writes)
+          # Tools for PR review with inline comments
+          # Note: Bash tool patterns use space separators, not colons
+          # GitHub MCP tools for pending review workflow (create -> add comments -> submit)
           allowed-tools: |
             View,GlobTool,GrepTool,
-            Bash(gh pr diff:*),
-            Bash(gh pr view:*),
-            Bash(gh pr comment:*),
-            Bash(git log:*),
-            Bash(git diff:*),
-            Bash(git show:*),
+            Bash(gh pr diff *),
+            Bash(gh pr view *),
+            Bash(gh pr comment *),
+            Bash(git log *),
+            Bash(git diff *),
+            Bash(git show *),
+            mcp__github__create_pending_pull_request_review,
+            mcp__github__add_pull_request_review_comment_to_pending_review,
+            mcp__github__submit_pending_pull_request_review,
+            mcp__github__get_pull_request_diff,
             mcp__deepwiki__ask_question
 
           # Progress tracking
