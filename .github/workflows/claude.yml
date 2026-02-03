@@ -19,9 +19,11 @@ on:
   pull_request_review_comment:
     types: [created]
   issues:
-    types: [opened, assigned]
+    types: [opened, assigned, labeled]
   pull_request_review:
     types: [submitted]
+  pull_request:
+    types: [labeled]
 
 env:
   AWS_REGION: ${{ vars.AWS_REGION }}
@@ -36,7 +38,10 @@ jobs:
       (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
       (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
       (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude')) ||
-      (github.event_name == 'issues' && (contains(github.event.issue.body, '@claude')))
+      (github.event_name == 'issues' && github.event.action == 'opened' && contains(github.event.issue.body, '@claude')) ||
+      (github.event_name == 'issues' && github.event.action == 'assigned' && github.event.assignee.login == 'claude') ||
+      (github.event_name == 'issues' && github.event.action == 'labeled' && github.event.label.name == 'claude') ||
+      (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'claude')
 
     runs-on: [Windows, self-hosted, GCP-T4]
     timeout-minutes: 360
@@ -270,5 +275,26 @@ jobs:
           bedrock-base-url: ${{ vars.ANTHROPIC_BEDROCK_BASE_URL }}
           small-fast-model: ${{ vars.ANTHROPIC_SMALL_FAST_MODEL }}
 
-          # Additional tools for deepwiki
-          allowed-tools: "Bash,View,GlobTool,GrepTool,BatchTool,Write,mcp__deepwiki__ask_question"
+          # Tool allowlist with granular Bash permissions for security
+          # - Build commands: cmake, slang-test
+          # - Git operations: git status/diff/log/add/commit/show
+          # - GitHub CLI: gh pr/issue operations
+          # - Slang-specific: slangc for testing compilation
+          allowed-tools: |
+            View,GlobTool,GrepTool,BatchTool,Write,
+            Bash(cmake*),
+            Bash(./build/*slangc*),
+            Bash(./build/*slang-test*),
+            Bash(git status*),
+            Bash(git diff*),
+            Bash(git log*),
+            Bash(git add*),
+            Bash(git commit*),
+            Bash(git show*),
+            Bash(git branch*),
+            Bash(git checkout*),
+            Bash(gh pr *),
+            Bash(gh issue *),
+            Bash(python*extras/split-ir-dump.py*),
+            Bash(python*extras/insttrace.py*),
+            mcp__deepwiki__ask_question

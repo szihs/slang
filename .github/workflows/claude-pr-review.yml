@@ -1,0 +1,137 @@
+name: Claude PR Review
+
+# Automated PR review using Claude Code Action
+# Triggers on new PRs and updates to source/test files
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    paths:
+      - 'source/**'
+      - 'tests/**'
+      - 'prelude/**'
+      - 'include/**'
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  actions: read
+
+jobs:
+  review:
+    name: Automated Code Review
+    # Skip draft PRs and bot-generated PRs
+    if: |
+      github.event.pull_request.draft == false &&
+      !contains(github.event.pull_request.user.login, '[bot]')
+    runs-on: [Windows, self-hosted, GCP-T4]
+    timeout-minutes: 60
+
+    # Cancel previous runs for the same PR
+    concurrency:
+      group: claude-review-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
+
+    steps:
+      # Windows-specific setup: Add bash to PATH
+      - name: Add bash to PATH (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          Add-Content -Path $env:GITHUB_PATH -Value "C:\Program Files\Git\bin"
+          Add-Content -Path $env:GITHUB_PATH -Value "C:\Program Files\Git\usr\bin"
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: false
+
+      - name: Run Claude Code Review
+        uses: ./.github/actions/claude-code-runner
+        with:
+          # Authentication
+          llmgw-id: ${{ secrets.LLMGW_ID }}
+          llmgw-secret: ${{ secrets.LLMGW_SECRET }}
+          llmgw-token-url: ${{ secrets.LLMGW_TOKEN_URL }}
+          github-token-fallback: ${{ secrets.GITHUB_TOKEN }}
+
+          # AUTOMATION MODE - provide explicit prompt for automatic review
+          prompt: |
+            Perform an automated code review on this pull request.
+
+            ## Review Focus Areas (Slang-specific)
+
+            1. **IR Consistency & Type Safety**
+               - Check slang-ir-*.cpp files for proper SSA form
+               - Verify type information preservation through passes
+               - Ensure IR instruction definitions match usage
+
+            2. **Error Handling & Diagnostics**
+               - Proper use of diagnostic macros
+               - Meaningful error messages
+               - No silent failures
+
+            3. **Test Coverage**
+               - New features should have tests under tests/
+               - Tests should use CPU or interpreter for CI without GPU:
+                 - `//TEST:COMPARE_COMPUTE(filecheck-buffer=CHECK):-cpu`
+                 - `//TEST:INTERPRET(filecheck=CHECK):`
+
+            4. **Slang CLI Conventions**
+               - Single-dash options: `-help` not `--help`
+               - `-target`, `-stage`, `-dump-ir`, etc.
+
+            5. **Memory Safety**
+               - Check for use-after-free in RefPtr/ComPtr usage
+               - Verify proper ownership semantics
+
+            ## Review Output
+            - Post inline comments for specific issues
+            - Provide a top-level summary of observations
+            - Be constructive and educational
+
+          # Custom instructions for Slang context
+          custom-instructions: |
+            You are reviewing Slang compiler code. Key context:
+            - Slang is a shading language compiler targeting SPIRV, HLSL, Metal, CUDA
+            - Uses custom SSA-based IR (not LLVM)
+            - IR instructions defined in slang-ir-insts.lua
+            - Generated files in build/source/slang/fiddle/
+
+            Use deepwiki for architectural insights about the codebase.
+
+          # MCP configuration for deepwiki
+          mcp-config: |
+            {
+              "mcpServers": {
+                "deepwiki": {
+                  "type": "sse",
+                  "url": "https://mcp.deepwiki.com/sse"
+                }
+              }
+            }
+
+          # Read-only tools for review (no writes)
+          allowed-tools: |
+            View,GlobTool,GrepTool,
+            Bash(gh pr diff:*),
+            Bash(gh pr view:*),
+            Bash(gh pr comment:*),
+            Bash(git log:*),
+            Bash(git diff:*),
+            Bash(git show:*),
+            mcp__deepwiki__ask_question
+
+          # Progress tracking
+          track-progress: 'true'
+          include-fix-links: 'true'
+
+          # Model configuration
+          model: ${{ vars.ANTHROPIC_MODEL || 'claude-sonnet-4-20250514' }}
+          max-turns: '100'
+
+          # Bedrock configuration
+          aws-region: ${{ vars.AWS_REGION }}
+          bedrock-base-url: ${{ vars.ANTHROPIC_BEDROCK_BASE_URL }}

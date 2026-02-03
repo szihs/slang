@@ -18,9 +18,9 @@ inputs:
 
   # Claude configuration
   model:
-    description: "Anthropic model to use"
+    description: "Anthropic model to use (claude-sonnet-4-20250514, claude-opus-4-5-20251101, etc.)"
     required: false
-    default: "claude-3-5-sonnet-20241022"
+    default: "claude-sonnet-4-20250514"
   max-turns:
     description: "Maximum number of turns for Claude"
     required: false
@@ -66,6 +66,24 @@ inputs:
     description: "Continue if setup commands fail"
     required: false
     default: "false"
+
+  # Progress and UI configuration
+  track-progress:
+    description: "Enable progress tracking comment showing Claude's work in real-time"
+    required: false
+    default: "true"
+  include-fix-links:
+    description: "Add 'Fix this' links in review comments for quick fixes"
+    required: false
+    default: "true"
+  use-sticky-comment:
+    description: "Use a single comment that gets updated (vs multiple comments)"
+    required: false
+    default: "true"
+  branch-prefix:
+    description: "Prefix for branches created by Claude"
+    required: false
+    default: "claude/"
 
   # AWS/Bedrock configuration
   use-bedrock:
@@ -315,6 +333,13 @@ runs:
         prompt: ${{ inputs.prompt }}
         # Path to pre-installed Claude Code executable (for Windows)
         path_to_claude_code_executable: ${{ inputs.claude-code-executable-path }}
+        # Progress and UI settings (v1 features)
+        track_progress: ${{ inputs.track-progress }}
+        include_fix_links: ${{ inputs.include-fix-links }}
+        use_sticky_comment: ${{ inputs.use-sticky-comment }}
+        branch_prefix: ${{ inputs.branch-prefix }}
+        # Request additional permissions for CI log access
+        additional_permissions: "actions: read"
         # Consolidated CLI arguments for v1
         claude_args: |
           --system-prompt "${{ inputs.custom-instructions }}"

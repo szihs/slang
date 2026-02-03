@@ -1,0 +1,173 @@
+name: Claude CI Fix
+
+# Automatically analyze and attempt to fix CI failures
+# Triggers when the main CI workflow fails on a PR
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  actions: read
+
+jobs:
+  analyze-failure:
+    name: Analyze CI Failure
+    # Only run on failed CI for pull requests
+    if: |
+      github.event.workflow_run.conclusion == 'failure' &&
+      github.event.workflow_run.event == 'pull_request'
+    runs-on: [Windows, self-hosted, GCP-T4]
+    timeout-minutes: 60
+
+    concurrency:
+      group: claude-fix-ci-${{ github.event.workflow_run.head_branch }}
+      cancel-in-progress: true
+
+    steps:
+      # Windows-specific setup
+      - name: Add bash to PATH (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          Add-Content -Path $env:GITHUB_PATH -Value "C:\Program Files\Git\bin"
+          Add-Content -Path $env:GITHUB_PATH -Value "C:\Program Files\Git\usr\bin"
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
+          fetch-depth: 0
+          submodules: false
+
+      - name: Checkout submodules
+        run: git submodule update --init --recursive --depth=1
+
+      # Get PR number from the workflow run
+      - name: Get PR Information
+        id: pr-info
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Find the PR associated with this workflow run
+          PR_NUMBER=$(curl -s -H "Authorization: token ${GITHUB_TOKEN}" \
+            "https://api.github.com/repos/${{ github.repository }}/pulls?head=${{ github.repository_owner }}:${{ github.event.workflow_run.head_branch }}&state=open" \
+            | grep -o '"number":[0-9]*' | head -1 | sed 's/"number"://')
+
+          if [ -n "$PR_NUMBER" ]; then
+            echo "pr-number=$PR_NUMBER" >> $GITHUB_OUTPUT
+            echo "Found PR #$PR_NUMBER"
+          else
+            echo "No open PR found for branch ${{ github.event.workflow_run.head_branch }}"
+            echo "pr-number=" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run Claude CI Analysis
+        if: steps.pr-info.outputs.pr-number != ''
+        uses: ./.github/actions/claude-code-runner
+        with:
+          # Authentication
+          llmgw-id: ${{ secrets.LLMGW_ID }}
+          llmgw-secret: ${{ secrets.LLMGW_SECRET }}
+          llmgw-token-url: ${{ secrets.LLMGW_TOKEN_URL }}
+          github-token-fallback: ${{ secrets.GITHUB_TOKEN }}
+
+          # AUTOMATION MODE - analyze CI failure
+          prompt: |
+            The CI workflow has failed for PR #${{ steps.pr-info.outputs.pr-number }}.
+
+            ## Your Task
+
+            1. **Analyze the Failure**
+               - Check the workflow run logs at: https://github.com/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }}
+               - Identify the specific job and step that failed
+               - Determine the root cause
+
+            2. **Classify the Failure**
+               - **Build Error**: Compilation failure in C++ code
+               - **Test Failure**: Failed test case
+               - **Formatting**: Code style issues
+               - **Flaky Test**: Intermittent failure
+               - **Infrastructure**: CI environment issue
+
+            3. **Attempt a Fix** (if appropriate)
+               - For build/test errors: Create a fix and commit to a new branch
+               - For formatting: Run `./extras/formatting.sh` and commit
+               - For flaky tests: Document the issue in a comment
+               - For infrastructure: Comment explaining the issue
+
+            4. **Report Results**
+               - Comment on PR #${{ steps.pr-info.outputs.pr-number }} with your analysis
+               - If you created a fix, link to the new branch
+
+            ## Important Notes
+            - Do NOT force push or modify the PR branch directly
+            - Create a new branch with prefix `claude/fix-ci-` for any fixes
+            - Be clear about what you found and what actions you took
+
+          # Custom instructions
+          custom-instructions: |
+            You are analyzing a CI failure for the Slang compiler.
+
+            Common failure patterns:
+            - SPIRV validation errors: Check slang-emit-spirv.cpp
+            - Test mismatches: Compare expected vs actual output
+            - Build errors: Check for missing includes or type errors
+
+            Use the GitHub Actions API to read workflow logs.
+            Failed run ID: ${{ github.event.workflow_run.id }}
+
+          # MCP configuration
+          mcp-config: |
+            {
+              "mcpServers": {
+                "deepwiki": {
+                  "type": "sse",
+                  "url": "https://mcp.deepwiki.com/sse"
+                }
+              }
+            }
+
+          # Tool allowlist - includes git operations for fixes
+          allowed-tools: |
+            View,GlobTool,GrepTool,BatchTool,Write,
+            Bash(cmake*),
+            Bash(./build/*slangc*),
+            Bash(./build/*slang-test*),
+            Bash(./extras/formatting.sh*),
+            Bash(git status*),
+            Bash(git diff*),
+            Bash(git log*),
+            Bash(git add*),
+            Bash(git commit*),
+            Bash(git show*),
+            Bash(git branch*),
+            Bash(git checkout*),
+            Bash(git push*),
+            Bash(gh pr comment*),
+            Bash(gh run view*),
+            Bash(gh api*),
+            mcp__deepwiki__ask_question
+
+          # Configuration
+          track-progress: 'true'
+          model: ${{ vars.ANTHROPIC_MODEL || 'claude-sonnet-4-20250514' }}
+          max-turns: '150'
+          branch-prefix: 'claude/fix-ci-'
+
+          # Setup commands - build first
+          setup-commands: |
+            set -euo pipefail
+            echo "Building project for CI fix analysis..."
+            cmake.exe --preset vs2022 --fresh
+            cmake.exe --build --preset release
+            echo "Build completed"
+
+          # Bedrock configuration
+          aws-region: ${{ vars.AWS_REGION }}
+          bedrock-base-url: ${{ vars.ANTHROPIC_BEDROCK_BASE_URL }}
