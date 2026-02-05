@@ -80,7 +80,6 @@ void processNonUniformResourceIndex(
                     }
                     break;
                 case kIROp_GetElement:
-                    // Ignore when `NonUniformResourceIndex` is not on base
                     if (user->getOperand(0) == inst)
                     {
                         // Replace getElement(nonuniformRes(obj), i), into
@@ -89,6 +88,17 @@ void processNonUniformResourceIndex(
                             user->getFullType(),
                             inst->getOperand(0),
                             user->getOperand(1));
+                    }
+                    else if (
+                        floatMode == NonUniformResourceIndexFloatMode::SPIRV &&
+                        user->getOperand(1) == inst)
+                    {
+                        // Replace getElement(obj, nonUniformRes(i)), into
+                        // nonUniformRes(getElement(obj, i))
+                        newUser = builder.emitElementExtract(
+                            user->getFullType(),
+                            user->getOperand(0),
+                            inst->getOperand(0));
                     }
                     break;
                 case kIROp_Swizzle:
@@ -118,6 +128,18 @@ void processNonUniformResourceIndex(
                     // Replace load(nonUniformRes(x)), into nonUniformRes(load(x))
                     newUser = builder.emitLoad(user->getFullType(), inst->getOperand(0));
                     break;
+                case kIROp_CastDynamicResource:
+                    {
+                        // Replace castDynamicResource(nonUniformRes(x)), into
+                        // nonUniformRes(castDynamicResource(x))
+                        auto operand = inst->getOperand(0);
+                        newUser = builder.emitIntrinsicInst(
+                            user->getFullType(),
+                            kIROp_CastDynamicResource,
+                            1,
+                            &operand);
+                    }
+                    break;
                 default:
                     // Ignore for all other unknown insts.
                     break;
@@ -140,6 +162,7 @@ void processNonUniformResourceIndex(
                 case kIROp_Load:
                 case kIROp_NonUniformResourceIndex:
                 case kIROp_CastDescriptorHandleToUInt2:
+                case kIROp_CastDynamicResource:
                 case kIROp_GetElement:
                 case kIROp_Swizzle:
                     resWorkList.add(nonuniformUser);
