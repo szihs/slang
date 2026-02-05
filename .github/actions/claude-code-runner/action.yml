@@ -365,7 +365,8 @@ runs:
       id: determine-model
       shell: bash
       run: |
-        AUTH_PROVIDER="${{ inputs.auth-provider }}"
+        # Read from inputs or env vars (same as other steps)
+        AUTH_PROVIDER="${{ inputs.auth-provider || env.CLAUDE_AUTH_PROVIDER }}"
 
         if [ "$AUTH_PROVIDER" = "nv-inference" ]; then
           # Use NV Inference Portal model format (aws/anthropic/...)
