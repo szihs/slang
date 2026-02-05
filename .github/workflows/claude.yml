@@ -285,8 +285,6 @@ jobs:
             Bash(gh issue *),
             Bash(python*extras/split-ir-dump.py*),
             Bash(python*extras/insttrace.py*),
-            mcp__github__create_pending_pull_request_review,
-            mcp__github__add_pull_request_review_comment_to_pending_review,
-            mcp__github__submit_pending_pull_request_review,
+            mcp__github_inline_comment__create_inline_comment,
             mcp__github__get_pull_request_diff,
             mcp__deepwiki__ask_question
