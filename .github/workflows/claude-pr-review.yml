@@ -49,7 +49,7 @@ jobs:
       - name: PR Review with Progress Tracking
         uses: ./.github/actions/claude-code-runner
         with:
-          # Review prompt (reference pattern)
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           prompt: |
             REPO: ${{ github.repository }}
             PR NUMBER: ${{ github.event.pull_request.number }}

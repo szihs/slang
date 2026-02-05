@@ -44,6 +44,12 @@ inputs:
     required: false
     default: "aws/anthropic/claude-haiku-4-5-v1"
 
+  # GitHub authentication
+  github-token:
+    description: "GitHub token for API access (uses GITHUB_TOKEN if not provided)"
+    required: false
+    default: ""
+
   # Claude configuration
   model:
     description: "Anthropic model to use (claude-sonnet-4-20250514, claude-opus-4-5-20251101, etc.)"
@@ -385,6 +391,7 @@ runs:
       with:
         # Pass API key via the action's input (not env) - action sets ANTHROPIC_API_KEY internally
         anthropic_api_key: ${{ steps.auth-token.outputs.token }}
+        github_token: ${{ inputs.github-token || github.token }}
         trigger_phrase: ${{ inputs.trigger-phrase }}
         prompt: ${{ inputs.prompt }}
         path_to_claude_code_executable: ${{ inputs.claude-code-executable-path }}
@@ -424,6 +431,7 @@ runs:
         ANTHROPIC_BEDROCK_BASE_URL: ${{ inputs.bedrock-base-url }}
         AWS_BEARER_TOKEN_BEDROCK: ${{ steps.auth-token.outputs.token }}
       with:
+        github_token: ${{ inputs.github-token || github.token }}
         use_bedrock: "true"
         trigger_phrase: ${{ inputs.trigger-phrase }}
         prompt: ${{ inputs.prompt }}

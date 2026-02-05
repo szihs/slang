@@ -209,8 +209,7 @@ jobs:
         id: claude
         uses: ./.github/actions/claude-code-runner
         with:
-          # Auth from env vars (set at job level)
-          # Direct prompt for workflow_dispatch testing
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           prompt: ${{ github.event.inputs.prompt || '' }}
 
           # Path to pre-installed Claude Code executable (Windows only)
