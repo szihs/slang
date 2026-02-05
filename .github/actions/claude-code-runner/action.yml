@@ -173,12 +173,12 @@ runs:
       run: |
         set -euo pipefail
 
-        # Read from inputs or env vars
-        AUTH_PROVIDER="${{ inputs.auth-provider || env.CLAUDE_AUTH_PROVIDER }}"
-        LLMGW_ID="${{ inputs.llmgw-id || env.LLMGW_ID }}"
-        LLMGW_SECRET="${{ inputs.llmgw-secret || env.LLMGW_SECRET }}"
-        LLMGW_TOKEN_URL="${{ inputs.llmgw-token-url || env.LLMGW_TOKEN_URL }}"
-        NV_TOKEN="${{ inputs.nv-inference-token || env.NV_INFERENCE_TOKEN }}"
+        # Read from shell env vars (inherited from job-level env)
+        AUTH_PROVIDER="${CLAUDE_AUTH_PROVIDER:-llmgw}"
+        LLMGW_ID="${LLMGW_ID}"
+        LLMGW_SECRET="${LLMGW_SECRET}"
+        LLMGW_TOKEN_URL="${LLMGW_TOKEN_URL}"
+        NV_TOKEN="${NV_INFERENCE_TOKEN}"
 
         echo "🔍 Validating auth provider: $AUTH_PROVIDER"
 
@@ -207,8 +207,8 @@ runs:
       run: |
         set -euo pipefail
 
-        # Read from inputs or env vars
-        AUTH_PROVIDER="${{ inputs.auth-provider || env.CLAUDE_AUTH_PROVIDER }}"
+        # Read from shell env vars (inherited from job-level env)
+        AUTH_PROVIDER="${CLAUDE_AUTH_PROVIDER:-llmgw}"
         echo "🔐 Configuring authentication for: $AUTH_PROVIDER"
 
         if [ "$AUTH_PROVIDER" = "nv-inference" ]; then
@@ -217,7 +217,7 @@ runs:
           #############################################
           echo "Using NVIDIA Inference Portal"
 
-          ANTHROPIC_AUTH_TOKEN="${{ inputs.nv-inference-token || env.NV_INFERENCE_TOKEN }}"
+          ANTHROPIC_AUTH_TOKEN="${NV_INFERENCE_TOKEN}"
 
           # CRITICAL: Mask the token BEFORE any output
           echo "::add-mask::$ANTHROPIC_AUTH_TOKEN"
@@ -246,10 +246,10 @@ runs:
           #############################################
           echo "Using LLM Gateway (OAuth)"
 
-          # Read credentials from inputs or env vars
-          LLMGW_ID="${{ inputs.llmgw-id || env.LLMGW_ID }}"
-          LLMGW_SECRET="${{ inputs.llmgw-secret || env.LLMGW_SECRET }}"
-          LLMGW_TOKEN_URL="${{ inputs.llmgw-token-url || env.LLMGW_TOKEN_URL }}"
+          # Read credentials from shell env vars
+          LLMGW_ID="${LLMGW_ID}"
+          LLMGW_SECRET="${LLMGW_SECRET}"
+          LLMGW_TOKEN_URL="${LLMGW_TOKEN_URL}"
 
           TEMP_DIR="${RUNNER_TEMP:-/tmp}"
           TOKEN_FILE="$TEMP_DIR/token_response.json"
@@ -365,8 +365,8 @@ runs:
       id: determine-model
       shell: bash
       run: |
-        # Read from inputs or env vars (same as other steps)
-        AUTH_PROVIDER="${{ inputs.auth-provider || env.CLAUDE_AUTH_PROVIDER }}"
+        # Read from shell env vars (inherited from job-level env)
+        AUTH_PROVIDER="${CLAUDE_AUTH_PROVIDER:-llmgw}"
 
         if [ "$AUTH_PROVIDER" = "nv-inference" ]; then
           # Use NV Inference Portal model format (aws/anthropic/...)
@@ -478,7 +478,7 @@ runs:
       if: always()
       shell: bash
       run: |
-        AUTH_PROVIDER="${{ inputs.auth-provider || env.CLAUDE_AUTH_PROVIDER }}"
+        AUTH_PROVIDER="${CLAUDE_AUTH_PROVIDER:-llmgw}"
 
         echo "### Authentication" >> $GITHUB_STEP_SUMMARY
         echo "**Auth Provider**: $AUTH_PROVIDER" >> $GITHUB_STEP_SUMMARY
