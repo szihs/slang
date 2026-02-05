@@ -19,9 +19,11 @@ on:
   pull_request_review_comment:
     types: [created]
   issues:
-    types: [opened, assigned]
+    types: [opened, assigned, labeled]
   pull_request_review:
     types: [submitted]
+  pull_request:
+    types: [labeled]
 
 env:
   AWS_REGION: ${{ vars.AWS_REGION }}
@@ -31,15 +33,18 @@ env:
 jobs:
   claude:
     name: Claude Code Assistant
+    # Intelligent mode detection: The action auto-detects @claude mentions.
+    # We only need explicit conditions for non-standard triggers (workflow_dispatch, labels, assignee).
     if: |
       github.event_name == 'workflow_dispatch' ||
-      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
-      (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
-      (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude')) ||
-      (github.event_name == 'issues' && (contains(github.event.issue.body, '@claude')))
+      (github.event_name == 'issues' && github.event.action == 'assigned' && github.event.assignee.login == 'claude') ||
+      (github.event_name == 'issues' && github.event.action == 'labeled' && github.event.label.name == 'claude') ||
+      (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'claude') ||
+      contains(github.event.comment.body || github.event.review.body || github.event.issue.body || '', '@claude')
 
-    runs-on: [Windows, self-hosted, GCP-T4]
-    timeout-minutes: 360
+    # TODO: Change back to [Windows, self-hosted, GCP-T4] once fork runner permissions are configured
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
 
     # Cancel previous runs on new pushes
     concurrency:
@@ -198,10 +203,12 @@ jobs:
         id: claude
         uses: ./.github/actions/claude-code-runner
         with:
-          # Authentication (these secrets must be configured in your repository)
+          # Auth - provider selected via CLAUDE_AUTH_PROVIDER var (default: llmgw)
+          auth-provider: ${{ vars.CLAUDE_AUTH_PROVIDER || 'llmgw' }}
           llmgw-id: ${{ secrets.LLMGW_ID }}
           llmgw-secret: ${{ secrets.LLMGW_SECRET }}
           llmgw-token-url: ${{ secrets.LLMGW_TOKEN_URL }}
+          nv-inference-token: ${{ secrets.NV_INFERENCE_TOKEN }}
           github-token-fallback: ${{ secrets.GITHUB_TOKEN }}
 
           # Direct prompt for workflow_dispatch testing
@@ -210,48 +217,34 @@ jobs:
           # Path to pre-installed Claude Code executable (Windows only)
           claude-code-executable-path: ${{ steps.install-claude.outputs.claude-exe-path || '' }}
 
-          # Repository-specific setup (Windows)
+          # Repository-specific setup (Linux - no build, read-only analysis)
+          # TODO: Restore Windows build commands when switching back to self-hosted runners
           setup-commands: |
             set -euo pipefail
-            echo "🏗️ Setting up Windows environment..."
-
-            # Windows self-hosted runners have pre-installed:
-            # - Visual Studio 2022
-            # - CUDA toolkit
-            # - Vulkan SDK
-            # - NVIDIA GPU drivers
-
-            # Configure and build the project (use cmake.exe for Windows)
-            cmake.exe --preset vs2022 --fresh
-            cmake.exe --build --preset release
-
-            echo "✅ Environment setup completed"
+            echo "🏗️ Setting up Linux environment..."
+            echo "Note: Running on ubuntu-latest without GPU. Build/test commands disabled."
+            echo "✅ Environment setup completed (read-only mode)"
 
           # Custom instructions for Slang
           custom-instructions: |
-            ### **Build System Information:**
-            - OS: Windows Server 2022 (self-hosted runner with NVIDIA T4 GPU)
-            - GPU: NVIDIA T4 available for GPU tests (D3D12, Vulkan)
-            - Build commands: Configure `cmake.exe --preset vs2022`, Build `cmake.exe --build --preset release`
-            - Test: `./build/Release/bin/slang-test.exe tests/path/to/test.slang`
-            - GPU tests: Can use `-api dx12` or `-api vk` flags for GPU-specific tests
-            - Project is pre-built and ready for development tasks
+            ### **Environment Information:**
+            - OS: Ubuntu (GitHub-hosted runner, no GPU)
+            - Mode: Read-only analysis (build/test disabled)
+            - NOTE: Build and GPU tests not available on this runner
 
-            ### **IMPORTANT: Windows-Specific Notes**
-            - Always use `cmake.exe` (not `cmake`) to ensure proper execution
-            - Use forward slashes in paths for bash scripts, backslashes for PowerShell
-            - The runner has Visual Studio 2022, CUDA toolkit, and Vulkan SDK pre-installed
+            ### **Repository Knowledge**
+            Use `mcp__deepwiki__ask_question` with repoName "shader-slang/slang" for architectural insights.
 
-            ### **IMPORTANT: Deep Repository Knowledge & Debugging**
-            **Repository Knowledge Tool**: Use `mcp__deepwiki__ask_question` with repoName "shader-slang/slang" for architectural insights and implementation patterns.
+            ### **What You Can Do:**
+            - Code review and analysis
+            - Read files, search patterns, check git history
+            - Suggest fixes and improvements
+            - Answer questions about the codebase
 
-            **Implementation Guidelines:**
-            - Use git history (`git log -S "keyword"`) to find related features but don't spend excessive time
-            - Use deepwiki for expert insights and architectural patterns
-            - Think carefully about the user's request before implementing
-
-            ### **Test-Driven Development - Strongly Encouraged**
-            Write failing tests in `tests/` directory, implement fixes and verify both tests and builds succeed before submitting.
+            ### **What's NOT Available:**
+            - Building the project (no Visual Studio)
+            - Running tests (no GPU)
+            - Compiling shaders
 
           # MCP configuration for deepwiki
           mcp-config: |
@@ -270,5 +263,31 @@ jobs:
           bedrock-base-url: ${{ vars.ANTHROPIC_BEDROCK_BASE_URL }}
           small-fast-model: ${{ vars.ANTHROPIC_SMALL_FAST_MODEL }}
 
-          # Additional tools for deepwiki
-          allowed-tools: "Bash,View,GlobTool,GrepTool,BatchTool,Write,mcp__deepwiki__ask_question"
+          # Tool allowlist with granular Bash permissions for security
+          # - Build commands: cmake, slang-test
+          # - Git operations: git status/diff/log/add/commit/show
+          # - GitHub CLI: gh pr/issue operations
+          # - Slang-specific: slangc for testing compilation
+          # - GitHub MCP: PR review tools (create -> add comments -> submit)
+          allowed-tools: |
+            View,GlobTool,GrepTool,BatchTool,Write,
+            Bash(cmake*),
+            Bash(./build/*slangc*),
+            Bash(./build/*slang-test*),
+            Bash(git status*),
+            Bash(git diff*),
+            Bash(git log*),
+            Bash(git add*),
+            Bash(git commit*),
+            Bash(git show*),
+            Bash(git branch*),
+            Bash(git checkout*),
+            Bash(gh pr *),
+            Bash(gh issue *),
+            Bash(python*extras/split-ir-dump.py*),
+            Bash(python*extras/insttrace.py*),
+            mcp__github__create_pending_pull_request_review,
+            mcp__github__add_pull_request_review_comment_to_pending_review,
+            mcp__github__submit_pending_pull_request_review,
+            mcp__github__get_pull_request_diff,
+            mcp__deepwiki__ask_question

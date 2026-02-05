@@ -1,0 +1,74 @@
+name: Claude PR Review
+
+# Automated PR review - simplified pattern matching reference example
+# See: claude-code-action/examples/pr-review-comprehensive.yml
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review, reopened]
+    paths:
+      - 'source/**'
+      - 'tests/**'
+      - 'prelude/**'
+      - 'include/**'
+
+permissions:
+  contents: read
+  pull-requests: write
+  id-token: write
+
+jobs:
+  review:
+    # Skip draft PRs, bot PRs, and Claude's own branches (loop prevention)
+    if: |
+      github.event.pull_request.draft == false &&
+      !contains(github.event.pull_request.user.login, '[bot]') &&
+      !startsWith(github.event.pull_request.head.ref, 'claude/')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    concurrency:
+      group: claude-review-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: PR Review with Progress Tracking
+        uses: ./.github/actions/claude-code-runner
+        with:
+          # Auth - provider selected via CLAUDE_AUTH_PROVIDER var
+          auth-provider: ${{ vars.CLAUDE_AUTH_PROVIDER || 'llmgw' }}
+          llmgw-id: ${{ secrets.LLMGW_ID }}
+          llmgw-secret: ${{ secrets.LLMGW_SECRET }}
+          llmgw-token-url: ${{ secrets.LLMGW_TOKEN_URL }}
+          nv-inference-token: ${{ secrets.NV_INFERENCE_TOKEN }}
+          github-token-fallback: ${{ secrets.GITHUB_TOKEN }}
+
+          # Review prompt (reference pattern)
+          prompt: |
+            REPO: ${{ github.repository }}
+            PR NUMBER: ${{ github.event.pull_request.number }}
+
+            Perform a comprehensive code review focusing on:
+            1. Code quality and best practices
+            2. Potential bugs or security issues
+            3. Performance considerations
+            4. Test coverage
+
+            Provide detailed feedback using inline comments for specific issues.
+            Use top-level comments for general observations.
+
+          # Tools for PR review
+          allowed-tools: |
+            View,GlobTool,GrepTool,
+            Bash(gh pr diff *),
+            Bash(gh pr view *),
+            Bash(gh pr comment *),
+            mcp__github__create_pending_pull_request_review,
+            mcp__github__add_pull_request_review_comment_to_pending_review,
+            mcp__github__submit_pending_pull_request_review,
+            mcp__github__get_pull_request_diff
