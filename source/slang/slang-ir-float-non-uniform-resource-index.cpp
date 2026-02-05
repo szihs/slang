@@ -80,7 +80,7 @@ void processNonUniformResourceIndex(
                     }
                     break;
                 case kIROp_GetElement:
-                    // Ignore when `NonUniformResourceIndex` is not on base
+                    // Handle when `NonUniformResourceIndex` is on the base
                     if (user->getOperand(0) == inst)
                     {
                         // Replace getElement(nonuniformRes(obj), i), into
@@ -89,6 +89,18 @@ void processNonUniformResourceIndex(
                             user->getFullType(),
                             inst->getOperand(0),
                             user->getOperand(1));
+                    }
+                    // Handle when `NonUniformResourceIndex` is on the index (for SPIRV)
+                    else if (
+                        floatMode == NonUniformResourceIndexFloatMode::SPIRV &&
+                        user->getOperand(1) == inst)
+                    {
+                        // Replace getElement(obj, nonUniformRes(x)), into
+                        // nonUniformRes(getElement(obj, x))
+                        newUser = builder.emitElementExtract(
+                            user->getFullType(),
+                            user->getOperand(0),
+                            inst->getOperand(0));
                     }
                     break;
                 case kIROp_Swizzle:
