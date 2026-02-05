@@ -2,32 +2,33 @@ name: "Claude Code Runner"
 description: "Complete Claude Code execution with authentication, setup, execution, and results handling"
 inputs:
   # Authentication provider selection
+  # Can be set via input or CLAUDE_AUTH_PROVIDER env var
   auth-provider:
     description: "Authentication provider: 'llmgw' (LLM Gateway) or 'nv-inference' (NVIDIA Inference Portal)"
     required: false
     default: "llmgw"
 
-  # LLM Gateway authentication inputs (used when auth-provider=llmgw)
+  # LLM Gateway authentication (can use LLMGW_ID, LLMGW_SECRET, LLMGW_TOKEN_URL env vars)
   llmgw-id:
-    description: "LLMGW ID for token generation (required for auth-provider=llmgw)"
+    description: "LLMGW ID for token generation"
     required: false
     default: ""
   llmgw-secret:
-    description: "LLMGW secret for token generation (required for auth-provider=llmgw)"
+    description: "LLMGW secret for token generation"
     required: false
     default: ""
   llmgw-token-url:
-    description: "LLMGW token URL for authentication (required for auth-provider=llmgw)"
+    description: "LLMGW token URL for authentication"
     required: false
     default: ""
 
-  # NVIDIA Inference Portal authentication inputs (used when auth-provider=nv-inference)
+  # NVIDIA Inference Portal authentication (can use NV_INFERENCE_TOKEN env var)
   nv-inference-url:
-    description: "NVIDIA Inference Portal base URL (required for auth-provider=nv-inference)"
+    description: "NVIDIA Inference Portal base URL"
     required: false
     default: "https://inference-api.nvidia.com"
   nv-inference-token:
-    description: "NVIDIA Inference Portal API token (required for auth-provider=nv-inference)"
+    description: "NVIDIA Inference Portal API token"
     required: false
     default: ""
   nv-inference-opus-model:
@@ -42,12 +43,6 @@ inputs:
     description: "Haiku model name for NV Inference Portal"
     required: false
     default: "aws/anthropic/claude-haiku-4-5-v1"
-
-  # Common authentication
-  github-token-fallback:
-    description: "Fallback GitHub token if App token fails"
-    required: false
-    default: ""
 
   # Claude configuration
   model:
@@ -143,9 +138,6 @@ outputs:
   auth-provider:
     description: "Authentication provider used (llmgw or nv-inference)"
     value: ${{ steps.auth-token.outputs.auth-provider }}
-  github-token:
-    description: "GitHub token for API access"
-    value: ${{ steps.auth-config.outputs.github-token }}
   token-expires:
     description: "Token expiration time (if available, LLMGW only)"
     value: ${{ steps.auth-token.outputs.token-expires }}
@@ -175,29 +167,32 @@ runs:
       run: |
         set -euo pipefail
 
-        AUTH_PROVIDER="${{ inputs.auth-provider }}"
-        echo "🔍 Validating environment for auth provider: $AUTH_PROVIDER"
+        # Read from inputs or env vars
+        AUTH_PROVIDER="${{ inputs.auth-provider || env.CLAUDE_AUTH_PROVIDER }}"
+        LLMGW_ID="${{ inputs.llmgw-id || env.LLMGW_ID }}"
+        LLMGW_SECRET="${{ inputs.llmgw-secret || env.LLMGW_SECRET }}"
+        LLMGW_TOKEN_URL="${{ inputs.llmgw-token-url || env.LLMGW_TOKEN_URL }}"
+        NV_TOKEN="${{ inputs.nv-inference-token || env.NV_INFERENCE_TOKEN }}"
+
+        echo "🔍 Validating auth provider: $AUTH_PROVIDER"
 
         if [ "$AUTH_PROVIDER" = "llmgw" ]; then
-          # Check LLMGW required secrets
-          if [ -z "${{ inputs.llmgw-id }}" ] || [ -z "${{ inputs.llmgw-secret }}" ] || [ -z "${{ inputs.llmgw-token-url }}" ]; then
-            echo "::error::Missing required secrets for LLMGW: llmgw-id, llmgw-secret, or llmgw-token-url"
+          if [ -z "$LLMGW_ID" ] || [ -z "$LLMGW_SECRET" ] || [ -z "$LLMGW_TOKEN_URL" ]; then
+            echo "::error::Missing LLMGW credentials (set via inputs or env vars)"
             exit 1
           fi
-          # Check required tools (curl only - jq replaced with portable parsing)
-          command -v curl >/dev/null 2>&1 || { echo "::error::curl is required but not installed"; exit 1; }
+          command -v curl >/dev/null 2>&1 || { echo "::error::curl required"; exit 1; }
         elif [ "$AUTH_PROVIDER" = "nv-inference" ]; then
-          # Check NV Inference Portal required secrets
-          if [ -z "${{ inputs.nv-inference-token }}" ]; then
-            echo "::error::Missing required secret for NV Inference Portal: nv-inference-token"
+          if [ -z "$NV_TOKEN" ]; then
+            echo "::error::Missing NV_INFERENCE_TOKEN (set via input or env var)"
             exit 1
           fi
         else
-          echo "::error::Unknown auth-provider: $AUTH_PROVIDER. Must be 'llmgw' or 'nv-inference'"
+          echo "::error::Unknown auth-provider: $AUTH_PROVIDER"
           exit 1
         fi
 
-        echo "✅ Environment validation passed for $AUTH_PROVIDER"
+        echo "✅ Validation passed"
 
     # Generate/configure auth token based on provider
     - name: Configure Auth Token
@@ -206,16 +201,17 @@ runs:
       run: |
         set -euo pipefail
 
-        AUTH_PROVIDER="${{ inputs.auth-provider }}"
-        echo "🔐 Configuring authentication for provider: $AUTH_PROVIDER"
+        # Read from inputs or env vars
+        AUTH_PROVIDER="${{ inputs.auth-provider || env.CLAUDE_AUTH_PROVIDER }}"
+        echo "🔐 Configuring authentication for: $AUTH_PROVIDER"
 
         if [ "$AUTH_PROVIDER" = "nv-inference" ]; then
           #############################################
           # NV Inference Portal - Direct token usage
           #############################################
-          echo "Using NVIDIA Inference Portal authentication (direct token)"
+          echo "Using NVIDIA Inference Portal"
 
-          ANTHROPIC_AUTH_TOKEN="${{ inputs.nv-inference-token }}"
+          ANTHROPIC_AUTH_TOKEN="${{ inputs.nv-inference-token || env.NV_INFERENCE_TOKEN }}"
 
           # CRITICAL: Mask the token BEFORE any output
           echo "::add-mask::$ANTHROPIC_AUTH_TOKEN"
@@ -242,9 +238,13 @@ runs:
           #############################################
           # LLM Gateway - OAuth token generation
           #############################################
-          echo "Using LLM Gateway authentication (OAuth)"
+          echo "Using LLM Gateway (OAuth)"
 
-          # Use portable temp directory (works on both Linux and Windows)
+          # Read credentials from inputs or env vars
+          LLMGW_ID="${{ inputs.llmgw-id || env.LLMGW_ID }}"
+          LLMGW_SECRET="${{ inputs.llmgw-secret || env.LLMGW_SECRET }}"
+          LLMGW_TOKEN_URL="${{ inputs.llmgw-token-url || env.LLMGW_TOKEN_URL }}"
+
           TEMP_DIR="${RUNNER_TEMP:-/tmp}"
           TOKEN_FILE="$TEMP_DIR/token_response.json"
 
@@ -266,9 +266,9 @@ runs:
             --max-time 30 \
             --retry 3 \
             --retry-delay 2 \
-            --location "${{ inputs.llmgw-token-url }}" \
+            --location "$LLMGW_TOKEN_URL" \
             --header 'Content-Type: application/x-www-form-urlencoded' \
-            --header "Authorization: Basic $(echo -n ${{ inputs.llmgw-id }}:${{ inputs.llmgw-secret }} | base64 | tr -d '\n\r')" \
+            --header "Authorization: Basic $(echo -n $LLMGW_ID:$LLMGW_SECRET | base64 | tr -d '\n\r')" \
             --data-urlencode 'grant_type=client_credentials' \
             --data-urlencode 'scope=awsanthropic-readwrite azureopenai-readwrite' \
             2>/dev/null)
@@ -322,18 +322,6 @@ runs:
           rm -f "$TOKEN_FILE"
         fi
 
-    # Configure GitHub authentication
-    - name: Configure GitHub Authentication
-      id: auth-config
-      shell: bash
-      run: |
-        set -euo pipefail
-
-        # Use the provided GitHub token fallback (GITHUB_TOKEN)
-        # Note: GitHub App token integration can be added later if needed
-        echo "github-token=${{ inputs.github-token-fallback }}" >> $GITHUB_OUTPUT
-        echo "✅ Using GitHub token authentication"
-
     # Run setup commands if provided
     - name: Run setup commands
       id: setup-commands
@@ -365,38 +353,6 @@ runs:
 
         echo "✅ Security cleanup completed"
 
-    # Workflow summary
-    - name: Generate Workflow Summary
-      if: always()
-      shell: bash
-      run: |
-        echo "## Claude Code Runner Summary" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "### Authentication" >> $GITHUB_STEP_SUMMARY
-        echo "- **Auth Provider**: ${{ inputs.auth-provider }}" >> $GITHUB_STEP_SUMMARY
-        echo "- **Auth Token**: ✅ Configured" >> $GITHUB_STEP_SUMMARY
-        if [ "${{ inputs.auth-provider }}" = "nv-inference" ]; then
-          echo "- **Base URL**: ${{ inputs.nv-inference-url }}" >> $GITHUB_STEP_SUMMARY
-        else
-          echo "- **Token Expiry**: ${{ steps.auth-token.outputs.token-expires || 'Not provided' }}" >> $GITHUB_STEP_SUMMARY
-        fi
-        echo "- **GitHub Token**: ✅ Configured" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "### Configuration" >> $GITHUB_STEP_SUMMARY
-        echo "- **Model (input)**: ${{ inputs.model }}" >> $GITHUB_STEP_SUMMARY
-        echo "- **Max Turns**: ${{ inputs.max-turns }}" >> $GITHUB_STEP_SUMMARY
-        echo "- **Timeout**: ${{ inputs.timeout-minutes }} minutes" >> $GITHUB_STEP_SUMMARY
-        if [ "${{ inputs.auth-provider }}" = "llmgw" ]; then
-          echo "- **Bedrock**: ${{ inputs.use-bedrock == 'true' && '✅ Enabled' || '❌ Disabled' }}" >> $GITHUB_STEP_SUMMARY
-          if [ "${{ inputs.use-bedrock }}" = "true" ]; then
-            echo "- **AWS Region**: ${{ inputs.aws-region || 'Default' }}" >> $GITHUB_STEP_SUMMARY
-          fi
-        fi
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "### Setup" >> $GITHUB_STEP_SUMMARY
-        echo "- **Setup Commands**: ${{ inputs.setup-commands != '' && '✅ Executed' || '⏭️ Skipped' }}" >> $GITHUB_STEP_SUMMARY
-        echo "- **Setup Result**: ${{ steps.setup-commands.outcome || 'Skipped' }}" >> $GITHUB_STEP_SUMMARY
-        echo "- **Security Cleanup**: ✅ Completed" >> $GITHUB_STEP_SUMMARY
 
     # Determine model based on auth provider
     - name: Determine Model
@@ -429,7 +385,6 @@ runs:
       with:
         # Pass API key via the action's input (not env) - action sets ANTHROPIC_API_KEY internally
         anthropic_api_key: ${{ steps.auth-token.outputs.token }}
-        github_token: ${{ steps.auth-config.outputs.github-token }}
         trigger_phrase: ${{ inputs.trigger-phrase }}
         prompt: ${{ inputs.prompt }}
         path_to_claude_code_executable: ${{ inputs.claude-code-executable-path }}
@@ -469,7 +424,6 @@ runs:
         ANTHROPIC_BEDROCK_BASE_URL: ${{ inputs.bedrock-base-url }}
         AWS_BEARER_TOKEN_BEDROCK: ${{ steps.auth-token.outputs.token }}
       with:
-        github_token: ${{ steps.auth-config.outputs.github-token }}
         use_bedrock: "true"
         trigger_phrase: ${{ inputs.trigger-phrase }}
         prompt: ${{ inputs.prompt }}
@@ -510,66 +464,26 @@ runs:
           echo "outcome=${{ steps.claude-action-llmgw.outcome }}" >> $GITHUB_OUTPUT
         fi
 
-    # Handle Claude results
-    - name: Handle Claude Results
+    # Minimal execution summary
+    - name: Execution Summary
       if: always()
       shell: bash
       run: |
-        set -euo pipefail
+        AUTH_PROVIDER="${{ inputs.auth-provider || env.CLAUDE_AUTH_PROVIDER }}"
 
-        echo "🔍 Processing Claude action results..."
+        echo "### Authentication" >> $GITHUB_STEP_SUMMARY
+        echo "**Auth Provider**: $AUTH_PROVIDER" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### Execution Status" >> $GITHUB_STEP_SUMMARY
 
-        # Check if Claude action succeeded
         if [ "${{ steps.claude-action.outcome }}" = "success" ]; then
-          echo "✅ Claude Code action completed successfully"
+          echo "**Claude Action**: ✅ Success" >> $GITHUB_STEP_SUMMARY
         elif [ "${{ steps.claude-action.outcome }}" = "failure" ]; then
-          echo "❌ Claude Code action failed"
-
-          # Create error summary
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### ❌ Claude Execution Failed" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "The Claude Code action encountered an error. Common causes:" >> $GITHUB_STEP_SUMMARY
-          echo "- Authentication issues" >> $GITHUB_STEP_SUMMARY
-          echo "- Network connectivity problems" >> $GITHUB_STEP_SUMMARY
-          echo "- Model availability issues" >> $GITHUB_STEP_SUMMARY
-          echo "- Rate limiting" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Please check the workflow logs for detailed error information." >> $GITHUB_STEP_SUMMARY
+          echo "**Claude Action**: ❌ Failed" >> $GITHUB_STEP_SUMMARY
         else
-          echo "⚠️  Claude Code action was cancelled or skipped"
+          echo "**Claude Action**: ⚠️ ${{ steps.claude-action.outcome }}" >> $GITHUB_STEP_SUMMARY
         fi
 
-    # Add execution summary
-    - name: Add Claude Execution Summary
-      if: always()
-      shell: bash
-      run: |
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "### Claude Execution Details" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-
-        # Event information
-        echo "#### Event Information" >> $GITHUB_STEP_SUMMARY
-        echo "- **Trigger**: ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
-        echo "- **Repository**: ${{ github.repository }}" >> $GITHUB_STEP_SUMMARY
-        echo "- **Actor**: @${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-
-        # Execution status
-        echo "#### Execution Status" >> $GITHUB_STEP_SUMMARY
-        if [ "${{ steps.claude-action.outcome }}" = "success" ]; then
-          echo "- **Claude Action**: ✅ Success" >> $GITHUB_STEP_SUMMARY
-        elif [ "${{ steps.claude-action.outcome }}" = "failure" ]; then
-          echo "- **Claude Action**: ❌ Failed" >> $GITHUB_STEP_SUMMARY
-        else
-          echo "- **Claude Action**: ⚠️ ${{ steps.claude-action.outcome }}" >> $GITHUB_STEP_SUMMARY
-        fi
-        echo "- **Model Used**: ${{ steps.determine-model.outputs.model }}" >> $GITHUB_STEP_SUMMARY
-        echo "- **Max Turns**: ${{ inputs.max-turns }}" >> $GITHUB_STEP_SUMMARY
-        echo "- **Workflow Status**: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
-
-        # Add timestamp
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "#### Timestamp" >> $GITHUB_STEP_SUMMARY
-        echo "- **Completed at**: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
+        echo "**Model Used**: ${{ steps.determine-model.outputs.model }}" >> $GITHUB_STEP_SUMMARY
+        echo "**Workflow Status**: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+        echo "**Completed**: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY

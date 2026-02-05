@@ -42,11 +42,17 @@ jobs:
       (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'claude') ||
       contains(github.event.comment.body || github.event.review.body || github.event.issue.body || '', '@claude')
 
-    # TODO: Change back to [Windows, self-hosted, GCP-T4] once fork runner permissions are configured
     runs-on: ubuntu-latest
     timeout-minutes: 120
 
-    # Cancel previous runs on new pushes
+    # Centralized auth configuration via environment variables
+    env:
+      CLAUDE_AUTH_PROVIDER: ${{ vars.CLAUDE_AUTH_PROVIDER || 'llmgw' }}
+      LLMGW_ID: ${{ secrets.LLMGW_ID }}
+      LLMGW_SECRET: ${{ secrets.LLMGW_SECRET }}
+      LLMGW_TOKEN_URL: ${{ secrets.LLMGW_TOKEN_URL }}
+      NV_INFERENCE_TOKEN: ${{ secrets.NV_INFERENCE_TOKEN }}
+
     concurrency:
       group: claude-${{ github.event.issue.number || github.event.pull_request.number || github.run_id }}
       cancel-in-progress: true
@@ -203,14 +209,7 @@ jobs:
         id: claude
         uses: ./.github/actions/claude-code-runner
         with:
-          # Auth - provider selected via CLAUDE_AUTH_PROVIDER var (default: llmgw)
-          auth-provider: ${{ vars.CLAUDE_AUTH_PROVIDER || 'llmgw' }}
-          llmgw-id: ${{ secrets.LLMGW_ID }}
-          llmgw-secret: ${{ secrets.LLMGW_SECRET }}
-          llmgw-token-url: ${{ secrets.LLMGW_TOKEN_URL }}
-          nv-inference-token: ${{ secrets.NV_INFERENCE_TOKEN }}
-          github-token-fallback: ${{ secrets.GITHUB_TOKEN }}
-
+          # Auth from env vars (set at job level)
           # Direct prompt for workflow_dispatch testing
           prompt: ${{ github.event.inputs.prompt || '' }}
 
