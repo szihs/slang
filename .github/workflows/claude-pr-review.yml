@@ -4,6 +4,12 @@ name: Claude PR Review
 # Triggers on PRs to master that touch core source, tests, build, or tools
 
 on:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: "PR number to review"
+        required: true
+        type: number
   pull_request:
     branches: [master]
     types: [opened, synchronize, ready_for_review, reopened]
@@ -24,10 +30,13 @@ permissions:
 jobs:
   review:
     # Skip draft PRs, bot PRs, and Claude's own branches (loop prevention)
+    # workflow_dispatch bypasses these checks (manual trigger = intentional)
     if: |
-      github.event.pull_request.draft == false &&
-      !contains(github.event.pull_request.user.login, '[bot]') &&
-      !startsWith(github.event.pull_request.head.ref, 'claude/')
+      github.event_name == 'workflow_dispatch' || (
+        github.event.pull_request.draft == false &&
+        !contains(github.event.pull_request.user.login, '[bot]') &&
+        !startsWith(github.event.pull_request.head.ref, 'claude/')
+      )
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -40,7 +49,7 @@ jobs:
       NV_INFERENCE_TOKEN: ${{ secrets.NV_INFERENCE_TOKEN }}
 
     concurrency:
-      group: claude-review-${{ github.event.pull_request.number }}
+      group: claude-review-${{ github.event.inputs.pr_number || github.event.pull_request.number }}
       cancel-in-progress: true
 
     steps:
@@ -56,7 +65,7 @@ jobs:
           max-turns: "500"
           prompt: |
             REPO: ${{ github.repository }}
-            PR NUMBER: ${{ github.event.pull_request.number }}
+            PR NUMBER: ${{ github.event.inputs.pr_number || github.event.pull_request.number }}
 
             Review this PR for the Slang shader compiler. Focus on:
             1. IR consistency: ensure IR passes maintain type invariants and don't break SSA form
