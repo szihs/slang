@@ -593,16 +593,16 @@ def SPV_KHR_subgroup_rotate : _spirv_1_3;
 /// [EXT]
 def SPV_NV_ray_tracing_motion_blur : _spirv_1_0;
 
-/// Represents the SPIR-V extension for shader invocation reorder (NVIDIA-specific).
-/// Requires SPV_KHR_ray_tracing.
-/// [EXT]
-def SPV_NV_shader_invocation_reorder : _spirv_1_5 + SPV_KHR_ray_tracing;
-
 /// Represents the SPIR-V extension for shader invocation reorder (cross-vendor standard).
 /// Requires SPV_KHR_ray_tracing and SPIR-V 1.5 (which includes physical storage buffer).
 /// Note: Spec allows SPIR-V 1.4 + physical_storage_buffer extension, but we require 1.5 for simplicity.
 /// [EXT]
 def SPV_EXT_shader_invocation_reorder : _spirv_1_5 + SPV_KHR_ray_tracing;
+
+/// Represents the SPIR-V extension for shader invocation reorder (NVIDIA-specific).
+/// Inherits from EXT variant to ensure NV implies EXT for __target_switch compatibility.
+/// [EXT]
+def SPV_NV_shader_invocation_reorder : SPV_EXT_shader_invocation_reorder;
 
 /// Represents the SPIR-V extension for cluster acceleration structure.
 /// [EXT]
