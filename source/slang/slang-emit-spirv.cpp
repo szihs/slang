@@ -5911,8 +5911,23 @@ struct SPIRVEmitContext : public SourceEmitterBase, public SPIRVEmitSharedContex
             break;
         case kIROp_VulkanHitObjectAttributesDecoration:
             // needed since GLSL will not set optypes accordingly, but will keep the decoration
-            ensureExtensionDeclaration(UnownedStringSlice("SPV_NV_shader_invocation_reorder"));
-            requireSPIRVCapability(SpvCapabilityShaderInvocationReorderNV);
+            // Use EXT if target has spvShaderInvocationReorderEXT capability,
+            // otherwise fall back to NV for backward compatibility
+            {
+                auto targetCaps = m_targetProgram->getTargetReq()->getTargetCaps();
+                if (targetCaps.implies(CapabilityAtom::spvShaderInvocationReorderEXT))
+                {
+                    ensureExtensionDeclaration(
+                        UnownedStringSlice("SPV_EXT_shader_invocation_reorder"));
+                    requireSPIRVCapability(SpvCapabilityShaderInvocationReorderEXT);
+                }
+                else
+                {
+                    ensureExtensionDeclaration(
+                        UnownedStringSlice("SPV_NV_shader_invocation_reorder"));
+                    requireSPIRVCapability(SpvCapabilityShaderInvocationReorderNV);
+                }
+            }
             isRayTracingObject = true;
             break;
         case kIROp_VulkanRayPayloadDecoration:
