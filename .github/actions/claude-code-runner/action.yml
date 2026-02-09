@@ -32,9 +32,9 @@ inputs:
 
   # Claude configuration
   model:
-    description: "Anthropic model to use (claude-sonnet-4-20250514, claude-opus-4-5-20251101, etc.)"
+    description: "Bedrock model ID for LLMGW (e.g. us.anthropic.claude-sonnet-4-5-20250929-v1:0)"
     required: false
-    default: "claude-sonnet-4-20250514"
+    default: "us.anthropic.claude-sonnet-4-5-20250929-v1:0"
   max-turns:
     description: "Maximum number of turns for Claude"
     required: false
@@ -109,13 +109,13 @@ inputs:
     required: false
     default: "us-west-2"
   bedrock-base-url:
-    description: "Anthropic Bedrock base URL"
+    description: "LLMGW Bedrock proxy URL"
     required: false
-    default: ""
+    default: "https://prod.api.nvidia.com/llm/v1/aws"
   small-fast-model:
-    description: "Small fast model for Anthropic"
+    description: "Small fast model for subagents (Bedrock format)"
     required: false
-    default: ""
+    default: "us.anthropic.claude-sonnet-4-5-20250929-v1:0"
 
 outputs:
   claude-outcome:
@@ -384,7 +384,11 @@ runs:
           echo "Using NV Inference model (Opus): $MODEL"
         else
           # Use Bedrock model format (us.anthropic....)
+          # Fall back to default if workflow passes empty string from unset vars
           MODEL="${{ inputs.model }}"
+          if [ -z "$MODEL" ]; then
+            MODEL="us.anthropic.claude-sonnet-4-5-20250929-v1:0"
+          fi
           echo "Using Bedrock model: $MODEL"
         fi
 
@@ -442,7 +446,7 @@ runs:
       uses: anthropics/claude-code-action@v1
       env:
         # Use Bedrock with bearer token auth (not AWS SigV4)
-        ANTHROPIC_BEDROCK_BASE_URL: ${{ inputs.bedrock-base-url }}
+        ANTHROPIC_BEDROCK_BASE_URL: ${{ inputs.bedrock-base-url || 'https://prod.api.nvidia.com/llm/v1/aws' }}
         AWS_BEARER_TOKEN_BEDROCK: ${{ steps.auth-token.outputs.token }}
         AWS_REGION: ${{ inputs.aws-region || 'us-west-2' }}
       with:
@@ -469,7 +473,7 @@ runs:
         settings: |
           {
             "env": {
-              "ANTHROPIC_SMALL_FAST_MODEL": "${{ inputs.small-fast-model }}",
+              "ANTHROPIC_SMALL_FAST_MODEL": "${{ inputs.small-fast-model || 'us.anthropic.claude-sonnet-4-5-20250929-v1:0' }}",
               "AWS_REGION": "${{ inputs.aws-region || 'us-west-2' }}",
               "GITHUB_REPOSITORY": "${{ github.repository }}",
               "GITHUB_EVENT_NAME": "${{ github.event_name }}",

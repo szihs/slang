@@ -46,6 +46,7 @@ jobs:
       LLMGW_SECRET: ${{ secrets.LLMGW_SECRET }}
       LLMGW_TOKEN_URL: ${{ secrets.LLMGW_TOKEN_URL }}
       NV_INFERENCE_TOKEN: ${{ secrets.NV_INFERENCE_TOKEN }}
+      SLANG_CLAUDE_DEBUG_ENV: ${{ vars.SLANG_CLAUDE_DEBUG_ENV || 'false' }}
 
     concurrency:
       group: claude-${{ github.event.issue.number || github.event.pull_request.number || github.run_id }}
@@ -246,7 +247,7 @@ jobs:
               }
             }
 
-          # Advanced configuration (using repository variables)
+          # Advanced configuration (override action defaults via repository variables)
           model: ${{ vars.ANTHROPIC_MODEL }}
           aws-region: ${{ vars.AWS_REGION }}
           bedrock-base-url: ${{ vars.ANTHROPIC_BEDROCK_BASE_URL }}
