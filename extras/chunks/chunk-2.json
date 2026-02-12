@@ -1,0 +1,4206 @@
+{
+  "chunk_index": 2,
+  "total_chunks": 6,
+  "diagnostics": [
+    {
+      "id": 33077,
+      "severity": "Error",
+      "name": "DynInterfaceCannotInheritNonDynInterface",
+      "message": "dyn interface '$0' may only inherit 'dyn' interfaces. '$1' is not a dyn interface.",
+      "line": 939,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 108,
+          "statement": "Diagnostics::DynInterfaceCannotInheritNonDynInterface, decl, inheritedInterfaceDecl);",
+          "context_before": [
+            "",
+            "            auto inheritedInterfaceDecl = inheritedInterfaceDeclRefType.getDecl();",
+            "            if (!inheritedInterfaceDecl->hasModifier<DynModifier>())",
+            "                sink->diagnose(",
+            "                    m,"
+          ],
+          "context_after": [
+            "                    decl,",
+            "                    inheritedInterfaceDecl);",
+            "        }",
+            "    }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 33078,
+      "severity": "Error",
+      "name": "cannotUseExtensionToMakeTypeConformToDynInterface",
+      "message": "cannot use a extension to conform to a dyn interface '$0'.",
+      "line": 944,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 142,
+          "statement": "Diagnostics::cannotUseExtensionToMakeTypeConformToDynInterface, interfaceDecl);",
+          "context_before": [
+            "        if (auto extensionDeclParent = as<ExtensionDecl>(decl->parentDecl))",
+            "        {",
+            "            // not allowed to extend to conform to a 'dyn interface'",
+            "            sink->diagnose(",
+            "                extensionDeclParent,"
+          ],
+          "context_after": [
+            "                interfaceDecl);",
+            "        }",
+            "        else if (visitor->GetOuterGeneric(decl->parentDecl))",
+            "        {",
+            "            sink->diagnose("
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 33079,
+      "severity": "Error",
+      "name": "cannotHaveUnsizedMemberWhenInheritingDynInterface",
+      "message": "cannot have unsized member '$0' when inheriting from dyn interface '$1'.",
+      "line": 949,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 177,
+          "statement": "Diagnostics::cannotHaveUnsizedMemberWhenInheritingDynInterface, varDecl, interfaceDecl);",
+          "context_before": [
+            "            bool isUnsized = varTypeTags & (int)TypeTag::Unsized;",
+            "            bool isOpaque = varTypeTags & (int)TypeTag::Opaque;",
+            "            if (isUnsized)",
+            "                sink->diagnose(",
+            "                    varDecl,"
+          ],
+          "context_after": [
+            "                    varDecl,",
+            "                    interfaceDecl);",
+            "            if (isOpaque)",
+            "                sink->diagnose(",
+            "                    varDecl,"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 33080,
+      "severity": "Error",
+      "name": "cannotHaveOpaqueMemberWhenInheritingDynInterface",
+      "message": "cannot have opaque member '$0' when inheriting from dyn interface '$1'.",
+      "line": 954,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 183,
+          "statement": "Diagnostics::cannotHaveOpaqueMemberWhenInheritingDynInterface, varDecl, interfaceDecl);",
+          "context_before": [
+            "                    varDecl,",
+            "                    interfaceDecl);",
+            "            if (isOpaque)",
+            "                sink->diagnose(",
+            "                    varDecl,"
+          ],
+          "context_after": [
+            "                    varDecl,",
+            "                    interfaceDecl);",
+            "        }",
+            "    }",
+            "}"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 33081,
+      "severity": "Error",
+      "name": "cannotHaveNonCopyableMemberWhenInheritingDynInterface",
+      "message": "cannot have non-copyable member '$0' when inheriting from dyn interface '$1'.",
+      "line": 959,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 166,
+          "statement": "Diagnostics::cannotHaveNonCopyableMemberWhenInheritingDynInterface, varDecl, interfaceDecl);",
+          "context_before": [
+            "",
+            "            if (isNonCopyableType(varDecl->getType()))",
+            "            {",
+            "                sink->diagnose(",
+            "                    varDecl,"
+          ],
+          "context_after": [
+            "                    varDecl,",
+            "                    interfaceDecl);",
+            "            }",
+            "",
+            "            int varTypeTags = (int)visitor->getTypeTags(varDecl->getType());"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 33082,
+      "severity": "Error",
+      "name": "cannotConformGenericToDynInterface",
+      "message": "cannot conform generic type '$0' to dyn interface '$1'.",
+      "line": 964,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 149,
+          "statement": "Diagnostics::cannotConformGenericToDynInterface, decl->parentDecl, interfaceDecl);",
+          "context_before": [
+            "        }",
+            "        else if (visitor->GetOuterGeneric(decl->parentDecl))",
+            "        {",
+            "            sink->diagnose(",
+            "                decl,"
+          ],
+          "context_after": [
+            "                decl->parentDecl,",
+            "                interfaceDecl);",
+            "        }",
+            "    }",
+            "    if (auto aggTypeDeclParent = as<AggTypeDecl>(decl->parentDecl))"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30080,
+      "severity": "Error",
+      "name": "ambiguousConversion",
+      "message": "more than one conversion exists from '$0' to '$1'",
+      "line": 975,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-conversion.cpp",
+          "line": 1919,
+          "statement": "sink->diagnose(fromExpr, Diagnostics::ambiguousConversion, fromType, toType);",
+          "context_before": [
+            "        //",
+            "        if (outToExpr)",
+            "        {",
+            "            if (sink)",
+            "            {"
+          ],
+          "context_after": [
+            "                for (auto candidate : overloadContext.bestCandidates)",
+            "                {",
+            "                    sink->diagnose(",
+            "                        candidate.item.declRef,",
+            "                        Diagnostics::seeDeclarationOf,"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30081,
+      "severity": "Warning",
+      "name": "unrecommendedImplicitConversion",
+      "message": "implicit conversion from '$0' to '$1' is not recommended",
+      "line": 976,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-conversion.cpp",
+          "line": 2017,
+          "statement": "Diagnostics::unrecommendedImplicitConversion, fromType, toType);",
+          "context_before": [
+            "                }",
+            "                if (shouldEmitGeneralWarning && sink)",
+            "                {",
+            "                    sink->diagnose(",
+            "                        fromExpr,"
+          ],
+          "context_after": [
+            "                        fromType,",
+            "                        toType);",
+            "                }",
+            "            }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30082,
+      "severity": "Warning",
+      "name": "implicitConversionToDouble",
+      "message": " implicit float-to-double conversion may cause unexpected performance issues, use explicit cast if intended.",
+      "line": 981,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-conversion.cpp",
+          "line": 2030,
+          "statement": "sink->diagnose(fromExpr, Diagnostics::implicitConversionToDouble);",
+          "context_before": [
+            "                auto builtinConversionKind = getImplicitConversionBuiltinKind(",
+            "                    overloadContext.bestCandidate->item.declRef.getDecl());",
+            "                if (builtinConversionKind == kBuiltinConversion_FloatToDouble)",
+            "                {",
+            "                    if (!as<FloatingPointLiteralExpr>(fromExpr))"
+          ],
+          "context_after": [
+            "                }",
+            "            }",
+            "        }",
+            "        if (fromType.isLeftValue)",
+            "        {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30090,
+      "severity": "Error",
+      "name": "tryClauseMustApplyToInvokeExpr",
+      "message": "expression in a 'try' clause must be a call to a function or operator overload.",
+      "line": 987,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 4665,
+          "statement": "getSink()->diagnose(expr, Diagnostics::tryClauseMustApplyToInvokeExpr);",
+          "context_before": [
+            "",
+            "    auto parentFunc = this->m_parentFunc;",
+            "    auto base = as<InvokeExpr>(expr->base);",
+            "    if (!base)",
+            "    {"
+          ],
+          "context_after": [
+            "        return expr;",
+            "    }",
+            "",
+            "    auto callee = as<DeclRefExpr>(base->functionExpr);",
+            "    if (!callee)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30091,
+      "severity": "Error",
+      "name": "tryInvokeCalleeShouldThrow",
+      "message": "'$0' called from a 'try' clause does not throw an error, make sure the callee is marked as 'throws'",
+      "line": 992,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 4682,
+          "statement": "getSink()->diagnose(expr, Diagnostics::tryInvokeCalleeShouldThrow, callee->declRef);",
+          "context_before": [
+            "    Stmt* catchStmt = nullptr;",
+            "    if (funcCallee)",
+            "    {",
+            "        if (funcCallee->errorType->equals(m_astBuilder->getBottomType()))",
+            "        {"
+          ],
+          "context_after": [
+            "            return expr;",
+            "        }",
+            "        catchStmt = findMatchingCatchStmt(funcCallee->errorType);",
+            "    }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30092,
+      "severity": "Error",
+      "name": "calleeOfTryCallMustBeFunc",
+      "message": "callee in a 'try' clause must be a function",
+      "line": 998,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 4672,
+          "statement": "getSink()->diagnose(expr, Diagnostics::calleeOfTryCallMustBeFunc);",
+          "context_before": [
+            "    }",
+            "",
+            "    auto callee = as<DeclRefExpr>(base->functionExpr);",
+            "    if (!callee)",
+            "    {"
+          ],
+          "context_after": [
+            "        return expr;",
+            "    }",
+            "",
+            "    auto funcCallee = as<FuncDecl>(callee->declRef.getDecl());",
+            "    Stmt* catchStmt = nullptr;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30093,
+      "severity": "Error",
+      "name": "uncaughtTryCallInNonThrowFunc",
+      "message": "the current function or environment is not declared to throw any errors, but the 'try' clause is not caught",
+      "line": 999,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 4701,
+          "statement": "getSink()->diagnose(expr, Diagnostics::uncaughtTryCallInNonThrowFunc);",
+          "context_before": [
+            "    if (!catchStmt)",
+            "    {",
+            "        // Uncaught try.",
+            "        if (!parentFunc)",
+            "        {"
+          ],
+          "context_after": [
+            "            return expr;",
+            "        }",
+            "        if (parentFunc->errorType->equals(m_astBuilder->getBottomType()))",
+            "        {",
+            "            getSink()->diagnose(expr, Diagnostics::uncaughtTryCallInNonThrowFunc);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 4706,
+          "statement": "getSink()->diagnose(expr, Diagnostics::uncaughtTryCallInNonThrowFunc);",
+          "context_before": [
+            "            getSink()->diagnose(expr, Diagnostics::uncaughtTryCallInNonThrowFunc);",
+            "            return expr;",
+            "        }",
+            "        if (parentFunc->errorType->equals(m_astBuilder->getBottomType()))",
+            "        {"
+          ],
+          "context_after": [
+            "            return expr;",
+            "        }",
+            "        if (funcCallee && !parentFunc->errorType->equals(funcCallee->errorType))",
+            "        {",
+            "            getSink()->diagnose("
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30094,
+      "severity": "Error",
+      "name": "mustUseTryClauseToCallAThrowFunc",
+      "message": "the callee may throw an error, and therefore must be called within a 'try' clause",
+      "line": 1005,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 2985,
+          "statement": "getSink()->diagnose(invoke, Diagnostics::mustUseTryClauseToCallAThrowFunc);",
+          "context_before": [
+            "            if (!funcType->getErrorType()->equals(m_astBuilder->getBottomType()))",
+            "            {",
+            "                // If the callee throws, make sure we are inside a try clause.",
+            "                if (m_enclosingTryClauseType == TryClauseType::None)",
+            "                {"
+          ],
+          "context_after": [
+            "                }",
+            "            }",
+            "",
+            "            auto funcDeclRefExpr = as<DeclRefExpr>(invoke->functionExpr);",
+            "            FunctionDeclBase* funcDeclBase = nullptr;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30095,
+      "severity": "Error",
+      "name": "errorTypeOfCalleeIncompatibleWithCaller",
+      "message": "the error type `$1` of callee `$0` is not compatible with the caller's error type `$2`.",
+      "line": 1010,
+      "param_count": 3,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 4713,
+          "statement": "Diagnostics::errorTypeOfCalleeIncompatibleWithCaller, callee->declRef, funcCallee->errorType, parentFunc->errorType);",
+          "context_before": [
+            "        }",
+            "        if (funcCallee && !parentFunc->errorType->equals(funcCallee->errorType))",
+            "        {",
+            "            getSink()->diagnose(",
+            "                expr,"
+          ],
+          "context_after": [
+            "                callee->declRef,",
+            "                funcCallee->errorType,",
+            "                parentFunc->errorType);",
+            "            return expr;",
+            "        }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30096,
+      "severity": "Error",
+      "name": "differentialTypeShouldServeAsItsOwnDifferentialType",
+      "message": "cannot use type '$0' a `Differential` type. A differential type's differential must be itself. However, '$0.Differential' is '$1'.",
+      "line": 1016,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 3774,
+          "statement": "Diagnostics::differentialTypeShouldServeAsItsOwnDifferentialType, differentialType, diffDiffType);",
+          "context_before": [
+            "        if (!differentialType->equals(diffDiffType))",
+            "        {",
+            "            SourceLoc sourceLoc = differentialType->getDeclRef().getDecl()->loc;",
+            "            getSink()->diagnose(",
+            "                inheritanceDecl,"
+          ],
+          "context_after": [
+            "                differentialType,",
+            "                diffDiffType);",
+            "            getSink()->diagnose(sourceLoc, Diagnostics::seeDefinitionOf, differentialType);",
+            "        }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": [
+            "seeDefinitionOf"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 30097,
+      "severity": "Error",
+      "name": "functionNotMarkedAsDifferentiable",
+      "message": "function '$0' is not marked as $1-differentiable.",
+      "line": 1022,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 3192,
+          "statement": "Diagnostics::functionNotMarkedAsDifferentiable, funcDecl, \"forward\");",
+          "context_before": [
+            "                        if (requiredLevel == FunctionDifferentiableLevel::Forward &&",
+            "                            !getShared()->isDifferentiableFunc(funcDecl))",
+            "                        {",
+            "                            getSink()->diagnose(",
+            "                                funcDeclExpr,"
+          ],
+          "context_after": [
+            "                                funcDecl,",
+            "                                \"forward\");",
+            "                        }",
+            "                        if (requiredLevel == FunctionDifferentiableLevel::Backward &&",
+            "                            !getShared()->isBackwardDifferentiableFunc(funcDecl))"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 3201,
+          "statement": "Diagnostics::functionNotMarkedAsDifferentiable, funcDecl, \"backward\");",
+          "context_before": [
+            "                        if (requiredLevel == FunctionDifferentiableLevel::Backward &&",
+            "                            !getShared()->isBackwardDifferentiableFunc(funcDecl))",
+            "                        {",
+            "                            getSink()->diagnose(",
+            "                                funcDeclExpr,"
+          ],
+          "context_after": [
+            "                                funcDecl,",
+            "                                \"backward\");",
+            "                        }",
+            "                        if (!isEffectivelyStatic(funcDecl) && !isGlobalDecl(funcDecl))",
+            "                        {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30098,
+      "severity": "Error",
+      "name": "nonStaticMemberFunctionNotAllowedAsDiffOperand",
+      "message": "non-static function reference '$0' is not allowed here.",
+      "line": 1027,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 3209,
+          "statement": "Diagnostics::nonStaticMemberFunctionNotAllowedAsDiffOperand, funcDecl);",
+          "context_before": [
+            "                        }",
+            "                        if (!isEffectivelyStatic(funcDecl) && !isGlobalDecl(funcDecl))",
+            "                        {",
+            "                            getSink()->diagnose(",
+            "                                invoke->functionExpr,"
+          ],
+          "context_after": [
+            "                                funcDecl);",
+            "                        }",
+            "                    }",
+            "                }",
+            "            }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30099,
+      "severity": "Error",
+      "name": "sizeOfArgumentIsInvalid",
+      "message": "argument to sizeof is invalid",
+      "line": 1033,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 4233,
+          "statement": "getSink()->diagnose(sizeOfLikeExpr, Diagnostics::sizeOfArgumentIsInvalid);",
+          "context_before": [
+            "    }",
+            "    else",
+            "    {",
+            "        if (!_isSizeOfType(type))",
+            "        {"
+          ],
+          "context_after": [
+            "",
+            "            sizeOfLikeExpr->type = m_astBuilder->getErrorType();",
+            "            return sizeOfLikeExpr;",
+            "        }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30083,
+      "severity": "Error",
+      "name": "countOfArgumentIsInvalid",
+      "message": "argument to countof can only be a type pack or tuple",
+      "line": 1034,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 4223,
+          "statement": "getSink()->diagnose(sizeOfLikeExpr, Diagnostics::countOfArgumentIsInvalid);",
+          "context_before": [
+            "",
+            "    if (as<CountOfExpr>(sizeOfLikeExpr))",
+            "    {",
+            "        if (!_isCountOfType(type))",
+            "        {"
+          ],
+          "context_after": [
+            "",
+            "            sizeOfLikeExpr->type = m_astBuilder->getErrorType();",
+            "            return sizeOfLikeExpr;",
+            "        }",
+            "    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30084,
+      "severity": "Error",
+      "name": "floatBitCastTypeMismatch",
+      "message": "'$0' requires a $1 argument",
+      "line": 1040,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 4291,
+          "statement": "Diagnostics::floatBitCastTypeMismatch, \"__floatAsInt\", \"half, float, or double\");",
+          "context_before": [
+            "",
+            "    if (floatBaseType == BaseType::Void)",
+            "    {",
+            "        getSink()->diagnose(",
+            "            expr,"
+          ],
+          "context_after": [
+            "            \"__floatAsInt\",",
+            "            \"half, float, or double\");",
+            "        expr->type = m_astBuilder->getErrorType();",
+            "        return expr;",
+            "    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30085,
+      "severity": "Error",
+      "name": "floatBitCastRequiresConstant",
+      "message": "'__floatAsInt' requires a compile-time constant floating-point expression",
+      "line": 1042,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 4377,
+          "statement": "getSink()->diagnose(expr, Diagnostics::floatBitCastRequiresConstant);",
+          "context_before": [
+            "        foldedExpr->value = resultValue;",
+            "        return foldedExpr;",
+            "    }",
+            "",
+            "    // Could not constant fold - emit error"
+          ],
+          "context_after": [
+            "    expr->type = m_astBuilder->getErrorType();",
+            "    return expr;",
+            "}",
+            "",
+            "// Determines if we have a valid `AddressOf` target."
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30101,
+      "severity": "Error",
+      "name": "readingFromWriteOnly",
+      "message": "cannot read from writeonly, check modifiers.",
+      "line": 1049,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 2816,
+          "statement": "getSink()->diagnose(expr, Diagnostics::readingFromWriteOnly);",
+          "context_before": [
+            "}",
+            "",
+            "Expr* SemanticsVisitor::checkAssignWithCheckedOperands(AssignExpr* expr)",
+            "{",
+            "    if (expr->right->type.isWriteOnly)"
+          ],
+          "context_after": [
+            "",
+            "    expr->left = maybeOpenRef(expr->left);",
+            "    auto type = expr->left->type;",
+            "    if (auto atomicType = as<AtomicType>(type))",
+            "    {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 2774,
+          "statement": "getSink()->diagnose(initExpr, Diagnostics::readingFromWriteOnly);",
+          "context_before": [
+            "        // it to the type of the variable.",
+            "        //",
+            "        initExpr = subVisitor.CheckTerm(initExpr);",
+            "",
+            "        if (initExpr->type.isWriteOnly)"
+          ],
+          "context_after": [
+            "",
+            "        initExpr = coerce(CoercionSite::Initializer, varDecl->type.Ptr(), initExpr, getSink());",
+            "        varDecl->initExpr = initExpr;",
+            "",
+            "        // We need to ensure that any variable doesn't introduce"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30102,
+      "severity": "Error",
+      "name": "differentiableMemberShouldHaveCorrespondingFieldInDiffType",
+      "message": "differentiable member '$0' should have a corresponding field in '$1'. Use [DerivativeMember($1.<field-name>)] or mark as no_diff",
+      "line": 1050,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 3817,
+          "statement": "Diagnostics::differentiableMemberShouldHaveCorrespondingFieldInDiffType, member->nameAndLoc.name, differentialType);",
+          "context_before": [
+            "            if (member->findModifier<DerivativeMemberAttribute>())",
+            "                continue;",
+            "            else if (!typeIsSelfDifferential)",
+            "                getSink()->diagnose(",
+            "                    member,"
+          ],
+          "context_after": [
+            "                    member->nameAndLoc.name,",
+            "                    differentialType);",
+            "            else",
+            "            {",
+            "                // If the type is its own differential type, we can infer the differential"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30103,
+      "severity": "Error",
+      "name": "expectTypePackAfterEach",
+      "message": "expected a type pack or a tuple after 'each'.",
+      "line": 1057,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 4937,
+          "statement": "getSink()->diagnose(expr, Diagnostics::expectTypePackAfterEach);",
+          "context_before": [
+            "    }",
+            "error:;",
+            "    expr->type = m_astBuilder->getErrorType();",
+            "    if (!as<ErrorType>(baseType))",
+            "    {"
+          ],
+          "context_after": [
+            "    }",
+            "    return expr;",
+            "}",
+            "",
+            "Expr* SemanticsExprVisitor::visitLambdaExpr(LambdaExpr* lambdaExpr)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30104,
+      "severity": "Error",
+      "name": "eachExprMustBeInsideExpandExpr",
+      "message": "'each' expression must be inside 'expand' expression.",
+      "line": 1058,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 4869,
+          "statement": "getSink()->diagnose(expr, Diagnostics::eachExprMustBeInsideExpandExpr);",
+          "context_before": [
+            "",
+            "Expr* SemanticsExprVisitor::visitEachExpr(EachExpr* expr)",
+            "{",
+            "    if (!m_parentExpandExpr)",
+            "    {"
+          ],
+          "context_after": [
+            "        expr->type = m_astBuilder->getErrorType();",
+            "        return expr;",
+            "    }",
+            "",
+            "    expr->baseExpr = CheckTerm(expr->baseExpr);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30105,
+      "severity": "Error",
+      "name": "expandTermCapturesNoTypePacks",
+      "message": "'expand' term captures no type packs. At least one type pack must be referenced via an 'each' term inside an 'expand' term.",
+      "line": 1063,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 4850,
+          "statement": "getSink()->diagnose(expr, Diagnostics::expandTermCapturesNoTypePacks);",
+          "context_before": [
+            "        expr->type = m_astBuilder->getErrorType();",
+            "        return expr;",
+            "    }",
+            "    if (subContext.getCapturedTypePacks()->getCount() == 0)",
+            "    {"
+          ],
+          "context_after": [
+            "    }",
+            "    List<Type*> capturedTypePacks;",
+            "    for (auto capturedType : capturedTypePackSet)",
+            "    {",
+            "        capturedTypePacks.add(capturedType);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30106,
+      "severity": "Error",
+      "name": "improperUseOfType",
+      "message": "type '$0' cannot be used in this context.",
+      "line": 1069,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-type.cpp",
+          "line": 448,
+          "statement": "getSink()->diagnose(typeExp.exp, Diagnostics::improperUseOfType, typeExp.type);",
+          "context_before": [
+            "    }",
+            "",
+            "    // A type pack is not a usable type other than for defining parameters.",
+            "    if (!as<ParamDecl>(decl) && isTypePack(type))",
+            "    {"
+          ],
+          "context_after": [
+            "        result.type = m_astBuilder->getErrorType();",
+            "        return result;",
+            "    }",
+            "    return result;",
+            "}"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30107,
+      "severity": "Error",
+      "name": "parameterPackMustBeConst",
+      "message": "a parameter pack must be declared as 'const'.",
+      "line": 1070,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 9643,
+          "statement": "getSink()->diagnose(modifier, Diagnostics::parameterPackMustBeConst);",
+          "context_before": [
+            "                // to the `const` modifier at all (since that is not actually what is",
+            "                // required), and should instead note that a parameter pack may only",
+            "                // be declared as a pure input parameter to a function (`in` or",
+            "                // `borrow`).",
+            "                //"
+          ],
+          "context_after": [
+            "            }",
+            "            else if (as<ConstModifier>(modifier))",
+            "            {",
+            "                hasConstModifier = true;",
+            "            }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30108,
+      "severity": "Error",
+      "name": "breakInsideDefer",
+      "message": "'break' must not appear inside a defer statement.",
+      "line": 1072,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-stmt.cpp",
+          "line": 215,
+          "statement": "getSink()->diagnose(stmt, Diagnostics::breakInsideDefer);",
+          "context_before": [
+            "    //",
+            "    if (targetOuterStmt)",
+            "    {",
+            "        if (FindOuterStmt<DeferStmt>(targetOuterStmt))",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "",
+            "        // We stash the ID of the target statement in the `break`",
+            "        // statement so that they can be correlated later, during",
+            "        // code generation."
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30109,
+      "severity": "Error",
+      "name": "continueInsideDefer",
+      "message": "'continue' must not appear inside a defer statement.",
+      "line": 1073,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-stmt.cpp",
+          "line": 237,
+          "statement": "getSink()->diagnose(stmt, Diagnostics::continueInsideDefer);",
+          "context_before": [
+            "    }",
+            "    else",
+            "    {",
+            "        if (FindOuterStmt<DeferStmt>(targetOuterStmt))",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "",
+            "        // We stash the ID of the target statement in the `continue`",
+            "        // statement so that they can be correlated later, during",
+            "        // code generation."
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30110,
+      "severity": "Error",
+      "name": "returnInsideDefer",
+      "message": "'return' must not appear inside a defer statement.",
+      "line": 1078,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-stmt.cpp",
+          "line": 601,
+          "statement": "getSink()->diagnose(stmt, Diagnostics::returnInsideDefer);",
+          "context_before": [
+            "        }",
+            "    }",
+            "",
+            "    if (FindOuterStmt<DeferStmt>())",
+            "    {"
+          ],
+          "context_after": [
+            "    }",
+            "}",
+            "",
+            "void SemanticsStmtVisitor::visitWhileStmt(WhileStmt* stmt)",
+            "{"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30111,
+      "severity": "Error",
+      "name": "returnTypeMismatchInsideLambda",
+      "message": "returned values must have the same type among all 'return' statements inside a lambda expression: returned '$0' here, but '$1' previously.",
+      "line": 1079,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-stmt.cpp",
+          "line": 593,
+          "statement": "Diagnostics::returnTypeMismatchInsideLambda, returnType, m_parentLambdaDecl->funcDecl->returnType.type);",
+          "context_before": [
+            "            m_parentLambdaDecl->funcDecl->returnType.type = returnType;",
+            "        if (!m_parentLambdaDecl->funcDecl->returnType.type->equals(returnType))",
+            "        {",
+            "            getSink()->diagnose(",
+            "                stmt,"
+          ],
+          "context_after": [
+            "                returnType,",
+            "                m_parentLambdaDecl->funcDecl->returnType.type);",
+            "        }",
+            "    }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30112,
+      "severity": "Error",
+      "name": "nonCopyableTypeCapturedInLambda",
+      "message": "cannot capture non-copyable type '$0' in a lambda expression.",
+      "line": 1086,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 3589,
+          "statement": "Diagnostics::nonCopyableTypeCapturedInLambda, capturedVarDecl->type.type);",
+          "context_before": [
+            "        // Is captured value NonCopyable? If so, it needs to be an error.",
+            "        if (isNonCopyableType(capturedVarDecl->type.type))",
+            "        {",
+            "            getSink()->diagnose(",
+            "                exprIn,"
+          ],
+          "context_after": [
+            "                capturedVarDecl->type.type);",
+            "        }",
+            "    }",
+            "",
+            "    // Return a VarExpr referencing the capturedVarDecl."
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30113,
+      "severity": "Error",
+      "name": "uncaughtThrowInsideDefer",
+      "message": "'throw' expressions require a matching 'catch' inside a defer statement.",
+      "line": 1092,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-stmt.cpp",
+          "line": 653,
+          "statement": "getSink()->diagnose(stmt, Diagnostics::uncaughtThrowInsideDefer);",
+          "context_before": [
+            "        // similar reasons as 'return' - if you have two (or more) defers,",
+            "        // both of which exit the outer scope, it's unclear which one gets",
+            "        // called and when. Both can't fully run. That kind of goes against the",
+            "        // point of 'defer', which is to _always_ run some code when exiting",
+            "        // scopes."
+          ],
+          "context_after": [
+            "    }",
+            "}",
+            "",
+            "void SemanticsStmtVisitor::visitCatchStmt(CatchStmt* stmt)",
+            "{"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30114,
+      "severity": "Error",
+      "name": "uncaughtTryInsideDefer",
+      "message": "'try' expressions require a matching 'catch' inside a defer statement.",
+      "line": 1097,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 4692,
+          "statement": "getSink()->diagnose(expr, Diagnostics::uncaughtTryInsideDefer);",
+          "context_before": [
+            "",
+            "    if (FindOuterStmt<DeferStmt>(catchStmt))",
+            "    {",
+            "        // 'try' may jump outside a defer statement, which isn't allowed for",
+            "        // now."
+          ],
+          "context_after": [
+            "        return expr;",
+            "    }",
+            "",
+            "    if (!catchStmt)",
+            "    {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30115,
+      "severity": "Error",
+      "name": "uncaughtThrowInNonThrowFunc",
+      "message": "the current function or environment is not declared to throw any errors, but contains an uncaught 'throw' statement.",
+      "line": 1102,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-stmt.cpp",
+          "line": 629,
+          "statement": "getSink()->diagnose(stmt, Diagnostics::uncaughtThrowInNonThrowFunc);",
+          "context_before": [
+            "    Stmt* catchStmt = findMatchingCatchStmt(stmt->expression->type);",
+            "",
+            "    auto parentFunc = getParentFunc();",
+            "    if (!catchStmt && (!parentFunc || parentFunc->errorType->equals(m_astBuilder->getBottomType())))",
+            "    {"
+          ],
+          "context_after": [
+            "        return;",
+            "    }",
+            "",
+            "    if (!catchStmt && !stmt->expression->type->equals(m_astBuilder->getErrorType()))",
+            "    {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30116,
+      "severity": "Error",
+      "name": "throwTypeIncompatibleWithErrorType",
+      "message": "the type `$0` of `throw` is not compatible with function's error type `$1`.",
+      "line": 1108,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-stmt.cpp",
+          "line": 639,
+          "statement": "Diagnostics::throwTypeIncompatibleWithErrorType, stmt->expression->type, parentFunc->errorType);",
+          "context_before": [
+            "    {",
+            "        if (!parentFunc->errorType->equals(stmt->expression->type))",
+            "        {",
+            "            getSink()->diagnose(",
+            "                stmt->expression,"
+          ],
+          "context_after": [
+            "                stmt->expression->type,",
+            "                parentFunc->errorType);",
+            "        }",
+            "    }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30117,
+      "severity": "Error",
+      "name": "forwardReferenceInGenericConstraint",
+      "message": "generic constraint for parameter '$0' references type parameter '$1' before it is declared",
+      "line": 1113,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 3479,
+          "statement": "Diagnostics::forwardReferenceInGenericConstraint, decl->sub.type, typeParam);",
+          "context_before": [
+            "                !declaredBeforeConstraint.contains(typeParam))",
+            "            {",
+            "                // Found a forward reference, report an error.",
+            "                getSink()->diagnose(",
+            "                    decl->sup.exp,"
+          ],
+          "context_after": [
+            "                    decl->sub.type,",
+            "                    typeParam);",
+            "            }",
+            "        }",
+            "    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30500,
+      "severity": "Error",
+      "name": "includedFileMissingImplementing",
+      "message": "missing 'implementing' declaration in the included source file '$0'.",
+      "line": 1120,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 11428,
+          "statement": "Diagnostics::includedFileMissingImplementing, name);",
+          "context_before": [
+            "        return;",
+            "    }",
+            "",
+            "    getSink()->diagnose(",
+            "        decl->moduleNameAndLoc.loc,"
+          ],
+          "context_after": [
+            "        name);",
+            "}",
+            "",
+            "",
+            "void SemanticsDeclScopeWiringVisitor::visitImplementingDecl(ImplementingDecl* decl)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30501,
+      "severity": "Error",
+      "name": "includedFileMissingImplementingDoYouMeanImport",
+      "message": "missing 'implementing' declaration in the included source file '$0'. The file declares that it defines module '$1', do you mean 'import' instead?",
+      "line": 1125,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 11351,
+          "statement": "Diagnostics::includedFileMissingImplementingDoYouMeanImport, name, moduleDeclaration->getName());",
+          "context_before": [
+            "    {",
+            "        // We are trying to include a file that defines a module, the user could mean \"import\"",
+            "        // instead.",
+            "        getSink()->diagnose(",
+            "            decl->moduleNameAndLoc.loc,"
+          ],
+          "context_after": [
+            "            name,",
+            "            moduleDeclaration->getName());",
+            "        return;",
+            "    }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30502,
+      "severity": "Error",
+      "name": "includedFileDoesNotImplementCurrentModule",
+      "message": "the included source file is expected to implement module '$0', but it is implementing '$1' instead.",
+      "line": 1131,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 11416,
+          "statement": "Diagnostics::includedFileDoesNotImplementCurrentModule, expectedModuleName, moduleName);",
+          "context_before": [
+            "            if (!moduleNameStr.getUnownedSlice().caseInsensitiveEquals(",
+            "                    expectedModuleNameStr.getUnownedSlice()))",
+            "            {",
+            "                getSink()->diagnose(",
+            "                    decl->moduleNameAndLoc.loc,"
+          ],
+          "context_after": [
+            "                    expectedModuleName,",
+            "                    moduleName);",
+            "                return;",
+            "            }",
+            "        }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30503,
+      "severity": "Error",
+      "name": "primaryModuleFileCannotStartWithImplementingDecl",
+      "message": "a primary source file for a module cannot start with 'implementing'.",
+      "line": 1137,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 4001,
+          "statement": "Diagnostics::primaryModuleFileCannotStartWithImplementingDecl);",
+          "context_before": [
+            "            if (!getShared()->isInLanguageServer())",
+            "            {",
+            "                // A primary module file can't start with an \"implementing\" declaration.",
+            "                getSink()->diagnose(",
+            "                    firstDeclInModule,"
+          ],
+          "context_after": [
+            "            }",
+            "        }",
+            "        else if (!as<ModuleDeclarationDecl>(firstDeclInModule))",
+            "        {",
+            "            // A primary module file must start with a `module` declaration."
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30504,
+      "severity": "Warning",
+      "name": "primaryModuleFileMustStartWithModuleDecl",
+      "message": "a primary source file for a module should start with 'module'.",
+      "line": 1142,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 4009,
+          "statement": "getSink()->diagnose(firstMember, Diagnostics::primaryModuleFileMustStartWithModuleDecl);",
+          "context_before": [
+            "        else if (!as<ModuleDeclarationDecl>(firstDeclInModule))",
+            "        {",
+            "            // A primary module file must start with a `module` declaration.",
+            "            // TODO: this warning is disabled for now to free users from massive change for now.",
+            "#if 0"
+          ],
+          "context_after": [
+            "#endif",
+            "        }",
+            "    }",
+            "",
+            "    if (moduleDecl->findModifier<PublicModifier>())"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30505,
+      "severity": "Error",
+      "name": "implementingMustReferencePrimaryModuleFile",
+      "message": "the source file referenced by 'implementing' must be a primary module file starting with a 'module' declaration.",
+      "line": 1147,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 11474,
+          "statement": "Diagnostics::implementingMustReferencePrimaryModuleFile);",
+          "context_before": [
+            "    }",
+            "    else if (as<ImplementingDecl>(firstDeclInFile))",
+            "    {",
+            "        getSink()->diagnose(",
+            "            decl->moduleNameAndLoc.loc,"
+          ],
+          "context_after": [
+            "        return;",
+            "    }",
+            "",
+            "    if (auto moduleDecl = getModuleDecl(decl))",
+            "        importFileDeclIntoScope(moduleDecl->ownedScope, fileDecl);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30506,
+      "severity": "Warning",
+      "name": "moduleImplementationHasFileExtension",
+      "message": "implementing directive contains file extension in module name '$0'. Module names should not include extensions. The compiler will use '$1' as the module name.",
+      "line": 1153,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 11404,
+          "statement": "Diagnostics::moduleImplementationHasFileExtension, moduleNameStr, normalizedName);",
+          "context_before": [
+            "                if (normalizedName.getUnownedSlice().caseInsensitiveEquals(",
+            "                        expectedModuleNameStr.getUnownedSlice()))",
+            "                {",
+            "                    getSink()->diagnose(",
+            "                        implementing->moduleNameAndLoc.loc,"
+          ],
+          "context_after": [
+            "                        moduleNameStr,",
+            "                        normalizedName);",
+            "                    return;",
+            "                }",
+            "            }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30600,
+      "severity": "Error",
+      "name": "declIsNotVisible",
+      "message": "'$0' is not accessible from the current context.",
+      "line": 1161,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-overload.cpp",
+          "line": 271,
+          "statement": "getSink()->diagnose(context.loc, Diagnostics::declIsNotVisible, candidate.item.declRef);",
+          "context_before": [
+            "",
+            "    if (!isDeclVisibleFromScope(candidate.item.declRef, context.sourceScope))",
+            "    {",
+            "        if (context.mode == OverloadResolveContext::Mode::ForReal)",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "        return false;",
+            "    }",
+            "",
+            "    return true;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 1072,
+          "statement": "getSink()->diagnose(loc, Diagnostics::declIsNotVisible, lookupResult.item.declRef);",
+          "context_before": [
+            "{",
+            "    outDiagnosed = false;",
+            "    auto result = filterLookupResultByVisibility(lookupResult);",
+            "    if (lookupResult.isValid() && !result.isValid())",
+            "    {"
+          ],
+          "context_after": [
+            "        outDiagnosed = true;",
+            "",
+            "        if (getShared()->isInLanguageServer())",
+            "        {",
+            "            // When in language server mode, return the unfiltered result so we can still"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30601,
+      "severity": "Error",
+      "name": "declCannotHaveHigherVisibility",
+      "message": "'$0' cannot have a higher visibility than '$1'.",
+      "line": 1162,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 2112,
+          "statement": "getSink()->diagnose(decl, Diagnostics::declCannotHaveHigherVisibility, decl, parentDecl);",
+          "context_before": [
+            "    if (!parentDecl)",
+            "        return;",
+            "    auto parentVisibility = getDeclVisibility(parentDecl);",
+            "    if (thisVisibility > parentVisibility)",
+            "    {"
+          ],
+          "context_after": [
+            "    }",
+            "}",
+            "",
+            "void postProcessingOnModifiers(ASTBuilder* astBuilder, Modifiers& modifiers)",
+            "{"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30602,
+      "severity": "Error",
+      "name": "satisfyingDeclCannotHaveLowerVisibility",
+      "message": "'$0' is less visible than the interface requirement it satisfies.",
+      "line": 1167,
+      "param_count": 1,
+      "call_sites": []
+    },
+    {
+      "id": 30603,
+      "severity": "Error",
+      "name": "invalidUseOfPrivateVisibility",
+      "message": "'$0' cannot have private visibility because it is not a member of a type.",
+      "line": 1172,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 1916,
+          "statement": "Diagnostics::invalidUseOfPrivateVisibility, as<Decl>(syntaxNode));",
+          "context_before": [
+            "        {",
+            "            if (isGlobalDecl(decl))",
+            "            {",
+            "                getSink()->diagnose(",
+            "                    m,"
+          ],
+          "context_after": [
+            "                    as<Decl>(syntaxNode));",
+            "                return m;",
+            "            }",
+            "        }",
+            "        if (as<NamespaceDeclBase>(syntaxNode))"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 1936,
+          "statement": "Diagnostics::invalidUseOfPrivateVisibility, as<Decl>(syntaxNode));",
+          "context_before": [
+            "            // Interface requirements can't be private.",
+            "            if (isInterfaceRequirement(decl))",
+            "            {",
+            "                getSink()->diagnose(",
+            "                    m,"
+          ],
+          "context_after": [
+            "                    as<Decl>(syntaxNode));",
+            "            }",
+            "        }",
+            "    }",
+            "    else if (as<InternalModifier>(m))"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30604,
+      "severity": "Error",
+      "name": "useOfLessVisibleType",
+      "message": "'$0' references less visible type '$1'.",
+      "line": 1177,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 2095,
+          "statement": "getSink()->diagnose(decl, Diagnostics::useOfLessVisibleType, decl, type);",
+          "context_before": [
+            "        if (!type)",
+            "            continue;",
+            "        DeclVisibility typeVisibility = getTypeVisibility(type);",
+            "        if (typeVisibility < thisVisibility)",
+            "        {"
+          ],
+          "context_after": [
+            "            break;",
+            "        }",
+            "    }",
+            "",
+            "    // Next, we check that the decl does not have higher visiblity than its parent."
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 36005,
+      "severity": "Error",
+      "name": "invalidVisibilityModifierOnTypeOfDecl",
+      "message": "visibility modifier is not allowed on '$0'.",
+      "line": 1178,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 1925,
+          "statement": "Diagnostics::invalidVisibilityModifierOnTypeOfDecl, syntaxNode->astNodeType);",
+          "context_before": [
+            "        }",
+            "        if (as<NamespaceDeclBase>(syntaxNode))",
+            "        {",
+            "            getSink()->diagnose(",
+            "                m,"
+          ],
+          "context_after": [
+            "                syntaxNode->astNodeType);",
+            "            return m;",
+            "        }",
+            "        else if (auto decl = as<Decl>(syntaxNode))",
+            "        {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 1947,
+          "statement": "Diagnostics::invalidVisibilityModifierOnTypeOfDecl, syntaxNode->astNodeType);",
+          "context_before": [
+            "    {",
+            "        if (as<NamespaceDeclBase>(syntaxNode))",
+            "        {",
+            "            getSink()->diagnose(",
+            "                m,"
+          ],
+          "context_after": [
+            "                syntaxNode->astNodeType);",
+            "            return m;",
+            "        }",
+            "    }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 36100,
+      "severity": "Error",
+      "name": "conflictingCapabilityDueToUseOfDecl",
+      "message": "'$0' requires capability '$1' that is conflicting with the '$2's current capability requirement '$3'.",
+      "line": 1185,
+      "param_count": 4,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 14053,
+          "statement": "Diagnostics::conflictingCapabilityDueToUseOfDecl, referencedDecl, nodeCaps, decl, oldCaps);",
+          "context_before": [
+            "            maybeDiagnose(",
+            "                visitor->getSink(),",
+            "                visitor->getOptionSet(),",
+            "                DiagnosticCategory::Capability,",
+            "                referenceLoc,"
+          ],
+          "context_after": [
+            "                referencedDecl,",
+            "                nodeCaps,",
+            "                decl,",
+            "                oldCaps);",
+            "        }"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 36101,
+      "severity": "Error",
+      "name": "conflictingCapabilityDueToStatement",
+      "message": "statement requires capability '$0' that is conflicting with the '$1's current capability requirement '$2'.",
+      "line": 1191,
+      "param_count": 3,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 14066,
+          "statement": "Diagnostics::conflictingCapabilityDueToStatement, nodeCaps, decl, oldCaps);",
+          "context_before": [
+            "            maybeDiagnose(",
+            "                visitor->getSink(),",
+            "                visitor->getOptionSet(),",
+            "                DiagnosticCategory::Capability,",
+            "                referenceLoc,"
+          ],
+          "context_after": [
+            "                nodeCaps,",
+            "                decl,",
+            "                oldCaps);",
+            "        }",
+            "        else"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 14226,
+          "statement": "Diagnostics::conflictingCapabilityDueToStatement, targetCap, maybeRequireCapability, maybeRequireCapability->capabilitySet);",
+          "context_before": [
+            "                        maybeDiagnose(",
+            "                            Base::getSink(),",
+            "                            outerContext.getOptionSet(),",
+            "                            DiagnosticCategory::Capability,",
+            "                            stmt->targetCases[targetCaseIndex]->loc,"
+          ],
+          "context_after": [
+            "                            targetCap,",
+            "                            maybeRequireCapability,",
+            "                            maybeRequireCapability->capabilitySet);",
+            "                        handleParentDiagnosticFunc(DiagnosticCategory::Capability);",
+            "                    }"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 14245,
+          "statement": "Diagnostics::conflictingCapabilityDueToStatement, bodyCap, \"target_switch\", oldCap);",
+          "context_before": [
+            "                maybeDiagnose(",
+            "                    Base::getSink(),",
+            "                    outerContext.getOptionSet(),",
+            "                    DiagnosticCategory::Capability,",
+            "                    targetCase->body->loc,"
+          ],
+          "context_after": [
+            "                    bodyCap,",
+            "                    \"target_switch\",",
+            "                    oldCap);",
+            "                handleParentDiagnosticFunc(DiagnosticCategory::Capability);",
+            "            }"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 36102,
+      "severity": "Error",
+      "name": "conflictingCapabilityDueToStatementEnclosingFunc",
+      "message": "statement requires capability '$0' that is conflicting with the current function's capability requirement '$1'.",
+      "line": 1197,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 14078,
+          "statement": "Diagnostics::conflictingCapabilityDueToStatementEnclosingFunc, nodeCaps, oldCaps);",
+          "context_before": [
+            "            maybeDiagnose(",
+            "                visitor->getSink(),",
+            "                visitor->getOptionSet(),",
+            "                DiagnosticCategory::Capability,",
+            "                referenceLoc,"
+          ],
+          "context_after": [
+            "                nodeCaps,",
+            "                oldCaps);",
+            "        }",
+            "    }",
+            ""
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 36103,
+      "severity": "Warning",
+      "name": "missingCapabilityRequirementOnPublicDecl",
+      "message": "public symbol '$0' is missing capability requirement declaration, the symbol is assumed to require inferred capabilities '$1'.",
+      "line": 1203,
+      "param_count": 2,
+      "call_sites": []
+    },
+    {
+      "id": 36104,
+      "severity": "Error",
+      "name": "useOfUndeclaredCapability",
+      "message": "'$0' uses undeclared capability '$1'",
+      "line": 1209,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 14541,
+          "statement": "Diagnostics::useOfUndeclaredCapability, failedAvailableCapabilityConjunction, true);",
+          "context_before": [
+            "                CapabilitySet{funcDecl->inferredCapabilityRequirements},",
+            "                failedAvailableCapabilityConjunction,",
+            "                checkCapabilityResult);",
+            "            diagnoseUndeclaredCapability(",
+            "                funcDecl,"
+          ],
+          "context_after": [
+            "                failedAvailableCapabilityConjunction,",
+            "                true);",
+            "",
+            "            // declared capabilities must be a superset.",
+            "            funcDecl->inferredCapabilityRequirements = frozenDeclaredCaps;"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 36104,
+      "severity": "Error",
+      "name": "useOfUndeclaredCapabilityOfInterfaceRequirement",
+      "message": "'$0' uses capability '$1' that is incompatable with the interface requirement",
+      "line": 1210,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 14630,
+          "statement": "Diagnostics::useOfUndeclaredCapabilityOfInterfaceRequirement, failedAvailableCapabilityConjunction, false);",
+          "context_before": [
+            "            if (checkCapabilityResult ==",
+            "                CheckCapabilityRequirementResult::AvailableIsNotASuperSetToRequired)",
+            "            {",
+            "                diagnoseUndeclaredCapability(",
+            "                    implDecl,"
+          ],
+          "context_after": [
+            "                    failedAvailableCapabilityConjunction,",
+            "                    false);",
+            "                maybeDiagnose(",
+            "                    getSink(),",
+            "                    getOptionSet(),"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 36104,
+      "severity": "Error",
+      "name": "useOfUndeclaredCapabilityOfInheritanceDecl",
+      "message": "'$0' uses capability '$1' that is incompatable with the supertype",
+      "line": 1215,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 14679,
+          "statement": "Diagnostics::useOfUndeclaredCapabilityOfInheritanceDecl, failedAvailableCapabilityConjunction, false);",
+          "context_before": [
+            "    if (checkCapabilityResult ==",
+            "        CheckCapabilityRequirementResult::AvailableIsNotASuperSetToRequired)",
+            "    {",
+            "        diagnoseUndeclaredCapability(",
+            "            inheritanceParentDecl,"
+          ],
+          "context_after": [
+            "            failedAvailableCapabilityConjunction,",
+            "            false);",
+            "        maybeDiagnose(",
+            "            getSink(),",
+            "            getOptionSet(),"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 36105,
+      "severity": "Error",
+      "name": "unknownCapability",
+      "message": "unknown capability name '$0'.",
+      "line": 1220,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-parser.cpp",
+          "line": 3978,
+          "statement": "Diagnostics::unknownCapability, capNameToken.getContent());",
+          "context_before": [
+            "        if (capName != CapabilityName::Invalid)",
+            "            capNames.add(capName);",
+            "        else",
+            "            parser->sink->diagnose(",
+            "                capNameToken,"
+          ],
+          "context_after": [
+            "                capNameToken.getContent());",
+            "        if (AdvanceIf(parser, \"+\") || AdvanceIf(parser, \",\"))",
+            "            continue;",
+            "        break;",
+            "    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 103,
+          "statement": "getSink()->diagnose(expr, Diagnostics::unknownCapability, varExpr->name);",
+          "context_before": [
+            "            suggestions.scopeKind = CompletionSuggestions::ScopeKind::Capabilities;",
+            "        }",
+            "        outCapabilityName = findCapabilityName(varExpr->name->text.getUnownedSlice());",
+            "        if (outCapabilityName == CapabilityName::Invalid)",
+            "        {"
+          ],
+          "context_after": [
+            "            return false;",
+            "        }",
+            "        return true;",
+            "    }",
+            "    getSink()->diagnose(expr, Diagnostics::expectCapability);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 705,
+          "statement": "getSink()->diagnose(attr, Diagnostics::unknownCapability, capNameString);",
+          "context_before": [
+            "            return entryPointAttr;",
+            "        }",
+            "        else",
+            "        {",
+            "            // always diagnose this error since nothing can compile with an invalid capability"
+          ],
+          "context_after": [
+            "            return nullptr;",
+            "        }",
+            "    }",
+            "    else if (",
+            "        (as<DomainAttribute>(attr)) || (as<OutputTopologyAttribute>(attr)) ||"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 36106,
+      "severity": "Error",
+      "name": "expectCapability",
+      "message": "expect a capability name.",
+      "line": 1221,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 108,
+          "statement": "getSink()->diagnose(expr, Diagnostics::expectCapability);",
+          "context_before": [
+            "            getSink()->diagnose(expr, Diagnostics::unknownCapability, varExpr->name);",
+            "            return false;",
+            "        }",
+            "        return true;",
+            "    }"
+          ],
+          "context_after": [
+            "    return false;",
+            "}",
+            "",
+            "void SemanticsVisitor::visitModifier(Modifier*)",
+            "{"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 36107,
+      "severity": "Error",
+      "name": "entryPointUsesUnavailableCapability",
+      "message": "entrypoint '$0' uses features that are not available in '$2' stage for '$1' compilation target.",
+      "line": 1222,
+      "param_count": 3,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-shader.cpp",
+          "line": 997,
+          "statement": "Diagnostics::entryPointUsesUnavailableCapability, entryPointFuncDecl, compileTarget, stageTarget);",
+          "context_before": [
+            "            maybeDiagnose(",
+            "                sink,",
+            "                linkage->m_optionSet,",
+            "                DiagnosticCategory::Capability,",
+            "                entryPointFuncDecl,"
+          ],
+          "context_after": [
+            "                entryPointFuncDecl,",
+            "                compileTarget,",
+            "                stageTarget);",
+            "",
+            "            // Find out what is incompatible (ancestor missing a super set of 'target+stage')"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 36108,
+      "severity": "Error",
+      "name": "declHasDependenciesNotCompatibleOnTarget",
+      "message": "'$0' has dependencies that are not compatible on the required compilation target '$1'.",
+      "line": 1228,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 15144,
+          "statement": "Diagnostics::declHasDependenciesNotCompatibleOnTarget, decl, outFailedAtom);",
+          "context_before": [
+            "            maybeDiagnose(",
+            "                getSink(),",
+            "                this->getOptionSet(),",
+            "                DiagnosticCategory::Capability,",
+            "                decl,"
+          ],
+          "context_after": [
+            "                decl,",
+            "                outFailedAtom);",
+            "",
+            "            // Anything defined on a non-failed target atom may be the culprit to why we fail",
+            "            // having a target capability. Print out all possible culprits."
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 36109,
+      "severity": "Error",
+      "name": "invalidTargetSwitchCase",
+      "message": "'$0' cannot be used as a target_switch case.",
+      "line": 1233,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-stmt.cpp",
+          "line": 468,
+          "statement": "Diagnostics::invalidTargetSwitchCase, capabilityNameToString((CapabilityName)caseStmt->capability));",
+          "context_before": [
+            "                caseStmt->capabilityToken.getContentLength() != 0 &&",
+            "                (set.getCapabilityTargetSets().getCount() != 1 || set.isInvalid() || set.isEmpty()))",
+            "            {",
+            "                getSink()->diagnose(",
+            "                    caseStmt->capabilityToken.loc,"
+          ],
+          "context_after": [
+            "                    capabilityNameToString((CapabilityName)caseStmt->capability));",
+            "            }",
+            "        }",
+            "",
+            "        if (checkedStmt.contains(caseStmt->body))"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 36110,
+      "severity": "Error",
+      "name": "stageIsIncompatibleWithCapabilityDefinition",
+      "message": "'$0' is defined for stage '$1', which is incompatible with the declared capability set '$2'.",
+      "line": 1234,
+      "param_count": 3,
+      "call_sites": []
+    },
+    {
+      "id": 36111,
+      "severity": "Error",
+      "name": "unexpectedCapability",
+      "message": "'$0' resolves into a disallowed `$1` Capability.",
+      "line": 1239,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 1151,
+          "statement": "Diagnostics::unexpectedCapability, attr, CapabilityName::Invalid);",
+          "context_before": [
+            "            maybeDiagnose(",
+            "                getSink(),",
+            "                this->getOptionSet(),",
+            "                DiagnosticCategory::Capability,",
+            "                attr,"
+          ],
+          "context_after": [
+            "                attr,",
+            "                CapabilityName::Invalid);",
+            "    }",
+            "    else if (auto requirePreludeAttr = as<RequirePreludeAttribute>(attr))",
+            "    {"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 36112,
+      "severity": "Warning",
+      "name": "entryPointAndProfileAreIncompatible",
+      "message": "'$0' is defined for stage '$1', which is incompatible with the declared profile '$2'.",
+      "line": 1240,
+      "param_count": 3,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-shader.cpp",
+          "line": 1105,
+          "statement": "Diagnostics::entryPointAndProfileAreIncompatible, entryPointFuncDecl, entryPointStage, targetProfile.getName());",
+          "context_before": [
+            "                maybeDiagnose(",
+            "                    sink,",
+            "                    optionSet,",
+            "                    DiagnosticCategory::Capability,",
+            "                    entryPointAttr,"
+          ],
+          "context_after": [
+            "                    entryPointFuncDecl,",
+            "                    entryPointStage,",
+            "                    targetProfile.getName());",
+            "        }",
+            "        if (entryPointProfileStage == Stage::Unknown)"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 36113,
+      "severity": "Warning",
+      "name": "usingInternalCapabilityName",
+      "message": "'$0' resolves into a '_Internal' '_$1' Capability, use '$1' instead.",
+      "line": 1245,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 669,
+          "statement": "Diagnostics::usingInternalCapabilityName, attr, capName);",
+          "context_before": [
+            "                maybeDiagnose(",
+            "                    getSink(),",
+            "                    this->getOptionSet(),",
+            "                    DiagnosticCategory::Capability,",
+            "                    attr,"
+          ],
+          "context_after": [
+            "                    attr,",
+            "                    capName);",
+            "",
+            "            // Ensure this capability only defines 1 stage per target, else diagnose an error.",
+            "            // This is a fatal error, do not allow toggling this error off."
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 1139,
+          "statement": "Diagnostics::usingInternalCapabilityName, attr, capName);",
+          "context_before": [
+            "                    maybeDiagnose(",
+            "                        getSink(),",
+            "                        this->getOptionSet(),",
+            "                        DiagnosticCategory::Capability,",
+            "                        attr,"
+          ],
+          "context_after": [
+            "                        attr,",
+            "                        capName);",
+            "            }",
+            "        }",
+            "        requireCapAttr->capabilitySet = CapabilitySet(capabilityNames).freeze(getASTBuilder());"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 36114,
+      "severity": "Warning",
+      "name": "incompatibleWithPrecompileLib",
+      "message": "Precompiled library requires '$0', has `$1`, implicitly upgrading capabilities.",
+      "line": 1250,
+      "param_count": 2,
+      "call_sites": []
+    },
+    {
+      "id": 36115,
+      "severity": "Error",
+      "name": "incompatibleWithPrecompileLibRestrictive",
+      "message": "Precompiled library requires '$0', has `$1`.",
+      "line": 1255,
+      "param_count": 2,
+      "call_sites": []
+    },
+    {
+      "id": 36116,
+      "severity": "Error",
+      "name": "capabilityHasMultipleStages",
+      "message": "Capability '$0' is targeting stages '$1', only allowed to use 1 unique stage here.",
+      "line": 1260,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 696,
+          "statement": "Diagnostics::capabilityHasMultipleStages, capNameString, atomsToPrint);",
+          "context_before": [
+            "                atomsToPrint.reserve(stageToBeUsed.getCount());",
+            "                for (auto i : stageToBeUsed)",
+            "                    atomsToPrint.add(i);",
+            "                getSink()->diagnose(",
+            "                    attr,"
+          ],
+          "context_after": [
+            "                    capNameString,",
+            "                    atomsToPrint);",
+            "            }",
+            "            return entryPointAttr;",
+            "        }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 36117,
+      "severity": "Error",
+      "name": "declHasDependenciesNotCompatibleOnStage",
+      "message": "'$0' requires support for stage '$1', but stage is unsupported.",
+      "line": 1265,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 15202,
+          "statement": "Diagnostics::declHasDependenciesNotCompatibleOnStage, decl, formattedAtom);",
+          "context_before": [
+            "            maybeDiagnose(",
+            "                getSink(),",
+            "                this->getOptionSet(),",
+            "                DiagnosticCategory::Capability,",
+            "                decl,"
+          ],
+          "context_after": [
+            "                decl,",
+            "                formattedAtom);",
+            "        }",
+            "        else",
+            "        {"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 36118,
+      "severity": "Error",
+      "name": "subTypeHasSubsetOfAbstractAtomsToSuperType",
+      "message": "subtype '$0' must have the same target/stage support as the supertype; '$0' is missing '$1'",
+      "line": 1270,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 14698,
+          "statement": "Diagnostics::subTypeHasSubsetOfAbstractAtomsToSuperType, inheritanceParentDecl, failedAvailableCapabilityConjunction);",
+          "context_before": [
+            "        maybeDiagnose(",
+            "            getSink(),",
+            "            getOptionSet(),",
+            "            DiagnosticCategory::Capability,",
+            "            inheritanceParentDecl,"
+          ],
+          "context_after": [
+            "            inheritanceParentDecl,",
+            "            failedAvailableCapabilityConjunction);",
+            "        maybeDiagnose(",
+            "            getSink(),",
+            "            getOptionSet(),"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 36119,
+      "severity": "Error",
+      "name": "requirmentHasSubsetOfAbstractAtomsToImplementation",
+      "message": "requirement '$0' must have the same target/stage support as the implementation; '$0' is missing '$1'",
+      "line": 1275,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 14650,
+          "statement": "Diagnostics::requirmentHasSubsetOfAbstractAtomsToImplementation, implDecl, failedAvailableCapabilityConjunction);",
+          "context_before": [
+            "                maybeDiagnose(",
+            "                    getSink(),",
+            "                    getOptionSet(),",
+            "                    DiagnosticCategory::Capability,",
+            "                    implDecl,"
+          ],
+          "context_after": [
+            "                    implDecl,",
+            "                    failedAvailableCapabilityConjunction);",
+            "                maybeDiagnose(",
+            "                    getSink(),",
+            "                    getOptionSet(),"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 36120,
+      "severity": "Error",
+      "name": "targetSwitchCapCasesConflict",
+      "message": "the capability for case '$0' is '$1', which is conflicts with previous case which requires '$2'.In target_switch, if two cases are belong to the same target, then one capability set has to be a subset of the other.",
+      "line": 1282,
+      "param_count": 3,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 14324,
+          "statement": "Diagnostics::targetSwitchCapCasesConflict, caseName,    // arg0 newSet,      // arg1 currentSet); // arg2",
+          "context_before": [
+            "            maybeDiagnose(",
+            "                Base::getSink(),",
+            "                outerContext.getOptionSet(),",
+            "                DiagnosticCategory::Capability,",
+            "                loc,"
+          ],
+          "context_after": [
+            "                caseName,    // arg0",
+            "                newSet,      // arg1",
+            "                currentSet); // arg2",
+            "        }",
+            "    }"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31000,
+      "severity": "Warning",
+      "name": "unknownAttributeName",
+      "message": "unknown attribute '$0'",
+      "line": 1292,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 1212,
+          "statement": "getSink()->diagnose(uncheckedAttr, Diagnostics::unknownAttributeName, attrName);",
+          "context_before": [
+            "    auto attrName = uncheckedAttr->getKeywordName();",
+            "    auto attrDecl = lookUpAttributeDecl(attrName, uncheckedAttr->scope);",
+            "",
+            "    if (!attrDecl)",
+            "    {"
+          ],
+          "context_after": [
+            "        return uncheckedAttr;",
+            "    }",
+            "",
+            "    if (!attrDecl->syntaxClass.isSubClassOf<Attribute>())",
+            "    {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31001,
+      "severity": "Error",
+      "name": "attributeArgumentCountMismatch",
+      "message": "attribute '$0' expects $1 arguments ($2 provided)",
+      "line": 1293,
+      "param_count": 3,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 727,
+          "statement": "Diagnostics::attributeArgumentCountMismatch, attr->keywordName, \"1...2\", argsCount);",
+          "context_before": [
+            "        const auto argsCount = opAttr->args.getCount();",
+            "        if (argsCount < 1 || argsCount > 2)",
+            "        {",
+            "            sink->diagnose(",
+            "                attr,"
+          ],
+          "context_after": [
+            "                attr->keywordName,",
+            "                \"1...2\",",
+            "                argsCount);",
+            "        }",
+            "        else if (!as<IntegerLiteralExpr>(opAttr->args[0]))"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 1289,
+          "statement": "Diagnostics::attributeArgumentCountMismatch, attrName, paramCount, argCount);",
+          "context_before": [
+            "",
+            "    if (mismatch)",
+            "    {",
+            "        getSink()->diagnose(",
+            "            attr,"
+          ],
+          "context_after": [
+            "            attrName,",
+            "            paramCount,",
+            "            argCount);",
+            "        return uncheckedAttr;",
+            "    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31002,
+      "severity": "Error",
+      "name": "attributeNotApplicable",
+      "message": "attribute '$0' is not valid here",
+      "line": 1298,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 1083,
+          "statement": "getSink()->diagnose(attr, Diagnostics::attributeNotApplicable, attr->getKeywordName());",
+          "context_before": [
+            "    else if (const auto derivativeMemberAttr = as<DerivativeMemberAttribute>(attr))",
+            "    {",
+            "        auto varDecl = as<VarDeclBase>(attrTarget);",
+            "        if (!varDecl)",
+            "        {"
+          ],
+          "context_after": [
+            "            return nullptr;",
+            "        }",
+            "    }",
+            "    else if (auto deprecatedAttr = as<DeprecatedAttribute>(attr))",
+            "    {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 1326,
+          "statement": "getSink()->diagnose(attr, Diagnostics::attributeNotApplicable, attrName);",
+          "context_before": [
+            "        break;",
+            "    };",
+            "",
+            "    if (!validTarget)",
+            "    {"
+          ],
+          "context_after": [
+            "        return uncheckedAttr;",
+            "    }",
+            "",
+            "    // Now apply type-specific validation to the attribute.",
+            "    if (!validateAttribute(attr, attrDecl, attrTarget))"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 1572,
+          "statement": "Diagnostics::attributeNotApplicable, diffType, declRefExpr->type);",
+          "context_before": [
+            "        }",
+            "        if (!varDecl->parentDecl)",
+            "        {",
+            "            getSink()->diagnose(",
+            "                derivativeMemberAttr,"
+          ],
+          "context_after": [
+            "                diffType,",
+            "                declRefExpr->type);",
+            "        }",
+            "        if (auto memberExpr = as<StaticMemberExpr>(declRefExpr))",
+            "        {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31003,
+      "severity": "Error",
+      "name": "badlyDefinedPatchConstantFunc",
+      "message": "hull shader '$0' has has badly defined 'patchconstantfunc' attribute.",
+      "line": 1300,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-shader.cpp",
+          "line": 738,
+          "statement": "sink->diagnose(attr, Diagnostics::badlyDefinedPatchConstantFunc, entryPointName);",
+          "context_before": [
+            "",
+            "        if (attr)",
+            "        {",
+            "            if (attr->args.getCount() != 1)",
+            "            {"
+          ],
+          "context_after": [
+            "                return;",
+            "            }",
+            "",
+            "            Expr* expr = attr->args[0];",
+            "            StringLiteralExpr* stringLit = as<StringLiteralExpr>(expr);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-shader.cpp",
+          "line": 747,
+          "statement": "sink->diagnose(expr, Diagnostics::badlyDefinedPatchConstantFunc, entryPointName);",
+          "context_before": [
+            "            Expr* expr = attr->args[0];",
+            "            StringLiteralExpr* stringLit = as<StringLiteralExpr>(expr);",
+            "",
+            "            if (!stringLit)",
+            "            {"
+          ],
+          "context_after": [
+            "                return;",
+            "            }",
+            "",
+            "            // We look up the patch-constant function by its name in the module",
+            "            // scope of the translation unit that declared the HS entry point."
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31004,
+      "severity": "Error",
+      "name": "expectedSingleIntArg",
+      "message": "attribute '$0' expects a single int argument",
+      "line": 1306,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 753,
+          "statement": "getSink()->diagnose(attr, Diagnostics::expectedSingleIntArg, attr->keywordName);",
+          "context_before": [
+            "    else if (as<OutputControlPointsAttribute>(attr))",
+            "    {",
+            "        // Let it go thru iff single integral attribute",
+            "        if (!hasIntArgs(attr, 1))",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "    }",
+            "    else if (auto attrUsageAttr = as<AttributeUsageAttribute>(attr))",
+            "    {",
+            "        uint32_t targetClassId = (uint32_t)UserDefinedAttributeTargets::None;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 785,
+          "statement": "getSink()->diagnose(attr, Diagnostics::expectedSingleIntArg, attr->keywordName);",
+          "context_before": [
+            "            {",
+            "                targetClassId = (uint32_t)(cInt->getValue());",
+            "            }",
+            "            else",
+            "            {"
+          ],
+          "context_after": [
+            "                return nullptr;",
+            "            }",
+            "        }",
+            "        if (!getAttributeTargetSyntaxClasses(attrUsageAttr->targetSyntaxClass, targetClassId))",
+            "        {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31005,
+      "severity": "Error",
+      "name": "expectedSingleStringArg",
+      "message": "attribute '$0' expects a single string argument",
+      "line": 1307,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 716,
+          "statement": "getSink()->diagnose(attr, Diagnostics::expectedSingleStringArg, attr->keywordName);",
+          "context_before": [
+            "        (as<PartitioningAttribute>(attr)) || (as<PatchConstantFuncAttribute>(attr)))",
+            "    {",
+            "        // Let it go thru iff single string attribute",
+            "        if (!hasStringArgs(attr, 1))",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "    }",
+            "    else if (auto opAttr = as<SPIRVInstructionOpAttribute>(attr))",
+            "    {",
+            "        auto sink = getSink();"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31006,
+      "severity": "Error",
+      "name": "attributeFunctionNotFound",
+      "message": "Could not find function '$0' for attribute'$1'",
+      "line": 1309,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-shader.cpp",
+          "line": 770,
+          "statement": "Diagnostics::attributeFunctionNotFound, name, \"patchconstantfunc\");",
+          "context_before": [
+            "            DeclRef<FuncDecl> patchConstantFuncDeclRef = findFunctionDeclByName(module, name, sink);",
+            "            if (!patchConstantFuncDeclRef)",
+            "            {",
+            "                sink->diagnose(",
+            "                    expr,"
+          ],
+          "context_after": [
+            "                    name,",
+            "                    \"patchconstantfunc\");",
+            "                return;",
+            "            }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31007,
+      "severity": "Error",
+      "name": "attributeExpectedIntArg",
+      "message": "attribute '$0' expects argument $1 to be int",
+      "line": 1315,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 734,
+          "statement": "sink->diagnose(attr, Diagnostics::attributeExpectedIntArg, attr->keywordName, 0);",
+          "context_before": [
+            "                \"1...2\",",
+            "                argsCount);",
+            "        }",
+            "        else if (!as<IntegerLiteralExpr>(opAttr->args[0]))",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "        else if (argsCount > 1 && !as<StringLiteralExpr>(opAttr->args[1]))",
+            "        {",
+            "            sink->diagnose(attr, Diagnostics::attributeExpectedStringArg, attr->keywordName, 1);",
+            "        }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31008,
+      "severity": "Error",
+      "name": "attributeExpectedStringArg",
+      "message": "attribute '$0' expects argument $1 to be string",
+      "line": 1316,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 738,
+          "statement": "sink->diagnose(attr, Diagnostics::attributeExpectedStringArg, attr->keywordName, 1);",
+          "context_before": [
+            "        {",
+            "            sink->diagnose(attr, Diagnostics::attributeExpectedIntArg, attr->keywordName, 0);",
+            "        }",
+            "        else if (argsCount > 1 && !as<StringLiteralExpr>(opAttr->args[1]))",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "    }",
+            "    else if (as<MaxTessFactorAttribute>(attr))",
+            "    {",
+            "        if (!hasFloatArgs(attr, 1))"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31009,
+      "severity": "Error",
+      "name": "expectedSingleFloatArg",
+      "message": "attribute '$0' expects a single floating point argument",
+      "line": 1322,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 745,
+          "statement": "getSink()->diagnose(attr, Diagnostics::expectedSingleFloatArg, attr->keywordName);",
+          "context_before": [
+            "    }",
+            "    else if (as<MaxTessFactorAttribute>(attr))",
+            "    {",
+            "        if (!hasFloatArgs(attr, 1))",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "    }",
+            "    else if (as<OutputControlPointsAttribute>(attr))",
+            "    {",
+            "        // Let it go thru iff single integral attribute"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31100,
+      "severity": "Error",
+      "name": "unknownStageName",
+      "message": "unknown stage name '$0'",
+      "line": 1328,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-stmt.cpp",
+          "line": 449,
+          "statement": "Diagnostics::unknownStageName, caseStmt->capabilityToken);",
+          "context_before": [
+            "        {",
+            "            if (!isStage && caseStmt->capability != (int32_t)CapabilityName::Invalid)",
+            "            {",
+            "                getSink()->diagnose(",
+            "                    caseStmt->capabilityToken.loc,"
+          ],
+          "context_after": [
+            "                    caseStmt->capabilityToken);",
+            "            }",
+            "            caseStmt->capability = (int32_t)canonicalStage;",
+            "        }",
+            "        else"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31101,
+      "severity": "Error",
+      "name": "unknownImageFormatName",
+      "message": "unknown image format '$0'",
+      "line": 1329,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 911,
+          "statement": "getSink()->diagnose(attr->args[0], Diagnostics::unknownImageFormatName, formatName);",
+          "context_before": [
+            "",
+            "        if (attr->keywordName->text.getUnownedSlice() == toSlice(\"image\"))",
+            "        {",
+            "            if (!findImageFormatByName(formatName.getUnownedSlice(), &format))",
+            "            {"
+          ],
+          "context_after": [
+            "            }",
+            "        }",
+            "        else",
+            "        {",
+            "            if (!findVkImageFormatByName(formatName.getUnownedSlice(), &format))"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 918,
+          "statement": "getSink()->diagnose(attr->args[0], Diagnostics::unknownImageFormatName, formatName);",
+          "context_before": [
+            "        }",
+            "        else",
+            "        {",
+            "            if (!findVkImageFormatByName(formatName.getUnownedSlice(), &format))",
+            "            {"
+          ],
+          "context_after": [
+            "            }",
+            "        }",
+            "",
+            "        formatAttr->format = format;",
+            "    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31101,
+      "severity": "Error",
+      "name": "unknownDiagnosticName",
+      "message": "unknown diagnostic '$0'",
+      "line": 1330,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 937,
+          "statement": "getSink()->diagnose(attr->args[0], Diagnostics::unknownDiagnosticName, diagnosticName);",
+          "context_before": [
+            "        }",
+            "",
+            "        auto diagnosticInfo = findDiagnosticByName(diagnosticName.getUnownedSlice());",
+            "        if (!diagnosticInfo)",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "",
+            "        allowAttr->diagnostic = diagnosticInfo;",
+            "    }",
+            "    else if (auto dllImportAttr = as<DllImportAttribute>(attr))"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-diagnostics.cpp",
+          "line": 81,
+          "statement": "outDiagnostic->diagnose(SourceLoc(), Diagnostics::unknownDiagnosticName, identifier);",
+          "context_before": [
+            "    // If it starts with a digit we assume it a number",
+            "    if (identifier.getLength() > 0 && (CharUtil::isDigit(identifier[0]) || identifier[0] == '-'))",
+            "    {",
+            "        if (SLANG_FAILED(StringUtil::parseInt(identifier, diagnosticId)))",
+            "        {"
+          ],
+          "context_after": [
+            "            return SLANG_FAIL;",
+            "        }",
+            "",
+            "        // If we use numbers, we don't worry if we can't find a diagnostic",
+            "        // and silently ignore. This was the previous behavior, and perhaps"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-diagnostics.cpp",
+          "line": 96,
+          "statement": "outDiagnostic->diagnose(SourceLoc(), Diagnostics::unknownDiagnosticName, identifier);",
+          "context_before": [
+            "    else",
+            "    {",
+            "        diagnostic = diagnosticsLookup->findDiagnosticByName(identifier);",
+            "        if (!diagnostic)",
+            "        {"
+          ],
+          "context_after": [
+            "            return SLANG_FAIL;",
+            "        }",
+            "        diagnosticId = diagnostic->id;",
+            "    }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-diagnostics.cpp",
+          "line": 109,
+          "statement": "outDiagnostic->diagnose(SourceLoc(), Diagnostics::unknownDiagnosticName, identifier);",
+          "context_before": [
+            "        diagnostic->severity != originalSeverity)",
+            "    {",
+            "        // Strictly speaking the diagnostic name is known, but it's not the right severity",
+            "        // to be converted from, so it is an 'unknown name' in the context of severity...",
+            "        // Or perhaps we want another diagnostic"
+          ],
+          "context_after": [
+            "        return SLANG_FAIL;",
+            "    }",
+            "",
+            "    // Override the diagnostic severity in the sink",
+            "    sink->overrideDiagnosticSeverity(int(diagnosticId), overrideSeverity, diagnostic);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31102,
+      "severity": "Error",
+      "name": "nonPositiveNumThreads",
+      "message": "expected a positive integer in 'numthreads' attribute, got '$0'",
+      "line": 1331,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 423,
+          "statement": "Diagnostics::nonPositiveNumThreads, constIntVal->getValue());",
+          "context_before": [
+            "                {",
+            "                    if (constIntVal->getValue() < 1)",
+            "                    {",
+            "                        getSink()->diagnose(",
+            "                            attr,"
+          ],
+          "context_after": [
+            "                            constIntVal->getValue());",
+            "                        return nullptr;",
+            "                    }",
+            "                    if (intValue->getType() != m_astBuilder->getIntType())",
+            "                    {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 2024,
+          "statement": "Diagnostics::nonPositiveNumThreads, cintVal->getValue());",
+          "context_before": [
+            "                    }",
+            "                    else if (cintVal->getValue() < 1)",
+            "                    {",
+            "                        getSink()->diagnose(",
+            "                            attr,"
+          ],
+          "context_after": [
+            "                            cintVal->getValue());",
+            "                        return nullptr;",
+            "                    }",
+            "                }",
+            "                attr->extents[i] = intValue;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31103,
+      "severity": "Error",
+      "name": "invalidWaveSize",
+      "message": "expected a power of 2 between 4 and 128, inclusive, in 'WaveSize' attribute, got '$0'",
+      "line": 1336,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 476,
+          "statement": "Diagnostics::invalidWaveSize, constIntVal->getValue());",
+          "context_before": [
+            "                }",
+            "                if (!isValidWaveSize)",
+            "                {",
+            "                    getSink()->diagnose(",
+            "                        attr,"
+          ],
+          "context_after": [
+            "                        constIntVal->getValue());",
+            "                    return nullptr;",
+            "                }",
+            "            }",
+            "            value = intValue;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31104,
+      "severity": "Warning",
+      "name": "explicitUniformLocation",
+      "message": "Explicit binding of uniform locations is discouraged. Prefer 'ConstantBuffer<$0>' over 'uniform $0'",
+      "line": 1341,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-parameter-binding.cpp",
+          "line": 4207,
+          "statement": "Diagnostics::explicitUniformLocation, as<VarDecl>(varLayout->varDecl).getDecl()->getType());",
+          "context_before": [
+            "                needDefaultConstantBuffer = true;",
+            "                if (varLayout->varDecl.getDecl()->hasModifier<GLSLBindingAttribute>() ||",
+            "                    varLayout->varDecl.getDecl()->hasModifier<GLSLLocationAttribute>())",
+            "                    sink->diagnose(",
+            "                        varLayout->varDecl,"
+          ],
+          "context_after": [
+            "                        as<VarDecl>(varLayout->varDecl).getDecl()->getType());",
+            "                diagnoseGlobalUniform(",
+            "                    &sharedContext,",
+            "                    as<VarDeclBase>(varLayout->varDecl.getDecl()));",
+            "            }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31105,
+      "severity": "Warning",
+      "name": "imageFormatUnsupportedByBackend",
+      "message": "Image format '$0' is not explicitly supported by the $1 backend, using supported format '$2' instead.",
+      "line": 1347,
+      "param_count": 3,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-emit-glsl.cpp",
+          "line": 660,
+          "statement": "Diagnostics::imageFormatUnsupportedByBackend, formatInfo.name, \"GLSL\", \"unknown\");",
+          "context_before": [
+            "        const auto formatInfo = getImageFormatInfo(format);",
+            "        if (!isImageFormatSupportedByGLSL(format))",
+            "        {",
+            "            getSink()->diagnose(",
+            "                SourceLoc(),"
+          ],
+          "context_after": [
+            "                formatInfo.name,",
+            "                \"GLSL\",",
+            "                \"unknown\");",
+            "            format = ImageFormat::unknown;",
+            "        }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-emit-wgsl.cpp",
+          "line": 446,
+          "statement": "Diagnostics::imageFormatUnsupportedByBackend, imageFormatInfo.name, \"WGSL\", \"rgba32float\");",
+          "context_before": [
+            "        return \"rgba32float\";",
+            "    default:",
+            "        const auto imageFormatInfo = getImageFormatInfo(imageFormat);",
+            "        getSink()->diagnose(",
+            "            SourceLoc(),"
+          ],
+          "context_after": [
+            "            imageFormatInfo.name,",
+            "            \"WGSL\",",
+            "            \"rgba32float\");",
+            "        return \"rgba32float\";",
+            "    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-emit-spirv.cpp",
+          "line": 2765,
+          "statement": "Diagnostics::imageFormatUnsupportedByBackend, imageFormatInfo.name, \"SPIRV\", \"unknown\");",
+          "context_before": [
+            "            return SpvImageFormatR64i;",
+            "        default:",
+            "            const auto imageFormatInfo = getImageFormatInfo(imageFormat);",
+            "            m_sink->diagnose(",
+            "                SourceLoc(),"
+          ],
+          "context_after": [
+            "                imageFormatInfo.name,",
+            "                \"SPIRV\",",
+            "                \"unknown\");",
+            "            return SpvImageFormatUnknown;",
+            "        }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31120,
+      "severity": "Error",
+      "name": "invalidAttributeTarget",
+      "message": "invalid syntax target for user defined attribute",
+      "line": 1355,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 791,
+          "statement": "getSink()->diagnose(attr, Diagnostics::invalidAttributeTarget);",
+          "context_before": [
+            "                return nullptr;",
+            "            }",
+            "        }",
+            "        if (!getAttributeTargetSyntaxClasses(attrUsageAttr->targetSyntaxClass, targetClassId))",
+            "        {"
+          ],
+          "context_after": [
+            "            return nullptr;",
+            "        }",
+            "",
+            "        // Create or find the AttributeDecl that represents the attribute",
+            "        // this struct defines."
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31125,
+      "severity": "Error",
+      "name": "attributeUsageAttributeMustBeOnNonGenericStruct",
+      "message": "[__AttributeUsage] can only be applied to non-generic struct definitions",
+      "line": 1356,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 764,
+          "statement": "Diagnostics::attributeUsageAttributeMustBeOnNonGenericStruct, attr->keywordName);",
+          "context_before": [
+            "        auto structDecl = as<StructDecl>(attrTarget);",
+            "        if (!structDecl)",
+            "        {",
+            "            getSink()->diagnose(",
+            "                attr,"
+          ],
+          "context_after": [
+            "                attr->keywordName);",
+            "            return nullptr;",
+            "        }",
+            "        if (findNextOuterGeneric(structDecl) != nullptr)",
+            "        {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 772,
+          "statement": "Diagnostics::attributeUsageAttributeMustBeOnNonGenericStruct, attr->keywordName);",
+          "context_before": [
+            "        }",
+            "        if (findNextOuterGeneric(structDecl) != nullptr)",
+            "        {",
+            "            getSink()->diagnose(",
+            "                attr,"
+          ],
+          "context_after": [
+            "                attr->keywordName);",
+            "            return nullptr;",
+            "        }",
+            "        if (attr->args.getCount() == 1)",
+            "        {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31121,
+      "severity": "Error",
+      "name": "anyValueSizeExceedsLimit",
+      "message": "'anyValueSize' cannot exceed $0",
+      "line": 1361,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 511,
+          "statement": "Diagnostics::anyValueSizeExceedsLimit, kMaxAnyValueSize);",
+          "context_before": [
+            "        const IRIntegerValue kMaxAnyValueSize = 0x7FFF;",
+            "        if (value->getValue() > kMaxAnyValueSize)",
+            "        {",
+            "            getSink()->diagnose(",
+            "                anyValueSizeAttr->loc,"
+          ],
+          "context_after": [
+            "                kMaxAnyValueSize);",
+            "            return nullptr;",
+            "        }",
+            "",
+            "        anyValueSizeAttr->size = int32_t(value->getValue());"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31122,
+      "severity": "Error",
+      "name": "associatedTypeNotAllowInComInterface",
+      "message": "associatedtype not allowed in a [COM] interface",
+      "line": 1363,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 8083,
+          "statement": "getSink()->diagnose(associatedType, Diagnostics::associatedTypeNotAllowInComInterface);",
+          "context_before": [
+            "    if (decl->findModifier<ComInterfaceAttribute>())",
+            "    {",
+            "        // `associatedtype` declaration is not allowed in a COM interface declaration.",
+            "        for (auto associatedType : decl->getMembersOfType<AssocTypeDecl>())",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "    }",
+            "}",
+            "",
+            "void SemanticsDeclBasesVisitor::visitStructDecl(StructDecl* decl)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31123,
+      "severity": "Error",
+      "name": "invalidGUID",
+      "message": "'$0' is not a valid GUID",
+      "line": 1368,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 1067,
+          "statement": "getSink()->diagnose(attr, Diagnostics::invalidGUID, guid);",
+          "context_before": [
+            "            {",
+            "                continue;",
+            "            }",
+            "            else",
+            "            {"
+          ],
+          "context_after": [
+            "                return nullptr;",
+            "            }",
+            "        }",
+            "        comInterfaceAttr->guid = resultGUID.toString();",
+            "        if (comInterfaceAttr->guid.getLength() != 32)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 1074,
+          "statement": "getSink()->diagnose(attr, Diagnostics::invalidGUID, guid);",
+          "context_before": [
+            "            }",
+            "        }",
+            "        comInterfaceAttr->guid = resultGUID.toString();",
+            "        if (comInterfaceAttr->guid.getLength() != 32)",
+            "        {"
+          ],
+          "context_after": [
+            "            return nullptr;",
+            "        }",
+            "    }",
+            "    else if (const auto derivativeMemberAttr = as<DerivativeMemberAttribute>(attr))",
+            "    {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31124,
+      "severity": "Error",
+      "name": "structCannotImplementComInterface",
+      "message": "a struct type cannot implement a [COM] interface",
+      "line": 1369,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 7652,
+          "statement": "Diagnostics::structCannotImplementComInterface);",
+          "context_before": [
+            "                }",
+            "                else if (const auto structDecl = as<StructDecl>(superTypeDecl))",
+            "                {",
+            "                    getSink()->diagnose(",
+            "                        inheritanceDecl,"
+          ],
+          "context_after": [
+            "                }",
+            "            }",
+            "        }",
+            "",
+            "        // Don't check conformances for abstract types that"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31124,
+      "severity": "Error",
+      "name": "interfaceInheritingComMustBeCom",
+      "message": "an interface type that inherits from a [COM] interface must itself be a [COM] interface",
+      "line": 1374,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 7645,
+          "statement": "Diagnostics::interfaceInheritingComMustBeCom);",
+          "context_before": [
+            "                {",
+            "                    if (!subInterfaceDecl->findModifier<ComInterfaceAttribute>())",
+            "                    {",
+            "                        getSink()->diagnose(",
+            "                            inheritanceDecl,"
+          ],
+          "context_after": [
+            "                    }",
+            "                }",
+            "                else if (const auto structDecl = as<StructDecl>(superTypeDecl))",
+            "                {",
+            "                    getSink()->diagnose("
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31130,
+      "severity": "Error",
+      "name": "derivativeMemberAttributeMustNameAMemberInExpectedDifferentialType",
+      "message": "[DerivativeMember] must reference to a member in the associated differential type '$0'.",
+      "line": 1380,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 1590,
+          "statement": "Diagnostics::derivativeMemberAttributeMustNameAMemberInExpectedDifferentialType, diffThisType);",
+          "context_before": [
+            "            }",
+            "        }",
+            "    }",
+            "    getSink()->diagnose(",
+            "        derivativeMemberAttr,"
+          ],
+          "context_after": [
+            "        diffThisType);",
+            "}",
+            "",
+            "Type* SemanticsVisitor::getDifferentialType(ASTBuilder* builder, Type* type, SourceLoc loc)",
+            "{"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31131,
+      "severity": "Error",
+      "name": "invalidUseOfDerivativeMemberAttributeParentTypeIsNotDifferentiable",
+      "message": "invalid use of [DerivativeMember], parent type is not differentiable.",
+      "line": 1385,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 1848,
+          "statement": "Diagnostics::invalidUseOfDerivativeMemberAttributeParentTypeIsNotDifferentiable);",
+          "context_before": [
+            "    auto diffThisType = getDifferentialType(m_astBuilder, thisType, derivativeMemberAttr->loc);",
+            "    if (!diffThisType)",
+            "    {",
+            "        getSink()->diagnose(",
+            "            derivativeMemberAttr,"
+          ],
+          "context_after": [
+            "    }",
+            "}",
+            "",
+            "void SemanticsDeclHeaderVisitor::checkExtensionExternVarAttribute(",
+            "    VarDeclBase* varDecl,"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31132,
+      "severity": "Error",
+      "name": "derivativeMemberAttributeCanOnlyBeUsedOnMembers",
+      "message": "[DerivativeMember] is allowed on members only.",
+      "line": 1390,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 1841,
+          "statement": "Diagnostics::derivativeMemberAttributeCanOnlyBeUsedOnMembers);",
+          "context_before": [
+            "    auto thisType = calcThisType(makeDeclRef(varDecl->parentDecl));",
+            "    if (!thisType)",
+            "    {",
+            "        getSink()->diagnose(",
+            "            derivativeMemberAttr,"
+          ],
+          "context_after": [
+            "    }",
+            "    auto diffThisType = getDifferentialType(m_astBuilder, thisType, derivativeMemberAttr->loc);",
+            "    if (!diffThisType)",
+            "    {",
+            "        getSink()->diagnose("
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31140,
+      "severity": "Error",
+      "name": "typeOfExternDeclMismatchesOriginalDefinition",
+      "message": "type of `extern` decl '$0' differs from its original definition. expected '$1'.",
+      "line": 1396,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 1866,
+          "statement": "Diagnostics::typeOfExternDeclMismatchesOriginalDefinition, varDecl, originalType);",
+          "context_before": [
+            "            auto extVarType = varDecl->type;",
+            "            if (!extVarType.type || !extVarType.type->equals(originalType))",
+            "            {",
+            "                getSink()->diagnose(",
+            "                    varDecl,"
+          ],
+          "context_after": [
+            "                    varDecl,",
+            "                    originalType);",
+            "            }",
+            "            else",
+            "            {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31141,
+      "severity": "Error",
+      "name": "definitionOfExternDeclMismatchesOriginalDefinition",
+      "message": "`extern` decl '$0' is not consistent with its original definition.",
+      "line": 1401,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 1879,
+          "statement": "Diagnostics::definitionOfExternDeclMismatchesOriginalDefinition, varDecl);",
+          "context_before": [
+            "        }",
+            "        else",
+            "        {",
+            "            getSink()->diagnose(",
+            "                varDecl,"
+          ],
+          "context_after": [
+            "                varDecl);",
+            "        }",
+            "    }",
+            "}",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31142,
+      "severity": "Error",
+      "name": "ambiguousOriginalDefintionOfExternDecl",
+      "message": "`extern` decl '$0' has ambiguous original definitions.",
+      "line": 1406,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 1819,
+          "statement": "Diagnostics::ambiguousOriginalDefintionOfExternDecl, varDecl);",
+          "context_before": [
+            "                }",
+            "                else if (filteredResult.isOverloaded())",
+            "                {",
+            "                    getSink()->diagnose(",
+            "                        varDecl,"
+          ],
+          "context_after": [
+            "                        varDecl);",
+            "                }",
+            "                else",
+            "                {",
+            "                    getSink()->diagnose("
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31143,
+      "severity": "Error",
+      "name": "missingOriginalDefintionOfExternDecl",
+      "message": "no original definition found for `extern` decl '$0'.",
+      "line": 1411,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 1826,
+          "statement": "Diagnostics::missingOriginalDefintionOfExternDecl, varDecl);",
+          "context_before": [
+            "                }",
+            "                else",
+            "                {",
+            "                    getSink()->diagnose(",
+            "                        varDecl,"
+          ],
+          "context_after": [
+            "                        varDecl);",
+            "                }",
+            "            }",
+            "            // The next part of the check is to make sure the type defined here is consistent with",
+            "            // the original definition. Since we haven't checked the type of this decl yet, we defer"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31145,
+      "severity": "Error",
+      "name": "invalidCustomDerivative",
+      "message": "invalid custom derivative attribute.",
+      "line": 1417,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 31146,
+      "severity": "Error",
+      "name": "declAlreadyHasAttribute",
+      "message": "'$0' already has attribute '[$1]'.",
+      "line": 1418,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 13279,
+          "statement": "Diagnostics::declAlreadyHasAttribute, calleeDeclRef, getDerivativeAttrName<TDerivativeAttr>());",
+          "context_before": [
+            "    if (auto existingModifier = _findModifier<TDerivativeAttr>(calleeFunc))",
+            "    {",
+            "        // The primal function already has a `[*Derivative]` attribute, this is invalid.",
+            "        visitor->getSink()->diagnose(",
+            "            derivativeOfAttr,"
+          ],
+          "context_after": [
+            "            calleeDeclRef,",
+            "            getDerivativeAttrName<TDerivativeAttr>());",
+            "        visitor->getSink()->diagnose(",
+            "            existingModifier->loc,",
+            "            Diagnostics::seeDeclarationOf,"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31147,
+      "severity": "Error",
+      "name": "cannotResolveOriginalFunctionForDerivative",
+      "message": "cannot resolve the original function for the the custom derivative.",
+      "line": 1419,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 13182,
+          "statement": "Diagnostics::cannotResolveOriginalFunctionForDerivative);",
+          "context_before": [
+            "",
+            "    if (!checkedHigherOrderFuncExpr)",
+            "    {",
+            "        visitor->getSink()->diagnose(",
+            "            derivativeOfAttr,"
+          ],
+          "context_after": [
+            "        return;",
+            "    }",
+            "    List<Expr*> imaginaryArgs =",
+            "        getImaginaryArgsToFunc(astBuilder, funcDecl, derivativeOfAttr->loc).args;",
+            "    auto invokeExpr ="
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 13212,
+          "statement": "Diagnostics::cannotResolveOriginalFunctionForDerivative);",
+          "context_before": [
+            "",
+            "    if (!calleeDeclRefExpr)",
+            "    {",
+            "        visitor->getSink()->diagnose(",
+            "            derivativeOfAttr,"
+          ],
+          "context_after": [
+            "        return;",
+            "    }",
+            "",
+            "    calleeDeclRefExpr->loc = higherOrderFuncExpr->loc;",
+            "    if (derivativeOfAttr->args.getCount() > 0)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 13248,
+          "statement": "Diagnostics::cannotResolveOriginalFunctionForDerivative);",
+          "context_before": [
+            "",
+            "    if (!calleeFunc)",
+            "    {",
+            "        visitor->getSink()->diagnose(",
+            "            derivativeOfAttr,"
+          ],
+          "context_after": [
+            "        return;",
+            "    }",
+            "",
+            "    // For now, if calleeFunc or funcDecl is nested inside some generic aggregate,",
+            "    // they must be the same generic decl. For example, using B<T>.f() as the original function"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31148,
+      "severity": "Error",
+      "name": "cannotResolveDerivativeFunction",
+      "message": "cannot resolve the custom derivative function",
+      "line": 1424,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 12708,
+          "statement": "visitor->getSink()->diagnose(attr, Diagnostics::cannotResolveDerivativeFunction);",
+          "context_before": [
+            "    {",
+            "        if (declRefExpr->declRef)",
+            "            visitor->ensureDecl(declRefExpr->declRef, DeclCheckState::TypesFullyResolved);",
+            "        else",
+            "        {"
+          ],
+          "context_after": [
+            "            return;",
+            "        }",
+            "    }",
+            "    else if (auto overloadedExpr = as<OverloadedExpr>(checkedFuncExpr))",
+            "    {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 12733,
+          "statement": "visitor->getSink()->diagnose(attr, Diagnostics::cannotResolveDerivativeFunction);",
+          "context_before": [
+            "            }",
+            "        }",
+            "    }",
+            "    else",
+            "    {"
+          ],
+          "context_after": [
+            "        return;",
+            "    }",
+            "",
+            "    // If left value is true, then convert the",
+            "    // inner type to an BorrowInOutParamType."
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31149,
+      "severity": "Error",
+      "name": "customDerivativeSignatureMismatchAtPosition",
+      "message": "invalid custom derivative. parameter type mismatch at position $0. expected '$1', got '$2'",
+      "line": 1429,
+      "param_count": 3,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 12809,
+          "statement": "Diagnostics::customDerivativeSignatureMismatchAtPosition, ii, qualTypeToString(argList[ii]->type), funcType->getParamTypeWithModeWrapper(ii)->toString());",
+          "context_before": [
+            "                        ctx.getASTBuilder()->getErrorType()) ||",
+            "                    funcType->getParamPassingMode(ii) != paramDirections[ii])",
+            "                {",
+            "                    visitor->getSink()->diagnose(",
+            "                        attr,"
+          ],
+          "context_after": [
+            "                        ii,",
+            "                        qualTypeToString(argList[ii]->type),",
+            "                        funcType->getParamTypeWithModeWrapper(ii)->toString());",
+            "                }",
+            "            }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31150,
+      "severity": "Error",
+      "name": "customDerivativeSignatureMismatch",
+      "message": "invalid custom derivative. could not resolve function with expected signature '$0'",
+      "line": 1434,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 12888,
+          "statement": "Diagnostics::customDerivativeSignatureMismatch);",
+          "context_before": [
+            "                        derivativeNextGeneric,",
+            "                        &specializedDecl))",
+            "                {",
+            "                    visitor->getSink()->diagnose(",
+            "                        attr,"
+          ],
+          "context_after": [
+            "                    return;",
+            "                }",
+            "",
+            "                calleeDeclRef->declRef = substituteDeclRef(",
+            "                    SubstitutionSet(specializedDecl),"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 12927,
+          "statement": "Diagnostics::customDerivativeSignatureMismatch, builder.produceString());",
+          "context_before": [
+            "    }",
+            "    builder << \")\";",
+            "",
+            "    visitor->getSink()->diagnose(",
+            "        attr,"
+          ],
+          "context_after": [
+            "        builder.produceString());",
+            "}",
+            "",
+            "template<typename TDerivativeAttr>",
+            "const char* getDerivativeAttrName()"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31151,
+      "severity": "Error",
+      "name": "cannotResolveGenericArgumentForDerivativeFunction",
+      "message": "The generic arguments to the derivative function cannot be deduced from the parameter list of the original function. Consider using [ForwardDerivative], [BackwardDerivative] or [PrimalSubstitute] attributes on the primal function with explicit generic arguments to associate it with a generic derivative function. Note that [ForwardDerivativeOf], [BackwardDerivativeOf], and [PrimalSubstituteOf] attributes are not supported when the generic arguments to the derivatives cannot be automatically deduced.",
+      "line": 1439,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 12784,
+          "statement": "Diagnostics::cannotResolveGenericArgumentForDerivativeFunction);",
+          "context_before": [
+            "                // generic arguments from imaginary argument list.",
+            "                // In this case we issue a diagnostic to ask the user to explicitly provide the",
+            "                // arguments.",
+            "                visitor->getSink()->diagnose(",
+            "                    attr,"
+          ],
+          "context_after": [
+            "                return;",
+            "            }",
+            "            if (isInterfaceRequirement(calleeDeclRef->declRef.getDecl()))",
+            "            {",
+            "                visitor->getSink()->diagnose("
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 12870,
+          "statement": "Diagnostics::cannotResolveGenericArgumentForDerivativeFunction);",
+          "context_before": [
+            "            if ((!originalNextGeneric) != (!derivativeNextGeneric))",
+            "            {",
+            "                // Diagnostic for when one is generic and the other is not.",
+            "                visitor->getSink()->diagnose(",
+            "                    attr,"
+          ],
+          "context_after": [
+            "                return;",
+            "            }",
+            "",
+            "            if (originalNextGeneric != derivativeNextGeneric)",
+            "            {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 13239,
+          "statement": "Diagnostics::cannotResolveGenericArgumentForDerivativeFunction);",
+          "context_before": [
+            "                // generic decl, the most likely cause is a failure of generic argument",
+            "                // inference.",
+            "                //",
+            "                visitor->getSink()->diagnose(",
+            "                    derivativeOfAttr,"
+          ],
+          "context_after": [
+            "            }",
+            "        }",
+            "    }",
+            "",
+            "    if (!calleeFunc)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31152,
+      "severity": "Error",
+      "name": "cannotAssociateInterfaceRequirementWithDerivative",
+      "message": "cannot associate an interface requirement with a derivative.",
+      "line": 1451,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 12637,
+          "statement": "Diagnostics::cannotAssociateInterfaceRequirementWithDerivative);",
+          "context_before": [
+            "{",
+            "    if (isInterfaceRequirement(funcDecl))",
+            "    {",
+            "        visitor->getSink()->diagnose(",
+            "            attr,"
+          ],
+          "context_after": [
+            "        return;",
+            "    }",
+            "",
+            "    SemanticsContext::ExprLocalScope scope;",
+            "    auto ctx = visitor->withExprLocalScope(&scope);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 13263,
+          "statement": "Diagnostics::cannotAssociateInterfaceRequirementWithDerivative);",
+          "context_before": [
+            "",
+            "    if (isInterfaceRequirement(calleeFunc))",
+            "    {",
+            "        visitor->getSink()->diagnose(",
+            "            derivativeOfAttr,"
+          ],
+          "context_after": [
+            "        return;",
+            "    }",
+            "    if (isInterfaceRequirement(funcDecl))",
+            "    {",
+            "        visitor->getSink()->diagnose("
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31153,
+      "severity": "Error",
+      "name": "cannotUseInterfaceRequirementAsDerivative",
+      "message": "cannot use an interface requirement as a derivative.",
+      "line": 1456,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 12791,
+          "statement": "Diagnostics::cannotUseInterfaceRequirementAsDerivative);",
+          "context_before": [
+            "            }",
+            "            if (isInterfaceRequirement(calleeDeclRef->declRef.getDecl()))",
+            "            {",
+            "                visitor->getSink()->diagnose(",
+            "                    attr,"
+          ],
+          "context_after": [
+            "                return;",
+            "            }",
+            "            if (funcType->getParamCount() != argList.getCount())",
+            "            {",
+            "                goto error;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 13270,
+          "statement": "Diagnostics::cannotUseInterfaceRequirementAsDerivative);",
+          "context_before": [
+            "    }",
+            "    if (isInterfaceRequirement(funcDecl))",
+            "    {",
+            "        visitor->getSink()->diagnose(",
+            "            derivativeOfAttr,"
+          ],
+          "context_after": [
+            "        return;",
+            "    }",
+            "",
+            "    if (auto existingModifier = _findModifier<TDerivativeAttr>(calleeFunc))",
+            "    {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31154,
+      "severity": "Error",
+      "name": "customDerivativeSignatureThisParamMismatch",
+      "message": "custom derivative does not match expected signature on `this`. Both original and derivative function must have the same `this` type.",
+      "line": 1461,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 12851,
+          "statement": "Diagnostics::customDerivativeSignatureThisParamMismatch);",
+          "context_before": [
+            "                if (funcThisType &&",
+            "                    !areTypesCompatibile(visitor, funcThisType, derivativeFuncThisType))",
+            "                {",
+            "                    visitor->getSink()->diagnose(",
+            "                        attr,"
+          ],
+          "context_after": [
+            "                    return;",
+            "                }",
+            "            }",
+            "",
+            "            // If the two decls are under different generic contexts, we'll need to check that"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31155,
+      "severity": "Error",
+      "name": "customDerivativeNotAllowedForMemberFunctionsOfDifferentiableType",
+      "message": "custom derivative is not allowed for non-static member functions of a differentiable type.",
+      "line": 1467,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 31156,
+      "severity": "Error",
+      "name": "customDerivativeExpectedStatic",
+      "message": "expected a static definition for the custom derivative.",
+      "line": 1472,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 12825,
+          "statement": "visitor->getSink()->diagnose(attr, Diagnostics::customDerivativeExpectedStatic);",
+          "context_before": [
+            "",
+            "            bool derivativeFuncIsStatic = isEffectivelyStatic(calleeDeclRef->declRef.getDecl());",
+            "",
+            "            if (expectStaticFunc && !derivativeFuncIsStatic)",
+            "            {"
+          ],
+          "context_after": [
+            "                return;",
+            "            }",
+            "",
+            "            if (!derivativeFuncIsStatic)",
+            "            {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    }
+  ],
+  "notes_reference": {}
+}

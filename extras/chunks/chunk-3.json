@@ -1,0 +1,4088 @@
+{
+  "chunk_index": 3,
+  "total_chunks": 6,
+  "diagnostics": [
+    {
+      "id": 31157,
+      "severity": "Error",
+      "name": "overloadedFuncUsedWithDerivativeOfAttributes",
+      "message": "cannot resolve overloaded functions for derivative-of attributes.",
+      "line": 1477,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 13203,
+          "statement": "Diagnostics::overloadedFuncUsedWithDerivativeOfAttributes);",
+          "context_before": [
+            "            calleeDeclRefExpr = as<DeclRefExpr>(resolvedFuncExpr->baseFunction);",
+            "            if (!calleeDeclRef && as<OverloadedExpr>(resolvedFuncExpr->baseFunction))",
+            "            {",
+            "                visitor->getSink()->diagnose(",
+            "                    derivativeOfAttr,"
+          ],
+          "context_after": [
+            "            }",
+            "        }",
+            "    }",
+            "",
+            "    if (!calleeDeclRefExpr)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31158,
+      "severity": "Error",
+      "name": "primalSubstituteTargetMustHaveHigherDifferentiabilityLevel",
+      "message": "primal substitute function for differentiable method must also be differentiable. Use [Differentiable] or [TreatAsDifferentiable] (for empty derivatives)",
+      "line": 1482,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 13392,
+          "statement": "Diagnostics::primalSubstituteTargetMustHaveHigherDifferentiabilityLevel, declRefExpr->declRef.getDecl(), funcDecl);",
+          "context_before": [
+            "            auto currDiffLevel = visitor->getShared()->getFuncDifferentiableLevel(funcDecl);",
+            "            if (targetDiffLevel < currDiffLevel)",
+            "            {",
+            "                visitor->getSink()->diagnose(",
+            "                    attr->loc,"
+          ],
+          "context_after": [
+            "                    declRefExpr->declRef.getDecl(),",
+            "                    funcDecl);",
+            "            }",
+            "        }",
+            "    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31159,
+      "severity": "Warning",
+      "name": "noDerivativeOnNonDifferentiableThisType",
+      "message": "There is no derivative calculated for member '$0' because the parent struct is not differentiable. If this is intended, consider using [NoDiffThis] on the function '$1' to suppress this warning. Alternatively, users can mark the parent struct as [Differentiable] to propagate derivatives.",
+      "line": 1488,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 1747,
+          "statement": "Diagnostics::noDerivativeOnNonDifferentiableThisType, memberExpr->declRef.getDecl(), this->m_parentFunc);",
+          "context_before": [
+            "                return;",
+            "            }",
+            "",
+            "            getSink()->diagnose(",
+            "                memberExpr->loc,"
+          ],
+          "context_after": [
+            "                memberExpr->declRef.getDecl(),",
+            "                this->m_parentFunc);",
+            "        }",
+            "    }",
+            "}"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31160,
+      "severity": "Error",
+      "name": "invalidAddressOf",
+      "message": "'__getAddress' only supports groupshared variables and members of groupshared/device memory.",
+      "line": 1497,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 4537,
+          "statement": "getSink()->diagnose(expr, Diagnostics::invalidAddressOf);",
+          "context_before": [
+            "    // Only allow known expressions.",
+            "    expr->type =",
+            "        getValidTypeForAddressOf(this, m_astBuilder, expr->arg, getType(m_astBuilder, expr->arg));",
+            "    if (!expr->type)",
+            "    {"
+          ],
+          "context_after": [
+            "        expr->type = m_astBuilder->getErrorType();",
+            "    }",
+            "    return expr;",
+            "}",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31200,
+      "severity": "Warning",
+      "name": "deprecatedUsage",
+      "message": "$0 has been deprecated: $1",
+      "line": 1502,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 331,
+          "statement": "Diagnostics::deprecatedUsage, declRef.getName(), deprecatedAttr->message);",
+          "context_before": [
+            "    }",
+            "    if (auto deprecatedAttr = declRef.getDecl()->findModifier<DeprecatedAttribute>())",
+            "    {",
+            "        getSink()->diagnose(",
+            "            loc,"
+          ],
+          "context_after": [
+            "            declRef.getName(),",
+            "            deprecatedAttr->message);",
+            "    }",
+            "}",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31201,
+      "severity": "Error",
+      "name": "modifierNotAllowed",
+      "message": "modifier '$0' is not allowed here.",
+      "line": 1503,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 1716,
+          "statement": "getSink()->diagnose(m, Diagnostics::modifierNotAllowed, m);",
+          "context_before": [
+            "            isGLSLInput = true;",
+            "        if (!isModifierAllowedOnDecl(isGLSLInput, m->astNodeType, decl))",
+            "        {",
+            "            if (!ignoreUnallowedModifier)",
+            "            {"
+          ],
+          "context_after": [
+            "                return nullptr;",
+            "            }",
+            "            return m;",
+            "        }",
+            "    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31202,
+      "severity": "Error",
+      "name": "duplicateModifier",
+      "message": "modifier '$0' is redundant or conflicting with existing modifier '$1'",
+      "line": 1504,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 2190,
+          "statement": "Diagnostics::duplicateModifier, modifier, existingModifier);",
+          "context_before": [
+            "        {",
+            "            if (mapExclusiveGroupToModifier.tryGetValue(conflictGroup, existingModifier))",
+            "            {",
+            "                getSink()->diagnose(",
+            "                    modifier->loc,"
+          ],
+          "context_after": [
+            "                    modifier,",
+            "                    existingModifier);",
+            "            }",
+            "            mapExclusiveGroupToModifier[conflictGroup] = modifier;",
+            "        }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31203,
+      "severity": "Error",
+      "name": "cannotExportIncompleteType",
+      "message": "cannot export incomplete type '$0'",
+      "line": 1509,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 10047,
+          "statement": "getSink()->diagnose(aggTypeDecl->loc, Diagnostics::cannotExportIncompleteType, aggTypeDecl);",
+          "context_before": [
+            "",
+            "void SemanticsDeclBodyVisitor::visitAggTypeDecl(AggTypeDecl* aggTypeDecl)",
+            "{",
+            "    if (aggTypeDecl->hasTag(TypeTag::Incomplete) && aggTypeDecl->hasModifier<HLSLExportModifier>())",
+            "    {"
+          ],
+          "context_after": [
+            "    }",
+            "",
+            "    auto structDecl = as<StructDecl>(aggTypeDecl);",
+            "    if (!structDecl)",
+            "        return;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31206,
+      "severity": "Error",
+      "name": "memoryQualifierNotAllowedOnANonImageTypeParameter",
+      "message": "modifier $0 is not allowed on a non image type parameter.",
+      "line": 1510,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 9675,
+          "statement": "Diagnostics::memoryQualifierNotAllowedOnANonImageTypeParameter, mod);",
+          "context_before": [
+            "        if (!MemoryQualifierSet)",
+            "            return;",
+            "        for (auto mod : MemoryQualifierSet->getModifiers())",
+            "            getSink()->diagnose(",
+            "                paramDecl,"
+          ],
+          "context_after": [
+            "                mod);",
+            "    }",
+            "}",
+            "",
+            "// This checks that the declaration is marked as \"out\" and changes the hlsl"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31208,
+      "severity": "Error",
+      "name": "requireInputDecoratedVarForParameter",
+      "message": "$0 expects for argument $1 a type which is a shader input (`in`) variable.",
+      "line": 1515,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-lower-to-ir.cpp",
+          "line": 4335,
+          "statement": "Diagnostics::requireInputDecoratedVarForParameter, decl, glslRequireShaderInputParameter->parameterNumber);",
+          "context_before": [
+            "            if (!irArgs[glslRequireShaderInputParameter->parameterNumber]",
+            "                     ->findDecoration<IRGlobalInputDecoration>())",
+            "            {",
+            "                this->context->getSink()->diagnose(",
+            "                    expr,"
+          ],
+          "context_after": [
+            "                    decl,",
+            "                    glslRequireShaderInputParameter->parameterNumber);",
+            "            }",
+            "            return;",
+            "        }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31210,
+      "severity": "Error",
+      "name": "derivativeGroupQuadMustBeMultiple2ForXYThreads",
+      "message": "compute derivative group quad requires thread dispatch count of X and Y to each be at a multiple of 2",
+      "line": 1520,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-util.cpp",
+          "line": 2425,
+          "statement": "sink->diagnose(errorLoc, Diagnostics::derivativeGroupQuadMustBeMultiple2ForXYThreads);",
+          "context_before": [
+            "        z = numThreadsDecor->getZ()->getValue();",
+            "",
+            "    if (quadAttr)",
+            "    {",
+            "        if (x % 2 != 0 || y % 2 != 0)"
+          ],
+          "context_after": [
+            "    }",
+            "    else if (linearAttr)",
+            "    {",
+            "        if ((x * y * z) % 4 != 0)",
+            "            sink->diagnose("
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31211,
+      "severity": "Error",
+      "name": "derivativeGroupLinearMustBeMultiple4ForTotalThreadCount",
+      "message": "compute derivative group linear requires total thread dispatch count to be at a multiple of 4",
+      "line": 1526,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-util.cpp",
+          "line": 2432,
+          "statement": "Diagnostics::derivativeGroupLinearMustBeMultiple4ForTotalThreadCount);",
+          "context_before": [
+            "    else if (linearAttr)",
+            "    {",
+            "        if ((x * y * z) % 4 != 0)",
+            "            sink->diagnose(",
+            "                errorLoc,"
+          ],
+          "context_after": [
+            "    }",
+            "}",
+            "",
+            "int getIRVectorElementSize(IRType* type)",
+            "{"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31212,
+      "severity": "Error",
+      "name": "onlyOneOfDerivativeGroupLinearOrQuadCanBeSet",
+      "message": "cannot set compute derivative group linear and compute derivative group quad at the same time",
+      "line": 1531,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-util.cpp",
+          "line": 2409,
+          "statement": "sink->diagnose(errorLoc, Diagnostics::onlyOneOfDerivativeGroupLinearOrQuadCanBeSet);",
+          "context_before": [
+            "    if (!numThreadsDecor)",
+            "        return;",
+            "",
+            "    if (quadAttr && linearAttr)",
+            "    {"
+          ],
+          "context_after": [
+            "    }",
+            "",
+            "    IRIntegerValue x = 1;",
+            "    IRIntegerValue y = 1;",
+            "    IRIntegerValue z = 1;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31213,
+      "severity": "Error",
+      "name": "cudaKernelMustReturnVoid",
+      "message": "return type of a CUDA kernel function cannot be non-void.",
+      "line": 1536,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 10355,
+          "statement": "getSink()->diagnose(decl, Diagnostics::cudaKernelMustReturnVoid);",
+          "context_before": [
+            "    // If this method is intended to be a CUDA kernel, verify that the return type is void.",
+            "    if (decl->findModifier<CudaKernelAttribute>())",
+            "    {",
+            "        if (decl->returnType.type && !decl->returnType.type->equals(m_astBuilder->getVoidType()))",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "    }",
+            "",
+            "    checkInterfaceRequirement(decl);",
+            "    checkVisibility(decl);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31214,
+      "severity": "Error",
+      "name": "differentiableKernelEntryPointCannotHaveDifferentiableParams",
+      "message": "differentiable kernel entry point cannot have differentiable parameters. Consider using DiffTensorView to pass differentiable data, or marking this parameter with 'no_diff'",
+      "line": 1541,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 13423,
+          "statement": "Diagnostics::differentiableKernelEntryPointCannotHaveDifferentiableParams);",
+          "context_before": [
+            "            {",
+            "                if (!paramDecl->hasModifier<NoDiffModifier>())",
+            "                {",
+            "                    visitor->getSink()->diagnose(",
+            "                        paramDecl,"
+          ],
+          "context_after": [
+            "                }",
+            "            }",
+            "        }",
+            "    }",
+            "}"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31215,
+      "severity": "Error",
+      "name": "cannotUseUnsizedTypeInConstantBuffer",
+      "message": "cannot use unsized type '$0' in a constant buffer.",
+      "line": 1547,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 2988,
+          "statement": "Diagnostics::cannotUseUnsizedTypeInConstantBuffer, trailingArrayType);",
+          "context_before": [
+            "                getTrailingUnsizedArrayElement(elementType, varDecl, trailingArrayType);",
+            "            if (trailingArrayField && !isOpaqueHandleType(trailingArrayType->getElementType()))",
+            "            {",
+            "                getSink()->diagnose(",
+            "                    trailingArrayField->loc,"
+          ],
+          "context_after": [
+            "                    trailingArrayType);",
+            "                getSink()->diagnose(varDecl->loc, Diagnostics::seeConstantBufferDefinition);",
+            "            }",
+            "        }",
+            "    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": [
+            "seeConstantBufferDefinition"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 31216,
+      "severity": "Error",
+      "name": "unrecognizedGLSLLayoutQualifier",
+      "message": "GLSL layout qualifier is unrecognized",
+      "line": 1552,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 1660,
+          "statement": "getSink()->diagnose(uncheckedAttr, Diagnostics::unrecognizedGLSLLayoutQualifier);",
+          "context_before": [
+            "    CASE(UncheckedGLSLHitObjectAttributesAttribute, VulkanHitObjectAttributesAttribute)",
+            "    CASE(UncheckedGLSLCallablePayloadAttribute, VulkanCallablePayloadAttribute)",
+            "    CASE(UncheckedGLSLCallablePayloadInAttribute, VulkanCallablePayloadInAttribute)",
+            "    else",
+            "    {"
+          ],
+          "context_after": [
+            "    }",
+            "#undef CASE",
+            "",
+            "    if (attr)",
+            "    {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31217,
+      "severity": "Error",
+      "name": "unrecognizedGLSLLayoutQualifierOrRequiresAssignment",
+      "message": "GLSL layout qualifier is unrecognized or requires assignment",
+      "line": 1553,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-parser.cpp",
+          "line": 9466,
+          "statement": "Diagnostics::unrecognizedGLSLLayoutQualifierOrRequiresAssignment);",
+          "context_before": [
+            "",
+            "            if (as<GLSLUnparsedLayoutModifier>(modifier))",
+            "            {",
+            "                parser->diagnose(",
+            "                    modifier,"
+          ],
+          "context_after": [
+            "            }",
+            "",
+            "            listBuilder.add(modifier);",
+            "        }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31218,
+      "severity": "Error",
+      "name": "specializationConstantMustBeScalar",
+      "message": "specialization constant must be a scalar.",
+      "line": 1558,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 13461,
+          "statement": "getSink()->diagnose(modifier, Diagnostics::specializationConstantMustBeScalar);",
+          "context_before": [
+            "        {",
+            "            // Specialization constant.",
+            "            // Check that type is basic type.",
+            "            if (!as<BasicExpressionType>(varDecl->getType()) && !as<ErrorType>(varDecl->getType()))",
+            "            {"
+          ],
+          "context_after": [
+            "            }",
+            "            hasSpecConstAttr = true;",
+            "        }",
+            "        else if (as<PushConstantAttribute>(modifier))",
+            "        {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31219,
+      "severity": "Error",
+      "name": "pushOrSpecializationConstantCannotBeStatic",
+      "message": "push or specialization constants cannot be 'static'.",
+      "line": 1563,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 13485,
+          "statement": "getSink()->diagnose(varDecl, Diagnostics::pushOrSpecializationConstantCannotBeStatic);",
+          "context_before": [
+            "    }",
+            "    if (hasSpecConstAttr || hasPushConstAttr)",
+            "    {",
+            "        if (varDecl->findModifier<HLSLStaticModifier>())",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "    }",
+            "}",
+            "",
+            "void SemanticsDeclAttributesVisitor::checkHLSLRegisterSemantic("
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31220,
+      "severity": "Error",
+      "name": "variableCannotBePushAndSpecializationConstant",
+      "message": "'$0' cannot be a push constant and a specialization constant at the same time",
+      "line": 1568,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 13478,
+          "statement": "Diagnostics::variableCannotBePushAndSpecializationConstant, varDecl->getName());",
+          "context_before": [
+            "    }",
+            "    if (hasSpecConstAttr && hasPushConstAttr)",
+            "    {",
+            "        getSink()->diagnose(",
+            "            varDecl,"
+          ],
+          "context_after": [
+            "            varDecl->getName());",
+            "    }",
+            "    if (hasSpecConstAttr || hasPushConstAttr)",
+            "    {",
+            "        if (varDecl->findModifier<HLSLStaticModifier>())"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31221,
+      "severity": "Error",
+      "name": "invalidHLSLRegisterName",
+      "message": "invalid HLSL register name '$0'.",
+      "line": 1573,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 13499,
+          "statement": "Diagnostics::invalidHLSLRegisterName, registerSemantic->registerName);",
+          "context_before": [
+            "    auto registerName = registerSemantic->registerName.getContent();",
+            "    if (registerName.getLength() < 1)",
+            "    {",
+            "        getSink()->diagnose(",
+            "            registerSemantic->registerName.getLoc(),"
+          ],
+          "context_after": [
+            "            registerSemantic->registerName);",
+            "        return;",
+            "    }",
+            "",
+            "    // Check to make sure the HLSL semantic register name is consistent with the resource type."
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31222,
+      "severity": "Error",
+      "name": "invalidHLSLRegisterNameForType",
+      "message": "invalid HLSL register name '$0' for type '$1'.",
+      "line": 1574,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 13569,
+          "statement": "Diagnostics::invalidHLSLRegisterNameForType, registerName, varType);",
+          "context_before": [
+            "    }",
+            "    if (!isValid)",
+            "    {",
+            "        getSink()->diagnose(",
+            "            registerSemantic->registerName.getLoc(),"
+          ],
+          "context_after": [
+            "            registerName,",
+            "            varType);",
+            "    }",
+            "}",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31223,
+      "severity": "Error",
+      "name": "ExternAndExportVarDeclMustBeConst",
+      "message": "extern and export variables must be static const: '$0'",
+      "line": 1579,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 238,
+          "statement": "Diagnostics::ExternAndExportVarDeclMustBeConst, decl->getName());",
+          "context_before": [
+            "                hasSpecializationConstant = true;",
+            "        }",
+            "        if (hasExportOrExtern && hasConst != hasStatic)",
+            "            getSink()->diagnose(",
+            "                decl,"
+          ],
+          "context_after": [
+            "                decl->getName());",
+            "",
+            "",
+            "        // Global const or uniform variables with initializers must be static",
+            "        // In HLSL, const global variables without static are uniform parameters"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31224,
+      "severity": "Error",
+      "name": "constGlobalVarWithInitRequiresStatic",
+      "message": "global const variable with initializer must be declared static: '$0'",
+      "line": 1585,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 256,
+          "statement": "Diagnostics::constGlobalVarWithInitRequiresStatic, decl->getName());",
+          "context_before": [
+            "            auto moduleDecl = getModuleDecl(decl);",
+            "            if (!moduleDecl || !moduleDecl->hasModifier<GLSLModuleModifier>())",
+            "            {",
+            "                getSink()->diagnose(",
+            "                    decl,"
+          ],
+          "context_after": [
+            "                    decl->getName());",
+            "            }",
+            "        }",
+            "    }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31225,
+      "severity": "Error",
+      "name": "staticConstVariableRequiresInitializer",
+      "message": "static const variable '$0' must have an initializer",
+      "line": 1591,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 2444,
+          "statement": "Diagnostics::staticConstVariableRequiresInitializer, varDecl);",
+          "context_before": [
+            "            // Don't error for interface member variables",
+            "            !isExtern && !as<InterfaceDecl>(varDecl->parentDecl))",
+            "        {",
+            "            getSink()->diagnose(",
+            "                varDecl,"
+          ],
+          "context_after": [
+            "                varDecl);",
+            "        }",
+            "    }",
+            "",
+            "    checkVisibility(varDecl);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 32000,
+      "severity": "Error",
+      "name": "invalidEnumTagType",
+      "message": "invalid tag type for 'enum': '$0'",
+      "line": 1599,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 8382,
+          "statement": "getSink()->diagnose(loc, Diagnostics::invalidEnumTagType, type);",
+          "context_before": [
+            "        return;",
+            "",
+            "    // By default, don't allow other types to be used",
+            "    // as an `enum` tag type.",
+            "    //"
+          ],
+          "context_after": [
+            "}",
+            "",
+            "bool SemanticsVisitor::_hasExplicitConstructor(StructDecl* structDecl, bool checkBaseType)",
+            "{",
+            "    if (!structDecl)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 32003,
+      "severity": "Error",
+      "name": "unexpectedEnumTagExpr",
+      "message": "unexpected form for 'enum' tag value expression",
+      "line": 1600,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 8657,
+          "statement": "getSink()->diagnose(explicitTagValExpr, Diagnostics::unexpectedEnumTagExpr);",
+          "context_before": [
+            "                    defaultTag = constIntVal->getValue();",
+            "                }",
+            "                else",
+            "                {",
+            "                    // TODO: need to handle other possibilities here"
+          ],
+          "context_after": [
+            "                }",
+            "            }",
+            "            else",
+            "            {",
+            "                // If this happens, then the explicit tag value expression"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30300,
+      "severity": "Error",
+      "name": "assocTypeInInterfaceOnly",
+      "message": "'associatedtype' can only be defined in an 'interface'.",
+      "line": 1603,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 8768,
+          "statement": "getSink()->diagnose(decl, Slang::Diagnostics::assocTypeInInterfaceOnly);",
+          "context_before": [
+            "void SemanticsDeclHeaderVisitor::visitAssocTypeDecl(AssocTypeDecl* decl)",
+            "{",
+            "    // assoctype only allowed in an interface",
+            "    auto interfaceDecl = as<InterfaceDecl>(decl->parentDecl);",
+            "    if (!interfaceDecl)"
+          ],
+          "context_after": [
+            "    checkVisibility(decl);",
+            "}",
+            "",
+            "SemanticsContext SemanticsDeclBodyVisitor::registerDifferentiableTypesForFunc(",
+            "    FunctionDeclBase* decl)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30301,
+      "severity": "Error",
+      "name": "globalGenParamInGlobalScopeOnly",
+      "message": "'type_param' can only be defined global scope.",
+      "line": 1608,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 8760,
+          "statement": "getSink()->diagnose(decl, Slang::Diagnostics::globalGenParamInGlobalScopeOnly);",
+          "context_before": [
+            "void SemanticsDeclHeaderVisitor::visitGlobalGenericParamDecl(GlobalGenericParamDecl* decl)",
+            "{",
+            "    // global generic param only allowed in global scope",
+            "    auto program = as<ModuleDecl>(decl->parentDecl);",
+            "    if (!program)"
+          ],
+          "context_after": [
+            "}",
+            "",
+            "void SemanticsDeclHeaderVisitor::visitAssocTypeDecl(AssocTypeDecl* decl)",
+            "{",
+            "    // assoctype only allowed in an interface"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30302,
+      "severity": "Error",
+      "name": "staticConstRequirementMustBeIntOrBool",
+      "message": "'static const' requirement can only have int or bool type.",
+      "line": 1613,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 2346,
+          "statement": "getSink()->diagnose(varDecl, Diagnostics::staticConstRequirementMustBeIntOrBool);",
+          "context_before": [
+            "            case BaseType::UInt:",
+            "            case BaseType::UInt64:",
+            "            case BaseType::UIntPtr:",
+            "                break;",
+            "            default:"
+          ],
+          "context_after": [
+            "                break;",
+            "            }",
+            "        }",
+            "        if (!varDecl->findModifier<HLSLStaticModifier>() || !varDecl->findModifier<ConstModifier>())",
+            "        {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30303,
+      "severity": "Error",
+      "name": "valueRequirementMustBeCompileTimeConst",
+      "message": "requirement in the form of a simple value must be declared as 'static const'.",
+      "line": 1618,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 2352,
+          "statement": "getSink()->diagnose(varDecl, Diagnostics::valueRequirementMustBeCompileTimeConst);",
+          "context_before": [
+            "                break;",
+            "            }",
+            "        }",
+            "        if (!varDecl->findModifier<HLSLStaticModifier>() || !varDecl->findModifier<ConstModifier>())",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "    }",
+            "",
+            "    // Check modifiers that can't be checked earlier during modifier checking stage.",
+            "    if (auto derivativeMemberAttr = varDecl->findModifier<DerivativeMemberAttribute>())"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30310,
+      "severity": "Error",
+      "name": "typeIsNotDifferentiable",
+      "message": "type '$0' is not differentiable.",
+      "line": 1623,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 1834,
+          "statement": "getSink()->diagnose(derivativeMemberAttr, Diagnostics::typeIsNotDifferentiable, memberType);",
+          "context_before": [
+            "{",
+            "    auto memberType = checkProperType(getLinkage(), varDecl->type, getSink());",
+            "    auto diffType = getDifferentialType(m_astBuilder, memberType, varDecl->loc);",
+            "    if (as<ErrorType>(diffType))",
+            "    {"
+          ],
+          "context_after": [
+            "    }",
+            "    auto thisType = calcThisType(makeDeclRef(varDecl->parentDecl));",
+            "    if (!thisType)",
+            "    {",
+            "        getSink()->diagnose("
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30311,
+      "severity": "Error",
+      "name": "nonMethodInterfaceRequirementCannotHaveBody",
+      "message": "non-method interface requirement cannot have a body.",
+      "line": 1625,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 10300,
+          "statement": "getSink()->diagnose(decl, Diagnostics::nonMethodInterfaceRequirementCannotHaveBody);",
+          "context_before": [
+            "    {",
+            "        if (auto funcBase = as<FunctionDeclBase>(decl))",
+            "        {",
+            "            if (!as<FuncDecl>(decl) && funcBase->body != nullptr)",
+            "            {"
+          ],
+          "context_after": [
+            "                return;",
+            "            }",
+            "        }",
+            "        // Interface requirement cannot be `override`.",
+            "        if (decl->hasModifier<OverrideModifier>())"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30312,
+      "severity": "Error",
+      "name": "interfaceRequirementCannotBeOverride",
+      "message": "interface requirement cannot override a base declaration.",
+      "line": 1630,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 10307,
+          "statement": "getSink()->diagnose(decl, Diagnostics::interfaceRequirementCannotBeOverride);",
+          "context_before": [
+            "            }",
+            "        }",
+            "        // Interface requirement cannot be `override`.",
+            "        if (decl->hasModifier<OverrideModifier>())",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "    }",
+            "}",
+            "",
+            "bool doesTypeHaveNoDiffModifier(Type* type)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30400,
+      "severity": "Error",
+      "name": "cannotDefinePtrTypeToManagedResource",
+      "message": "pointer to a managed resource is invalid, use `NativeRef<T>` instead",
+      "line": 1637,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-type.cpp",
+          "line": 401,
+          "statement": "getSink()->diagnose(typeExp.exp, Diagnostics::cannotDefinePtrTypeToManagedResource);",
+          "context_before": [
+            "    // We don't allow pointers to managed types.",
+            "    if (auto ptrType = as<PtrType>(result))",
+            "    {",
+            "        if (isManagedType(ptrType->getValueType()))",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "    }",
+            "",
+            "    *outProperType = result;",
+            "    return true;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30500,
+      "severity": "Warning",
+      "name": "forLoopSideEffectChangingDifferentVar",
+      "message": "the for loop initializes and checks variable '$0' but the side effect expression is modifying '$1'.",
+      "line": 1644,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-stmt.cpp",
+          "line": 843,
+          "statement": "Diagnostics::forLoopSideEffectChangingDifferentVar, initialVar, varExpr->declRef);",
+          "context_before": [
+            "            // If the user writes something like `for (int i = 0; i < 5; j++)`,",
+            "            // it is most likely a bug, so we issue a warning.",
+            "            if (predicateVar == initialVar)",
+            "                getSink()->diagnose(",
+            "                    varExpr,"
+          ],
+          "context_after": [
+            "                    initialVar,",
+            "                    varExpr->declRef);",
+            "            return;",
+            "        }",
+            "    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30501,
+      "severity": "Warning",
+      "name": "forLoopPredicateCheckingDifferentVar",
+      "message": "the for loop initializes and modifies variable '$0' but the predicate expression is checking '$1'.",
+      "line": 1650,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-stmt.cpp",
+          "line": 874,
+          "statement": "Diagnostics::forLoopPredicateCheckingDifferentVar, initialVar, predicateVar);",
+          "context_before": [
+            "    if (predicateVar.getDecl() != initialVar.getDecl())",
+            "    {",
+            "        if (predicateVar)",
+            "            getSink()->diagnose(",
+            "                stmt->predicateExpression,"
+          ],
+          "context_after": [
+            "                initialVar,",
+            "                predicateVar);",
+            "        return;",
+            "    }",
+            "    if (!stepSize)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30502,
+      "severity": "Warning",
+      "name": "forLoopChangingIterationVariableInOppsoiteDirection",
+      "message": "the for loop is modifiying variable '$0' in the opposite direction from loop exit condition.",
+      "line": 1656,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-stmt.cpp",
+          "line": 888,
+          "statement": "Diagnostics::forLoopChangingIterationVariableInOppsoiteDirection, initialVar);",
+          "context_before": [
+            "        if (sideEffectFuncOp == kIROp_Add && compareOp == kIROp_Greater ||",
+            "            sideEffectFuncOp == kIROp_Sub && compareOp == kIROp_Less)",
+            "        {",
+            "            getSink()->diagnose(",
+            "                stmt->sideEffectExpression,"
+          ],
+          "context_after": [
+            "                initialVar);",
+            "            return;",
+            "        }",
+            "    }",
+            "    else if (stepSize->getValue() < 0)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-stmt.cpp",
+          "line": 900,
+          "statement": "Diagnostics::forLoopChangingIterationVariableInOppsoiteDirection, initialVar);",
+          "context_before": [
+            "        if (sideEffectFuncOp == kIROp_Add && compareOp == kIROp_Less ||",
+            "            sideEffectFuncOp == kIROp_Sub && compareOp == kIROp_Greater)",
+            "        {",
+            "            getSink()->diagnose(",
+            "                stmt->sideEffectExpression,"
+          ],
+          "context_after": [
+            "                initialVar);",
+            "            return;",
+            "        }",
+            "    }",
+            "    else"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30503,
+      "severity": "Warning",
+      "name": "forLoopNotModifyingIterationVariable",
+      "message": "the for loop is not modifiying variable '$0' because the step size evaluates to 0.",
+      "line": 1661,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-stmt.cpp",
+          "line": 909,
+          "statement": "Diagnostics::forLoopNotModifyingIterationVariable, initialVar);",
+          "context_before": [
+            "    }",
+            "    else",
+            "    {",
+            "        getSink()->diagnose(",
+            "            stmt->sideEffectExpression,"
+          ],
+          "context_after": [
+            "            initialVar);",
+            "        return;",
+            "    }",
+            "",
+            "    if (!initialLitVal || !finalVal)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30504,
+      "severity": "Warning",
+      "name": "forLoopTerminatesInFewerIterationsThanMaxIters",
+      "message": "the for loop is statically determined to terminate within $0 iterations, which is less than what [MaxIters] specifies.",
+      "line": 1666,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-lower-to-ir.cpp",
+          "line": 6921,
+          "statement": "Diagnostics::forLoopTerminatesInFewerIterationsThanMaxIters, inferredMaxIters->value);",
+          "context_before": [
+            "                {",
+            "                    if (inferredMaxIters->value < constIntVal->getValue())",
+            "                    {",
+            "                        context->getSink()->diagnose(",
+            "                            maxIters,"
+          ],
+          "context_after": [
+            "                            inferredMaxIters->value);",
+            "                    }",
+            "                }",
+            "            }",
+            "        }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30505,
+      "severity": "Warning",
+      "name": "loopRunsForZeroIterations",
+      "message": "the loop runs for 0 iterations and will be removed.",
+      "line": 1672,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-stmt.cpp",
+          "line": 942,
+          "statement": "getSink()->diagnose(stmt, Diagnostics::loopRunsForZeroIterations);",
+          "context_before": [
+            "            iterations = 0;",
+            "        break;",
+            "    }",
+            "    if (iterations == 0)",
+            "    {"
+          ],
+          "context_after": [
+            "    }",
+            "",
+            "    // Note: the inferred max iterations may not be valid if the loop body",
+            "    // also modifies the induction variable.",
+            "    // We detect this case during lower-to-ir and will remove the `InferredMaxItersAttribute`"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30510,
+      "severity": "Error",
+      "name": "loopInDiffFuncRequireUnrollOrMaxIters",
+      "message": "loops inside a differentiable function need to provide either '[MaxIters(n)]' or '[ForceUnroll]' attribute.",
+      "line": 1677,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-check-differentiability.cpp",
+          "line": 642,
+          "statement": "sink->diagnose(loop->sourceLoc, Diagnostics::loopInDiffFuncRequireUnrollOrMaxIters);",
+          "context_before": [
+            "            {",
+            "                // We are good.",
+            "            }",
+            "            else",
+            "            {"
+          ],
+          "context_after": [
+            "            }",
+            "        }",
+            "",
+            "        // Make sure all stores of differentiable values are into addresses that can hold",
+            "        // derivatives. If we are assigning a value to a non-differentiable location, we need to"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30600,
+      "severity": "Error",
+      "name": "switchMultipleDefault",
+      "message": "multiple 'default' cases not allowed within a 'switch' statement",
+      "line": 1685,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-stmt.cpp",
+          "line": 380,
+          "statement": "sink->diagnose(sStmt, Diagnostics::switchMultipleDefault);",
+          "context_before": [
+            "        else if (as<DefaultStmt>(sStmt))",
+            "        {",
+            "            // check that there is at most one `default` clause",
+            "            if (hasDefaultStmt)",
+            "            {"
+          ],
+          "context_after": [
+            "                return;",
+            "            }",
+            "            hasDefaultStmt = true;",
+            "        }",
+            "    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30601,
+      "severity": "Error",
+      "name": "switchDuplicateCases",
+      "message": "duplicate cases not allowed within a 'switch' statement",
+      "line": 1690,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-stmt.cpp",
+          "line": 370,
+          "statement": "sink->diagnose(sStmt, Diagnostics::switchDuplicateCases);",
+          "context_before": [
+            "            {",
+            "                // exprVal contains the constant folded expr, that is checked for",
+            "                // uniqueness within the scope of the switch statement.",
+            "                if (!caseStmtVals.add(caseStmt->exprVal))",
+            "                {"
+          ],
+          "context_after": [
+            "                    return;",
+            "                }",
+            "            }",
+            "        }",
+            "        else if (as<DefaultStmt>(sStmt))"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31000,
+      "severity": "Warning",
+      "name": "linkTimeConstantArraySize",
+      "message": "Link-time constant sized arrays are a work in progress feature, some aspects of the reflection API may not work",
+      "line": 1697,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 10449,
+          "statement": "getSink()->diagnose(varDecl, Diagnostics::linkTimeConstantArraySize);",
+          "context_before": [
+            "        return;",
+            "    }",
+            "",
+            "    if (elementCount->isLinkTimeVal())",
+            "    {"
+          ],
+          "context_after": [
+            "    }",
+            "}",
+            "",
+            "void SemanticsVisitor::validateArrayElementTypeForVariable(VarDeclBase* varDecl)",
+            "{"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 39999,
+      "severity": "Fatal",
+      "name": "cyclicReference",
+      "message": "cyclic reference '$0'.",
+      "line": 1705,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 1504,
+          "statement": "getSink()->diagnose(decl, Diagnostics::cyclicReference, decl);",
+          "context_before": [
+            "        //",
+            "        // TODO: we should ideally be tracking a \"chain\" of declarations",
+            "        // being checked on the stack, so that we can report the full",
+            "        // chain that leads from this declaration back to itself.",
+            "        //"
+          ],
+          "context_after": [
+            "        return;",
+            "    }",
+            "",
+            "    // If we should skip the checking, return now.",
+            "    // A common case to skip checking is for the function bodies when we are in"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 39999,
+      "severity": "Error",
+      "name": "cyclicReferenceInInheritance",
+      "message": "cyclic reference in inheritance graph '$0'.",
+      "line": 1706,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-inheritance.cpp",
+          "line": 790,
+          "statement": "getSink()->diagnose(baseDecl, Diagnostics::cyclicReferenceInInheritance, baseDecl);",
+          "context_before": [
+            "        if (!foundFacet.getImpl())",
+            "        {",
+            "            if (!bases.isEmpty())",
+            "            {",
+            "                auto baseDecl = (*bases.begin())->facetImpl.origin.declRef.getDecl();"
+          ],
+          "context_after": [
+            "            }",
+            "            return;",
+            "        }",
+            "",
+            "        // At this point we definitely have a facet we'd like to"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 39999,
+      "severity": "Error",
+      "name": "localVariableUsedBeforeDeclared",
+      "message": "local variable '$0' is being used before its declaration.",
+      "line": 1712,
+      "param_count": 1,
+      "call_sites": []
+    },
+    {
+      "id": 39999,
+      "severity": "Error",
+      "name": "variableUsedInItsOwnDefinition",
+      "message": "the initial-value expression for variable '$0' depends on the value of the variable itself",
+      "line": 1717,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 2200,
+          "statement": "getSink()->diagnose(decl, Diagnostics::variableUsedInItsOwnDefinition, decl);",
+          "context_before": [
+            "    //",
+            "    for (auto info = circularityInfo; info; info = info->next)",
+            "    {",
+            "        if (decl == info->decl)",
+            "        {"
+          ],
+          "context_after": [
+            "            return true;",
+            "        }",
+            "    }",
+            "",
+            "    return false;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 39901,
+      "severity": "Fatal",
+      "name": "cannotProcessInclude",
+      "message": "internal compiler error: cannot process '__include' in the current semantic checking context.",
+      "line": 1722,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 11321,
+          "statement": "getSink()->diagnose(decl->moduleNameAndLoc.loc, Diagnostics::cannotProcessInclude);",
+          "context_before": [
+            "void SemanticsDeclHeaderVisitor::visitIncludeDecl(IncludeDecl* decl)",
+            "{",
+            "    auto name = decl->moduleNameAndLoc.name;",
+            "",
+            "    if (!getShared()->getTranslationUnitRequest())"
+          ],
+          "context_after": [
+            "",
+            "    auto parentModule = getModule(decl);",
+            "    auto moduleDecl = parentModule->getModuleDecl();",
+            "",
+            "    auto [fileDecl, isNew] = getLinkage()->findAndIncludeFile("
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 11445,
+          "statement": "getSink()->diagnose(decl->moduleNameAndLoc.loc, Diagnostics::cannotProcessInclude);",
+          "context_before": [
+            "    // we are in a language server context.",
+            "",
+            "    auto name = decl->moduleNameAndLoc.name;",
+            "",
+            "    if (!getShared()->getTranslationUnitRequest())"
+          ],
+          "context_after": [
+            "",
+            "    auto [fileDecl, isNew] = getLinkage()->findAndIncludeFile(",
+            "        getModule(decl),",
+            "        getShared()->getTranslationUnitRequest(),",
+            "        name,"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30400,
+      "severity": "Error",
+      "name": "genericTypeNeedsArgs",
+      "message": "generic type '$0' used without argument",
+      "line": 1729,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-type.cpp",
+          "line": 315,
+          "statement": "diagSink->diagnose(typeExp.exp, Diagnostics::genericTypeNeedsArgs, typeExp);",
+          "context_before": [
+            "                }",
+            "                else",
+            "                {",
+            "                    if (diagSink)",
+            "                    {"
+          ],
+          "context_after": [
+            "                        *outProperType = m_astBuilder->getErrorType();",
+            "                    }",
+            "                    return false;",
+            "                }",
+            "            }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-type.cpp",
+          "line": 325,
+          "statement": "diagSink->diagnose(typeExp.exp, Diagnostics::genericTypeNeedsArgs, typeExp);",
+          "context_before": [
+            "            }",
+            "            else if (auto typePack = as<GenericTypePackParamDecl>(member))",
+            "            {",
+            "                if (diagSink)",
+            "                {"
+          ],
+          "context_after": [
+            "                    *outProperType = m_astBuilder->getErrorType();",
+            "                }",
+            "                return false;",
+            "            }",
+            "            else if (auto valParam = as<GenericValueParamDecl>(member))"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-type.cpp",
+          "line": 359,
+          "statement": "diagSink->diagnose(typeExp.exp, Diagnostics::genericTypeNeedsArgs, typeExp);",
+          "context_before": [
+            "            if (!genericParam)",
+            "                return false;",
+            "            auto genericTypeParamDecl = as<GenericTypeParamDecl>(genericParam.getDecl());",
+            "            if (!genericTypeParamDecl)",
+            "            {"
+          ],
+          "context_after": [
+            "                return false;",
+            "            }",
+            "            auto defaultType = CheckProperType(genericTypeParamDecl->initType);",
+            "            if (!defaultType)",
+            "            {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-type.cpp",
+          "line": 365,
+          "statement": "diagSink->diagnose(typeExp.exp, Diagnostics::genericTypeNeedsArgs, typeExp);",
+          "context_before": [
+            "                return false;",
+            "            }",
+            "            auto defaultType = CheckProperType(genericTypeParamDecl->initType);",
+            "            if (!defaultType)",
+            "            {"
+          ],
+          "context_after": [
+            "                return false;",
+            "            }",
+            "            auto witness = tryGetSubtypeWitness(defaultType, CheckProperType(constraintParam->sup));",
+            "            if (!witness)",
+            "            {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30401,
+      "severity": "Error",
+      "name": "invalidTypeForConstraint",
+      "message": "type '$0' cannot be used as a constraint.",
+      "line": 1730,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 3529,
+          "statement": "Diagnostics::invalidTypeForConstraint, decl->sup);",
+          "context_before": [
+            "            validateGenericConstraintSubType(decl, decl->sub, getSink());",
+            "            if (!isValidGenericConstraintType(decl->sup) && !as<ErrorType>(decl->sup.type))",
+            "            {",
+            "                getSink()->diagnose(",
+            "                    decl->sup.exp,"
+          ],
+          "context_after": [
+            "                    decl->sup);",
+            "            }",
+            "        }",
+            "    }",
+            "}"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30402,
+      "severity": "Error",
+      "name": "invalidConstraintSubType",
+      "message": "type '$0' is not a valid left hand side of a type constraint.",
+      "line": 1731,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 3317,
+          "statement": "sink->diagnose(type.exp, Diagnostics::invalidConstraintSubType, type);",
+          "context_before": [
+            "            {",
+            "                sink->diagnose(type.exp, Diagnostics::invalidEqualityConstraintSubType, type);",
+            "            }",
+            "            else",
+            "            {"
+          ],
+          "context_after": [
+            "            }",
+            "        }",
+            "    };",
+            "    // Validate that the sub type of a constraint is in valid form.",
+            "    //"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30403,
+      "severity": "Error",
+      "name": "requiredConstraintIsNotChecked",
+      "message": "the constraint providing '$0' is optional and must be checked with an 'is' statement before usage.",
+      "line": 1736,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 1167,
+          "statement": "Diagnostics::requiredConstraintIsNotChecked, lookupResult.item.declRef);",
+          "context_before": [
+            "    auto result = filterLookupResultByCheckedOptional(lookupResult);",
+            "    if (lookupResult.isValid() && !result.isValid())",
+            "    {",
+            "        getSink()->diagnose(",
+            "            loc,"
+          ],
+          "context_after": [
+            "            lookupResult.item.declRef);",
+            "        outDiagnosed = true;",
+            "",
+            "        if (getShared()->isInLanguageServer())",
+            "        {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30404,
+      "severity": "Error",
+      "name": "invalidEqualityConstraintSupType",
+      "message": "type '$0' is not a proper type to use in a generic equality constraint.",
+      "line": 1742,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 3518,
+          "statement": "Diagnostics::invalidEqualityConstraintSupType, decl->sup);",
+          "context_before": [
+            "            checkGenericTypeEqualityConstraintSubType(decl);",
+            "            if (!isProperConstraineeType(decl->sup) && !as<ErrorType>(decl->sup.type))",
+            "            {",
+            "                getSink()->diagnose(",
+            "                    decl->sup.exp,"
+          ],
+          "context_after": [
+            "                    decl->sup);",
+            "            }",
+            "        }",
+            "        else",
+            "        {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30405,
+      "severity": "Error",
+      "name": "noValidEqualityConstraintSubType",
+      "message": "generic equality constraint requires at least one operand to be dependant on the generic declaration",
+      "line": 1747,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 3553,
+          "statement": "getSink()->diagnose(decl, Diagnostics::noValidEqualityConstraintSubType);",
+          "context_before": [
+            "        {",
+            "            return int(supOk) - int(subOk);",
+            "        }",
+            "        else if (!(subOk || supOk))",
+            "        {"
+          ],
+          "context_after": [
+            "            // Re-run the validation to emit the diagnostic this time",
+            "            validateGenericConstraintSubType(decl, decl->sub, getSink());",
+            "            validateGenericConstraintSubType(decl, decl->sup, getSink());",
+            "            return -1;",
+            "        }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30407,
+      "severity": "Warning",
+      "name": "failedEqualityConstraintCanonicalOrder",
+      "message": "failed to resolve canonical order of generic equality constraint.",
+      "line": 1758,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 3595,
+          "statement": "getSink()->diagnose(decl, Diagnostics::failedEqualityConstraintCanonicalOrder);",
+          "context_before": [
+            "        Swap(decl->sub, decl->sup);",
+            "    }",
+            "    else if (cmp == 0 && decl->sub != decl->sup)",
+            "    {",
+            "        // The comparison was not fully handled for this case."
+          ],
+          "context_after": [
+            "    }",
+            "}",
+            "",
+            "void SemanticsDeclHeaderVisitor::visitGenericTypeParamDecl(GenericTypeParamDecl* decl)",
+            "{"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30500,
+      "severity": "Error",
+      "name": "tooManyInitializers",
+      "message": "too many initializers (expected $0, got $1)",
+      "line": 1765,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-conversion.cpp",
+          "line": 992,
+          "statement": "Diagnostics::tooManyInitializers, argIndex, argCount);",
+          "context_before": [
+            "    {",
+            "        if (outToExpr)",
+            "        {",
+            "            getSink()->diagnose(",
+            "                fromInitializerListExpr,"
+          ],
+          "context_after": [
+            "                argIndex,",
+            "                argCount);",
+            "        }",
+            "    }",
+            "    if (outToExpr)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30501,
+      "severity": "Error",
+      "name": "cannotUseInitializerListForArrayOfUnknownSize",
+      "message": "cannot use initializer list for array of statically unknown size '$0'",
+      "line": 1766,
+      "param_count": 1,
+      "call_sites": []
+    },
+    {
+      "id": 30502,
+      "severity": "Error",
+      "name": "cannotUseInitializerListForVectorOfUnknownSize",
+      "message": "cannot use initializer list for vector of statically unknown size '$0'",
+      "line": 1771,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-conversion.cpp",
+          "line": 590,
+          "statement": "Diagnostics::cannotUseInitializerListForVectorOfUnknownSize, toElementCount);",
+          "context_before": [
+            "            //",
+            "            if (outToExpr)",
+            "            {",
+            "                getSink()->diagnose(",
+            "                    fromInitializerListExpr,"
+          ],
+          "context_after": [
+            "                    toElementCount);",
+            "            }",
+            "            return false;",
+            "        }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30503,
+      "severity": "Error",
+      "name": "cannotUseInitializerListForMatrixOfUnknownSize",
+      "message": "cannot use initializer list for matrix of statically unknown size '$0' rows",
+      "line": 1776,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-conversion.cpp",
+          "line": 786,
+          "statement": "Diagnostics::cannotUseInitializerListForMatrixOfUnknownSize, toMatrixType->getRowCount());",
+          "context_before": [
+            "            //",
+            "            if (outToExpr)",
+            "            {",
+            "                getSink()->diagnose(",
+            "                    fromInitializerListExpr,"
+          ],
+          "context_after": [
+            "                    toMatrixType->getRowCount());",
+            "            }",
+            "            return false;",
+            "        }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30504,
+      "severity": "Error",
+      "name": "cannotUseInitializerListForType",
+      "message": "cannot use initializer list for type '$0'",
+      "line": 1781,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-conversion.cpp",
+          "line": 463,
+          "statement": "Diagnostics::cannotUseInitializerListForType, toType);",
+          "context_before": [
+            "        bool isArrayType = as<ArrayExpressionType>(toType) != nullptr;",
+            "        if (!isCStyle && !isArrayType)",
+            "        {",
+            "            diagnoseOnce(",
+            "                fromInitializerListExpr->loc,"
+          ],
+          "context_after": [
+            "                toType);",
+            "        }",
+            "",
+            "        return false;",
+            "    }"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-conversion.cpp",
+          "line": 900,
+          "statement": "Diagnostics::cannotUseInitializerListForType, inToType);",
+          "context_before": [
+            "        //",
+            "        if (outToExpr)",
+            "        {",
+            "            getSink()->diagnose(",
+            "                fromInitializerListExpr,"
+          ],
+          "context_after": [
+            "                inToType);",
+            "        }",
+            "        return false;",
+            "    }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30505,
+      "severity": "Error",
+      "name": "cannotUseInitializerListForCoopVectorOfUnknownSize",
+      "message": "cannot use initializer list for CoopVector of statically unknown size '$0'",
+      "line": 1786,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-conversion.cpp",
+          "line": 634,
+          "statement": "Diagnostics::cannotUseInitializerListForCoopVectorOfUnknownSize, toElementCount);",
+          "context_before": [
+            "            //",
+            "            if (outToExpr)",
+            "            {",
+            "                getSink()->diagnose(",
+            "                    fromInitializerListExpr,"
+          ],
+          "context_after": [
+            "                    toElementCount);",
+            "            }",
+            "            return false;",
+            "        }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30506,
+      "severity": "Warning",
+      "name": "interfaceDefaultInitializer",
+      "message": "initializing an interface variable with defaults is deprecated and may cause unexpected behavior. Please provide a compatible initializer or leave the variable uninitialized",
+      "line": 1791,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-lower-to-ir.cpp",
+          "line": 5474,
+          "statement": "context->getSink()->diagnose(expr, Diagnostics::interfaceDefaultInitializer);",
+          "context_before": [
+            "            // unspecified behavior, so we'll warn about it here.",
+            "            if (auto declRefType = as<DeclRefType>(type))",
+            "            {",
+            "                if (auto interfaceDeclRef = declRefType->getDeclRef().as<InterfaceDecl>())",
+            "                {"
+          ],
+          "context_after": [
+            "                }",
+            "            }",
+            "",
+            "            return getDefaultVal(type.type);",
+            "        }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30620,
+      "severity": "Error",
+      "name": "varWithoutTypeMustHaveInitializer",
+      "message": "a variable declaration without an initial-value expression must be given an explicit type",
+      "line": 1799,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 2185,
+          "statement": "getSink()->diagnose(varDecl, Diagnostics::varWithoutTypeMustHaveInitializer);",
+          "context_before": [
+            "                {",
+            "                    getSink()->diagnose(varDecl, Diagnostics::genericValueParameterMustHaveType);",
+            "                }",
+            "                else",
+            "                {"
+          ],
+          "context_after": [
+            "                }",
+            "                varDecl->type.type = m_astBuilder->getErrorType();",
+            "            }",
+            "        }",
+            "        else"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30621,
+      "severity": "Error",
+      "name": "paramWithoutTypeMustHaveInitializer",
+      "message": "a parameter declaration without an initial-value expression must be given an explicit type",
+      "line": 1804,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 9625,
+          "statement": "getSink()->diagnose(paramDecl, Diagnostics::paramWithoutTypeMustHaveInitializer);",
+          "context_before": [
+            "        deriveVarTypeFromInitExpr(paramDecl);",
+            "    }",
+            "",
+            "    if (!paramDecl->type && !as<AttributeDecl>(getParentDecl(paramDecl)))",
+            "    {"
+          ],
+          "context_after": [
+            "    }",
+            "",
+            "    if (isTypePack(paramDecl->type.type))",
+            "    {",
+            "        // For now, we only allow parameter packs to be `const`."
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30622,
+      "severity": "Error",
+      "name": "ambiguousDefaultInitializerForType",
+      "message": "more than one default initializer was found for type '$0'",
+      "line": 1809,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 2852,
+          "statement": "getSink()->diagnose(varDecl, Diagnostics::ambiguousDefaultInitializerForType, type);",
+          "context_before": [
+            "            {",
+            "                getShared()->cacheImplicitCastMethod(key, ImplicitCastMethod{});",
+            "            }",
+            "            else",
+            "            {"
+          ],
+          "context_after": [
+            "            }",
+            "        }",
+            "        else if (overloadContext.bestCandidate)",
+            "        {",
+            "            // If we are in the single-candidate case, then we again"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30623,
+      "severity": "Error",
+      "name": "cannotHaveInitializer",
+      "message": "'$0' cannot have an initializer because it is $1",
+      "line": 1814,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 2622,
+          "statement": "sink->diagnose(varDecl, Diagnostics::cannotHaveInitializer, varDecl, \"groupshared\");",
+          "context_before": [
+            "{",
+            "    // find groupshared modifier",
+            "    if (varDecl->findModifier<HLSLGroupSharedModifier>())",
+            "    {",
+            "        if (sink && varDecl->initExpr)"
+          ],
+          "context_after": [
+            "        return false;",
+            "    }",
+            "",
+            "    if (as<InterfaceDecl>(varDecl->parentDecl))",
+            "    {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 2631,
+          "statement": "Diagnostics::cannotHaveInitializer, varDecl, \"an interface requirement\");",
+          "context_before": [
+            "    if (as<InterfaceDecl>(varDecl->parentDecl))",
+            "    {",
+            "        if (sink && varDecl->initExpr)",
+            "            sink->diagnose(",
+            "                varDecl,"
+          ],
+          "context_after": [
+            "                varDecl,",
+            "                \"an interface requirement\");",
+            "        return false;",
+            "    }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30623,
+      "severity": "Error",
+      "name": "genericValueParameterMustHaveType",
+      "message": "a generic value parameter must be given an explicit type",
+      "line": 1815,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 2181,
+          "statement": "getSink()->diagnose(varDecl, Diagnostics::genericValueParameterMustHaveType);",
+          "context_before": [
+            "        {",
+            "            if (!varDecl->type.type)",
+            "            {",
+            "                if (as<GenericValueParamDecl>(varDecl))",
+            "                {"
+          ],
+          "context_after": [
+            "                }",
+            "                else",
+            "                {",
+            "                    getSink()->diagnose(varDecl, Diagnostics::varWithoutTypeMustHaveInitializer);",
+            "                }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30624,
+      "severity": "Error",
+      "name": "genericValueParameterTypeNotSupported",
+      "message": "generic value parameter type '$0' is not supported; only integer and enum types are allowed",
+      "line": 1820,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 3618,
+          "statement": "Diagnostics::genericValueParameterTypeNotSupported, decl->type.type);",
+          "context_before": [
+            "    {",
+            "        if (!isValidCompileTimeConstantType(decl->type.type))",
+            "        {",
+            "            getSink()->diagnose(",
+            "                decl,"
+          ],
+          "context_after": [
+            "                decl->type.type);",
+            "        }",
+            "    }",
+            "}",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30700,
+      "severity": "Error",
+      "name": "outputParameterCannotHaveDefaultValue",
+      "message": "an 'out' or 'inout' parameter cannot have a default-value expression",
+      "line": 1827,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 9779,
+          "statement": "getSink()->diagnose(initExpr, Diagnostics::outputParameterCannotHaveDefaultValue);",
+          "context_before": [
+            "        // Note: the `InOutModifier` class inherits from `OutModifier`,",
+            "        // so we only need to check for the base case.",
+            "        //",
+            "        if (paramDecl->findModifier<OutModifier>())",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "    }",
+            "}",
+            "",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30701,
+      "severity": "Error",
+      "name": "systemValueSemanticInvalidType",
+      "message": "type '$0' is not valid for system value semantic '$1'; expected '$2'",
+      "line": 1832,
+      "param_count": 3,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-shader.cpp",
+          "line": 279,
+          "statement": "Diagnostics::systemValueSemanticInvalidType, unwrapConditionalType(type), baseName, validTypesStr);",
+          "context_before": [
+            "",
+            "        diagnoseCapabilityErrors(",
+            "            sink,",
+            "            visitor->getOptionSet(),",
+            "            loc,"
+          ],
+          "context_after": [
+            "            unwrapConditionalType(type),",
+            "            baseName,",
+            "            validTypesStr);",
+            "    }",
+            "}"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30702,
+      "severity": "Error",
+      "name": "systemValueSemanticInvalidDirection",
+      "message": "system value semantic '$0' cannot be used as $1 in '$2' shader stage",
+      "line": 1837,
+      "param_count": 3,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-shader.cpp",
+          "line": 259,
+          "statement": "Diagnostics::systemValueSemanticInvalidDirection, baseName, directionStr, stageStr);",
+          "context_before": [
+            "        // No accessor defined for this stage+direction combination",
+            "        diagnoseCapabilityErrors(",
+            "            sink,",
+            "            visitor->getOptionSet(),",
+            "            loc,"
+          ],
+          "context_after": [
+            "            baseName,",
+            "            directionStr,",
+            "            stageStr);",
+            "    }",
+            "    else if (!foundMatchingAccessor)"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30810,
+      "severity": "Error",
+      "name": "baseOfInterfaceMustBeInterface",
+      "message": "interface '$0' cannot inherit from non-interface type '$1'",
+      "line": 1844,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 8048,
+          "statement": "Diagnostics::baseOfInterfaceMustBeInterface, decl, baseType);",
+          "context_before": [
+            "        auto baseDeclRefType = as<DeclRefType>(baseType);",
+            "        if (!baseDeclRefType)",
+            "        {",
+            "            getSink()->diagnose(",
+            "                inheritanceDecl,"
+          ],
+          "context_after": [
+            "                decl,",
+            "                baseType);",
+            "            continue;",
+            "        }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 8060,
+          "statement": "Diagnostics::baseOfInterfaceMustBeInterface, decl, baseType);",
+          "context_before": [
+            "        auto baseInterfaceDeclRef = baseDeclRef.as<InterfaceDecl>();",
+            "        if (!baseInterfaceDeclRef)",
+            "        {",
+            "            getSink()->diagnose(",
+            "                inheritanceDecl,"
+          ],
+          "context_after": [
+            "                decl,",
+            "                baseType);",
+            "            continue;",
+            "        }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30811,
+      "severity": "Error",
+      "name": "baseOfStructMustBeInterface",
+      "message": "struct '$0' cannot inherit from non-interface type '$1'",
+      "line": 1849,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 8118,
+          "statement": "Diagnostics::baseOfStructMustBeInterface, decl, baseType);",
+          "context_before": [
+            "        auto baseDeclRefType = as<DeclRefType>(baseType);",
+            "        if (!baseDeclRefType)",
+            "        {",
+            "            getSink()->diagnose(",
+            "                inheritanceDecl,"
+          ],
+          "context_after": [
+            "                decl,",
+            "                baseType);",
+            "            continue;",
+            "        }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 8137,
+          "statement": "Diagnostics::baseOfStructMustBeInterface, decl, baseType);",
+          "context_before": [
+            "                // In Slang 2026, we no longer allow structs to inherit from other structs.",
+            "                if (isSlang2026OrLater(this))",
+            "                {",
+            "                    getSink()->diagnose(",
+            "                        inheritanceDecl,"
+          ],
+          "context_after": [
+            "                        decl,",
+            "                        baseType);",
+            "                }",
+            "                else",
+            "                {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 8172,
+          "statement": "Diagnostics::baseOfStructMustBeInterface, decl, baseType);",
+          "context_before": [
+            "        }",
+            "        else",
+            "        {",
+            "            getSink()->diagnose(",
+            "                inheritanceDecl,"
+          ],
+          "context_after": [
+            "                decl,",
+            "                baseType);",
+            "            continue;",
+            "        }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30812,
+      "severity": "Error",
+      "name": "baseOfEnumMustBeIntegerOrInterface",
+      "message": "enum '$0' cannot inherit from type '$1' that is neither an interface not a builtin integer type",
+      "line": 1854,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 8456,
+          "statement": "Diagnostics::baseOfEnumMustBeIntegerOrInterface, decl, baseType);",
+          "context_before": [
+            "        auto baseDeclRefType = as<DeclRefType>(baseType);",
+            "        if (!baseDeclRefType)",
+            "        {",
+            "            getSink()->diagnose(",
+            "                inheritanceDecl,"
+          ],
+          "context_after": [
+            "                decl,",
+            "                baseType);",
+            "            continue;",
+            "        }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 8503,
+          "statement": "Diagnostics::baseOfEnumMustBeIntegerOrInterface, decl, baseType);",
+          "context_before": [
+            "        }",
+            "        else",
+            "        {",
+            "            getSink()->diagnose(",
+            "                inheritanceDecl,"
+          ],
+          "context_after": [
+            "                decl,",
+            "                baseType);",
+            "            continue;",
+            "        }",
+            "    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30813,
+      "severity": "Error",
+      "name": "baseOfExtensionMustBeInterface",
+      "message": "extension cannot inherit from non-interface type '$1'",
+      "line": 1860,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 10687,
+          "statement": "Diagnostics::baseOfExtensionMustBeInterface, decl, baseType);",
+          "context_before": [
+            "        auto baseDeclRefType = as<DeclRefType>(baseType);",
+            "        if (!baseDeclRefType)",
+            "        {",
+            "            getSink()->diagnose(",
+            "                inheritanceDecl,"
+          ],
+          "context_after": [
+            "                decl,",
+            "                baseType);",
+            "            continue;",
+            "        }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 10699,
+          "statement": "Diagnostics::baseOfExtensionMustBeInterface, decl, baseType);",
+          "context_before": [
+            "        auto baseInterfaceDeclRef = baseDeclRef.as<InterfaceDecl>();",
+            "        if (!baseInterfaceDeclRef)",
+            "        {",
+            "            getSink()->diagnose(",
+            "                inheritanceDecl,"
+          ],
+          "context_after": [
+            "                decl,",
+            "                baseType);",
+            "            continue;",
+            "        }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30814,
+      "severity": "Error",
+      "name": "baseOfClassMustBeClassOrInterface",
+      "message": "class '$0' cannot inherit from type '$1' that is neither a class nor an interface",
+      "line": 1865,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 8240,
+          "statement": "Diagnostics::baseOfClassMustBeClassOrInterface, decl, baseType);",
+          "context_before": [
+            "        auto baseDeclRefType = as<DeclRefType>(baseType);",
+            "        if (!baseDeclRefType)",
+            "        {",
+            "            getSink()->diagnose(",
+            "                inheritanceDecl,"
+          ],
+          "context_after": [
+            "                decl,",
+            "                baseType);",
+            "            continue;",
+            "        }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 8274,
+          "statement": "Diagnostics::baseOfClassMustBeClassOrInterface, decl, baseType);",
+          "context_before": [
+            "        }",
+            "        else",
+            "        {",
+            "            getSink()->diagnose(",
+            "                inheritanceDecl,"
+          ],
+          "context_after": [
+            "                decl,",
+            "                baseType);",
+            "            continue;",
+            "        }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30815,
+      "severity": "Error",
+      "name": "circularityInExtension",
+      "message": "circular extension is not allowed.",
+      "line": 1870,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-inheritance.cpp",
+          "line": 69,
+          "statement": "getSink()->diagnose(decl, Diagnostics::circularityInExtension, decl);",
+          "context_before": [
+            "{",
+            "    for (auto info = circularityInfo; info; info = info->next)",
+            "    {",
+            "        if (decl == info->decl)",
+            "        {"
+          ],
+          "context_after": [
+            "            return true;",
+            "        }",
+            "    }",
+            "",
+            "    return false;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30816,
+      "severity": "Warning",
+      "name": "inheritanceUnstable",
+      "message": "support for inheritance is unstable and will be removed in future language versions, consider using composition instead.",
+      "line": 1871,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 8146,
+          "statement": "getSink()->diagnose(inheritanceDecl, Diagnostics::inheritanceUnstable);",
+          "context_before": [
+            "                else",
+            "                {",
+            "                    // For legacy langauge versions, we still allow struct inheritance to avoid",
+            "                    // breaking existing code, but we will emit a warning to inform the user",
+            "                    // that this feature is unstable and may be removed in the future."
+          ],
+          "context_after": [
+            "                }",
+            "            }",
+            "",
+            "            // To simplify the task of reading and maintaining code,",
+            "            // we require that when a `struct` inherits from another"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30820,
+      "severity": "Error",
+      "name": "baseStructMustBeListedFirst",
+      "message": "a struct type may only inherit from one other struct type, and that type must appear first in the list of bases",
+      "line": 1877,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 8163,
+          "statement": "Diagnostics::baseStructMustBeListedFirst, decl, baseType);",
+          "context_before": [
+            "            //",
+            "            if (inheritanceClauseIndex != 0)",
+            "            {",
+            "                getSink()->diagnose(",
+            "                    inheritanceDecl,"
+          ],
+          "context_after": [
+            "                    decl,",
+            "                    baseType);",
+            "            }",
+            "        }",
+            "        else"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30821,
+      "severity": "Error",
+      "name": "tagTypeMustBeListedFirst",
+      "message": "an unum type may only have a single tag type, and that type must be listed first in the list of bases",
+      "line": 1883,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 8482,
+          "statement": "Diagnostics::tagTypeMustBeListedFirst, decl, baseType);",
+          "context_before": [
+            "            //",
+            "            if (inheritanceClauseIndex != 0)",
+            "            {",
+            "                getSink()->diagnose(",
+            "                    inheritanceDecl,"
+          ],
+          "context_after": [
+            "                    decl,",
+            "                    baseType);",
+            "            }",
+            "            else",
+            "            {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30822,
+      "severity": "Error",
+      "name": "baseClassMustBeListedFirst",
+      "message": "a class type may only inherit from one other class type, and that type must appear first in the list of bases",
+      "line": 1889,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 8265,
+          "statement": "Diagnostics::baseClassMustBeListedFirst, decl, baseType);",
+          "context_before": [
+            "            //",
+            "            if (inheritanceClauseIndex != 0)",
+            "            {",
+            "                getSink()->diagnose(",
+            "                    inheritanceDecl,"
+          ],
+          "context_after": [
+            "                    decl,",
+            "                    baseType);",
+            "            }",
+            "        }",
+            "        else"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30830,
+      "severity": "Error",
+      "name": "cannotInheritFromExplicitlySealedDeclarationInAnotherModule",
+      "message": "cannot inherit from type '$0' marked 'sealed' in module '$1'",
+      "line": 1896,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 7984,
+          "statement": "Diagnostics::cannotInheritFromExplicitlySealedDeclarationInAnotherModule, baseType, moduleWithBaseType->getModuleDecl()->getName());",
+          "context_before": [
+            "        // then it explicitly does *not* allow inheritance from other",
+            "        // modules.",
+            "        //",
+            "        getSink()->diagnose(",
+            "            inheritanceDecl,"
+          ],
+          "context_after": [
+            "            baseType,",
+            "            moduleWithBaseType->getModuleDecl()->getName());",
+            "        return;",
+            "    }",
+            "    else if (baseDecl->hasModifier<OpenAttribute>())"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30831,
+      "severity": "Error",
+      "name": "cannotInheritFromImplicitlySealedDeclarationInAnotherModule",
+      "message": "cannot inherit from type '$0' in module '$1' because it is implicitly 'sealed'; mark the base type 'open' to allow inheritance across modules",
+      "line": 1901,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 8012,
+          "statement": "Diagnostics::cannotInheritFromImplicitlySealedDeclarationInAnotherModule, baseType, moduleWithBaseType->getModuleDecl()->getName());",
+          "context_before": [
+            "        // For any non-interface type, if the declaration didn't specify",
+            "        // `[open]` or `[sealed]` then we assume `[sealed]` is the default.",
+            "        //",
+            "        getSink()->diagnose(",
+            "            inheritanceDecl,"
+          ],
+          "context_after": [
+            "            baseType,",
+            "            moduleWithBaseType->getModuleDecl()->getName());",
+            "        return;",
+            "    }",
+            "}"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30832,
+      "severity": "Error",
+      "name": "invalidTypeForInheritance",
+      "message": "type '$0' cannot be used for inheritance",
+      "line": 1907,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 7604,
+          "statement": "getSink()->diagnose(inheritanceDecl, Diagnostics::invalidTypeForInheritance, superType);",
+          "context_before": [
+            "            return true;",
+            "        }",
+            "    }",
+            "    if (!as<ErrorType>(superType))",
+            "    {"
+          ],
+          "context_after": [
+            "    }",
+            "    return false;",
+            "}",
+            "",
+            "static bool _doesTypeDeclHaveDefinition(ContainerDecl* decl)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30850,
+      "severity": "Error",
+      "name": "invalidExtensionOnType",
+      "message": "type '$0' cannot be extended. `extension` can only be used to extend a nominal type.",
+      "line": 1909,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 10564,
+          "statement": "Diagnostics::invalidExtensionOnType, decl->targetType);",
+          "context_before": [
+            "error:;",
+            "    if (!as<ErrorType>(decl->targetType.type))",
+            "    {",
+            "        getSink()->diagnose(",
+            "            decl->targetType.exp,"
+          ],
+          "context_after": [
+            "            decl->targetType);",
+            "    }",
+            "}",
+            "",
+            "void SemanticsDeclBasesVisitor::_validateExtensionDeclMembers(ExtensionDecl* decl)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30851,
+      "severity": "Error",
+      "name": "invalidMemberTypeInExtension",
+      "message": "$0 cannot be a part of an `extension`",
+      "line": 1914,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 10586,
+          "statement": "getSink()->diagnose(ctor, Diagnostics::invalidMemberTypeInExtension, ctor->astNodeType);",
+          "context_before": [
+            "        //",
+            "        // The underlying rationale",
+            "",
+            "        if (!ctor->body || ctor->getDirectMemberDeclCount() != 0)",
+            "            continue;"
+          ],
+          "context_after": [
+            "    }",
+            "}",
+            "",
+            "void SemanticsDeclBasesVisitor::_validateExtensionDeclGenericParams(ExtensionDecl* decl)",
+            "{"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30852,
+      "severity": "Error",
+      "name": "invalidExtensionOnInterface",
+      "message": "cannot extend interface type '$0'. consider using a generic extension: `extension<T:$0> T {...}`.",
+      "line": 1915,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 10522,
+          "statement": "Diagnostics::invalidExtensionOnInterface, decl->targetType);",
+          "context_before": [
+            "        // Attach our extension to that type as a candidate...",
+            "        if (targetDeclRefType->getDeclRef().as<InterfaceDecl>())",
+            "        {",
+            "            getSink()->diagnose(",
+            "                decl->targetType.exp,"
+          ],
+          "context_after": [
+            "                decl->targetType);",
+            "            return;",
+            "        }",
+            "        else if (auto aggTypeDeclRef = targetDeclRefType->getDeclRef().as<AggTypeDecl>())",
+            "        {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30853,
+      "severity": "Error",
+      "name": "missingOverride",
+      "message": "missing 'override' keyword for methods that overrides the default implementation in the interface.",
+      "line": 1921,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 5475,
+          "statement": "getSink()->diagnose(memberDecl, Diagnostics::missingOverride);",
+          "context_before": [
+            "    {",
+            "        // If the required member has a default implementation,",
+            "        // we need to make sure the member we found is marked as 'override'.",
+            "        if (!memberDecl->hasModifier<OverrideModifier>())",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "    }",
+            "    auto overridingModifier = m_astBuilder->create<IsOverridingModifier>();",
+            "    overridingModifier->overridedDecl = requiredMemberDeclRef.getDecl();",
+            "    addModifier(memberDecl, overridingModifier);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30854,
+      "severity": "Error",
+      "name": "overrideModifierNotOverridingBaseDecl",
+      "message": "'$0' marked as 'override' is not overriding any base declarations.",
+      "line": 1927,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 7853,
+          "statement": "Diagnostics::overrideModifierNotOverridingBaseDecl, innerMember);",
+          "context_before": [
+            "            }",
+            "            if (hasOverride && !isOverriding)",
+            "            {",
+            "                getSink()->diagnose(",
+            "                    innerMember,"
+          ],
+          "context_after": [
+            "                    innerMember);",
+            "",
+            "                if (getShared()->isInLanguageServer() &&",
+            "                    member->getName() == getShared()->getSession()->getCompletionRequestTokenName())",
+            "                {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30855,
+      "severity": "Error",
+      "name": "unreferencedGenericParamInExtension",
+      "message": "generic parameter '$0' is not referenced by extension target type '$1'.",
+      "line": 1932,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 10628,
+          "statement": "Diagnostics::unreferencedGenericParamInExtension, member->getName(), decl->targetType);",
+          "context_before": [
+            "                bool referencedByConstraint = genericParamsReferencedByConstraints.contains(member);",
+            "                if (!referencedByTargetType && !referencedByConstraint)",
+            "                {",
+            "                    getSink()->diagnose(",
+            "                        member,"
+          ],
+          "context_after": [
+            "                        member->getName(),",
+            "                        decl->targetType);",
+            "                }",
+            "                else if (!referencedByTargetType && !isFromCoreModule(decl))",
+            "                {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30856,
+      "severity": "Warning",
+      "name": "genericParamInExtensionNotReferencedByTargetType",
+      "message": "the extension is non-standard and may not work as intended because the generic parameter '$0' is not referenced by extension target type '$1'.",
+      "line": 1937,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 10636,
+          "statement": "Diagnostics::genericParamInExtensionNotReferencedByTargetType, member->getName(), decl->targetType);",
+          "context_before": [
+            "                }",
+            "                else if (!referencedByTargetType && !isFromCoreModule(decl))",
+            "                {",
+            "                    getSink()->diagnose(",
+            "                        member,"
+          ],
+          "context_after": [
+            "                        member->getName(),",
+            "                        decl->targetType);",
+            "                }",
+            "            }",
+            "        }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30900,
+      "severity": "Error",
+      "name": "multiDimensionalArrayNotSupported",
+      "message": "multi-dimensional array is not supported.",
+      "line": 1944,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 2675,
+          "statement": "getSink()->diagnose(subscriptExpr, Diagnostics::multiDimensionalArrayNotSupported);",
+          "context_before": [
+            "                }",
+            "            }",
+            "        }",
+            "        else if (subscriptExpr->indexExprs.getCount() != 0)",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "",
+            "        auto elementType = CoerceToUsableType(TypeExp(baseExpr, baseTypeType->getType()), nullptr);",
+            "        auto arrayType = getArrayType(m_astBuilder, elementType, elementCount);",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30901,
+      "severity": "Error",
+      "name": "subscriptMustHaveReturnType",
+      "message": "__subscript declaration must have a return type specified after '->'",
+      "line": 1949,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-parser.cpp",
+          "line": 4145,
+          "statement": "parser->diagnose(decl->loc, Diagnostics::subscriptMustHaveReturnType);",
+          "context_before": [
+            "            {",
+            "                decl->returnType = parser->ParseTypeExp();",
+            "            }",
+            "            else",
+            "            {"
+          ],
+          "context_after": [
+            "                decl->returnType.exp = parser->astBuilder->create<IncompleteExpr>();",
+            "            }",
+            "",
+            "            auto funcScope = parser->currentScope;",
+            "            parser->PopScope();"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31100,
+      "severity": "Error",
+      "name": "accessorMustBeInsideSubscriptOrProperty",
+      "message": "an accessor declaration is only allowed inside a subscript or property declaration",
+      "line": 1958,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 10927,
+          "statement": "getSink()->diagnose(decl, Diagnostics::accessorMustBeInsideSubscriptOrProperty);",
+          "context_before": [
+            "    else if (as<PropertyDecl>(parentDecl))",
+            "    {",
+            "    }",
+            "    else",
+            "    {"
+          ],
+          "context_after": [
+            "    }",
+            "}",
+            "",
+            "void SemanticsDeclHeaderVisitor::visitAccessorDecl(AccessorDecl* decl)",
+            "{"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31101,
+      "severity": "Error",
+      "name": "nonSetAccessorMustNotHaveParams",
+      "message": "accessors other than 'set' must not have parameters",
+      "line": 1964,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 10945,
+          "statement": "getSink()->diagnose(decl, Diagnostics::nonSetAccessorMustNotHaveParams);",
+          "context_before": [
+            "    // Accessors (other than setters) don't support",
+            "    // parameters.",
+            "    //",
+            "    if (decl->getParameters().getCount() != 0)",
+            "    {"
+          ],
+          "context_after": [
+            "    }",
+            "",
+            "    // By default, the return type of an accessor is treated as",
+            "    // the type of the abstract storage location being accessed.",
+            "    //"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31102,
+      "severity": "Error",
+      "name": "setAccessorMayNotHaveMoreThanOneParam",
+      "message": "a 'set' accessor may not have more than one parameter",
+      "line": 1969,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 11000,
+          "statement": "getSink()->diagnose(params[1], Diagnostics::setAccessorMayNotHaveMoreThanOneParam);",
+          "context_before": [
+            "        if (params.getCount() > 1)",
+            "        {",
+            "            // If the user declared more than one explicit",
+            "            // parameter, then that is an error.",
+            "            //"
+          ],
+          "context_after": [
+            "        }",
+            "    }",
+            "    else",
+            "    {",
+            "        // If the user didn't declare any explicit parameters,"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31102,
+      "severity": "Error",
+      "name": "setAccessorParamWrongType",
+      "message": "'set' parameter '$0' has type '$1' which does not match the expected type '$2'",
+      "line": 1974,
+      "param_count": 3,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 11049,
+          "statement": "Diagnostics::setAccessorParamWrongType, newValueParam, actualType, newValueType);",
+          "context_before": [
+            "        }",
+            "        else",
+            "        {",
+            "            getSink()->diagnose(",
+            "                newValueParam,"
+          ],
+          "context_after": [
+            "                newValueParam,",
+            "                actualType,",
+            "                newValueType);",
+            "        }",
+            "    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31300,
+      "severity": "Error",
+      "name": "bitFieldTooWide",
+      "message": "bit-field size ($0) exceeds the width of its type $1 ($2)",
+      "line": 1981,
+      "param_count": 3,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 13928,
+          "statement": "Diagnostics::bitFieldTooWide, thisFieldWidth, t, thisFieldTypeWidth);",
+          "context_before": [
+            "        SLANG_ASSERT(thisFieldTypeWidth != 0);",
+            "        if (thisFieldWidth > thisFieldTypeWidth)",
+            "        {",
+            "            getSink()->diagnose(",
+            "                v->loc,"
+          ],
+          "context_after": [
+            "                thisFieldWidth,",
+            "                t,",
+            "                thisFieldTypeWidth);",
+            "            // Not much we can do with this field, just ignore it",
+            "            continue;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31301,
+      "severity": "Error",
+      "name": "bitFieldNonIntegral",
+      "message": "bit-field type ($0) must be an integral type",
+      "line": 1986,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 13909,
+          "statement": "getSink()->diagnose(v->loc, Diagnostics::bitFieldNonIntegral, t);",
+          "context_before": [
+            "        const auto t = v->type.type->getCanonicalType();",
+            "        SLANG_ASSERT(t);",
+            "        const auto b = as<BasicExpressionType>(t);",
+            "        if (!b)",
+            "        {"
+          ],
+          "context_after": [
+            "            continue;",
+            "        }",
+            "        const auto baseType = b->getBaseType();",
+            "        const bool isIntegerType = isIntegerBaseType(baseType);",
+            "        if (!isIntegerType)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 13916,
+          "statement": "getSink()->diagnose(v->loc, Diagnostics::bitFieldNonIntegral, t);",
+          "context_before": [
+            "        }",
+            "        const auto baseType = b->getBaseType();",
+            "        const bool isIntegerType = isIntegerBaseType(baseType);",
+            "        if (!isIntegerType)",
+            "        {"
+          ],
+          "context_after": [
+            "            continue;",
+            "        }",
+            "",
+            "        // The bit width of this member, and the member type width",
+            "        const auto thisFieldWidth = bfm->width;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 39999,
+      "severity": "Error",
+      "name": "expectedIntegerConstantWrongType",
+      "message": "expected integer constant (found: '$0')",
+      "line": 1990,
+      "param_count": 1,
+      "call_sites": []
+    },
+    {
+      "id": 39999,
+      "severity": "Error",
+      "name": "expectedIntegerConstantNotConstant",
+      "message": "expression does not evaluate to a compile-time constant",
+      "line": 1995,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-early-raytracing-intrinsic-simplification.cpp",
+          "line": 48,
+          "statement": "sink->diagnose(payloadVariable, Diagnostics::expectedIntegerConstantNotConstant);",
+          "context_before": [
+            "                varLayoutPointsTo = m_RayLocationToCallables.tryGetValue(intLitValue);",
+            "            }",
+            "        }",
+            "        else",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "",
+            "        IRInst* resultVariable;",
+            "        if (!varLayoutPointsTo)",
+            "        {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 2545,
+          "statement": "sink->diagnose(expr, Diagnostics::expectedIntegerConstantNotConstant);",
+          "context_before": [
+            "        return nullptr;",
+            "",
+            "    auto result = tryFoldIntegerConstantExpression(expr, kind, nullptr);",
+            "    if (!result && sink)",
+            "    {"
+          ],
+          "context_after": [
+            "    }",
+            "    return result;",
+            "}",
+            "",
+            "IntVal* SemanticsVisitor::CheckIntegerConstantExpression("
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 2572,
+          "statement": "getSink()->diagnose(expr, Diagnostics::expectedIntegerConstantNotConstant);",
+          "context_before": [
+            "        return nullptr;",
+            "",
+            "    auto result = tryConstantFoldExpr(expr, kind, nullptr);",
+            "    if (!result)",
+            "    {"
+          ],
+          "context_after": [
+            "    }",
+            "    return result;",
+            "}",
+            "",
+            "Expr* SemanticsVisitor::CheckSimpleSubscriptExpr(IndexExpr* subscriptExpr, Type* elementType)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 8666,
+          "statement": "Diagnostics::expectedIntegerConstantNotConstant);",
+          "context_before": [
+            "            {",
+            "                // If this happens, then the explicit tag value expression",
+            "                // doesn't seem to be a constant after all.",
+            "                getSink()->diagnose(",
+            "                    explicitTagValExpr,"
+          ],
+          "context_after": [
+            "            }",
+            "        }",
+            "        else",
+            "        {",
+            "            // This tag has no initializer, so it should use"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 39999,
+      "severity": "Error",
+      "name": "expectedIntegerConstantNotLiteral",
+      "message": "could not extract value from integer constant",
+      "line": 2000,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 42,
+          "statement": "getSink()->diagnose(expr->loc, Diagnostics::expectedIntegerConstantNotLiteral);",
+          "context_before": [
+            "        return nullptr;",
+            "",
+            "    auto constIntVal = as<ConstantIntVal>(intVal);",
+            "    if (!constIntVal)",
+            "    {"
+          ],
+          "context_after": [
+            "        return nullptr;",
+            "    }",
+            "    return constIntVal;",
+            "}",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 60,
+          "statement": "getSink()->diagnose(expr->loc, Diagnostics::expectedIntegerConstantNotLiteral);",
+          "context_before": [
+            "        return nullptr;",
+            "",
+            "    auto constIntVal = as<ConstantIntVal>(intVal);",
+            "    if (!constIntVal)",
+            "    {"
+          ],
+          "context_after": [
+            "        return nullptr;",
+            "    }",
+            "    return constIntVal;",
+            "}",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 39999,
+      "severity": "Error",
+      "name": "expectedRayTracingPayloadObjectAtLocationButMissing",
+      "message": "raytracing payload expected at location $0 but it is missing",
+      "line": 2006,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-early-raytracing-intrinsic-simplification.cpp",
+          "line": 59,
+          "statement": "Diagnostics::expectedRayTracingPayloadObjectAtLocationButMissing, intLitValue);",
+          "context_before": [
+            "            // if somehow the location tied variable is missing and an error was not thrown by the",
+            "            // compiler",
+            "            resultVariable = builder.getIntValue(builder.getIntType(), 0);",
+            "            sink->diagnose(",
+            "                payloadVariable,"
+          ],
+          "context_after": [
+            "                intLitValue);",
+            "        }",
+            "        else",
+            "        {",
+            "            resultVariable = *varLayoutPointsTo;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 39999,
+      "severity": "Error",
+      "name": "noApplicableOverloadForNameWithArgs",
+      "message": "no overload for '$0' applicable to arguments of type $1",
+      "line": 2012,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-overload.cpp",
+          "line": 2958,
+          "statement": "Diagnostics::noApplicableOverloadForNameWithArgs, funcName, argsList);",
+          "context_before": [
+            "",
+            "            if (funcName)",
+            "            {",
+            "                getSink()->diagnose(",
+            "                    expr,"
+          ],
+          "context_after": [
+            "                    funcName,",
+            "                    argsList);",
+            "            }",
+            "            else",
+            "            {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 39999,
+      "severity": "Error",
+      "name": "noApplicableWithArgs",
+      "message": "no overload applicable to arguments of type $0",
+      "line": 2017,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-overload.cpp",
+          "line": 2964,
+          "statement": "getSink()->diagnose(expr, Diagnostics::noApplicableWithArgs, argsList);",
+          "context_before": [
+            "                    funcName,",
+            "                    argsList);",
+            "            }",
+            "            else",
+            "            {"
+          ],
+          "context_after": [
+            "            }",
+            "        }",
+            "        else",
+            "        {",
+            "            // There were multiple applicable candidates, so we need to report them."
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 39999,
+      "severity": "Error",
+      "name": "ambiguousOverloadForNameWithArgs",
+      "message": "ambiguous call to '$0' with arguments of type $1",
+      "line": 2019,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-overload.cpp",
+          "line": 3023,
+          "statement": "Diagnostics::ambiguousOverloadForNameWithArgs, funcName, argsList);",
+          "context_before": [
+            "                // Use old diagnostic system",
+            "                if (funcName)",
+            "                {",
+            "                    getSink()->diagnose(",
+            "                        expr,"
+          ],
+          "context_after": [
+            "                        funcName,",
+            "                        argsList);",
+            "                }",
+            "                else",
+            "                {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 39999,
+      "severity": "Error",
+      "name": "ambiguousOverloadWithArgs",
+      "message": "ambiguous call to overloaded operation with arguments of type $0",
+      "line": 2024,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-overload.cpp",
+          "line": 3029,
+          "statement": "getSink()->diagnose(expr, Diagnostics::ambiguousOverloadWithArgs, argsList);",
+          "context_before": [
+            "                        funcName,",
+            "                        argsList);",
+            "                }",
+            "                else",
+            "                {"
+          ],
+          "context_after": [
+            "                }",
+            "",
+            "                {",
+            "                    Index candidateCount = context.bestCandidates.getCount();",
+            "                    Index maxCandidatesToPrint = 10; // don't show too many candidates at once..."
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 39999,
+      "severity": "Error",
+      "name": "caseOutsideSwitch",
+      "message": "'case' not allowed outside of a 'switch' statement",
+      "line": 2035,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-stmt.cpp",
+          "line": 406,
+          "statement": "getSink()->diagnose(stmt, Diagnostics::caseOutsideSwitch);",
+          "context_before": [
+            "void SemanticsStmtVisitor::visitCaseStmt(CaseStmt* stmt)",
+            "{",
+            "    auto switchStmt = FindOuterStmt<SwitchStmt>();",
+            "    if (!switchStmt)",
+            "    {"
+          ],
+          "context_after": [
+            "        return;",
+            "    }",
+            "",
+            "    // Check that the type for the `case` is consistent with the type for the `switch`.",
+            "    auto expr = CheckExpr(stmt->expr);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-stmt.cpp",
+          "line": 492,
+          "statement": "getSink()->diagnose(stmt, Diagnostics::caseOutsideSwitch);",
+          "context_before": [
+            "        getShared()->getLinkage()->contentAssistInfo.completionSuggestions.scopeKind =",
+            "            CompletionSuggestions::ScopeKind::Capabilities;",
+            "    }",
+            "    if (!switchStmt)",
+            "    {"
+          ],
+          "context_after": [
+            "    }",
+            "    else",
+            "    {",
+            "        stmt->targetOuterStmtID = switchStmt->uniqueID;",
+            "    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 39999,
+      "severity": "Error",
+      "name": "defaultOutsideSwitch",
+      "message": "'default' not allowed outside of a 'switch' statement",
+      "line": 2036,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-stmt.cpp",
+          "line": 514,
+          "statement": "getSink()->diagnose(stmt, Diagnostics::defaultOutsideSwitch);",
+          "context_before": [
+            "void SemanticsStmtVisitor::visitDefaultStmt(DefaultStmt* stmt)",
+            "{",
+            "    auto switchStmt = FindOuterStmt<SwitchStmt>();",
+            "    if (!switchStmt)",
+            "    {"
+          ],
+          "context_after": [
+            "    }",
+            "    else",
+            "    {",
+            "        // We stash the ID of the target statement in the `case`",
+            "        // statement so that they can be correlated later, during"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 39999,
+      "severity": "Error",
+      "name": "expectedAGeneric",
+      "message": "expected a generic when using '<...>' (found: '$0')",
+      "line": 2042,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-overload.cpp",
+          "line": 3343,
+          "statement": "getSink()->diagnose(genericAppExpr, Diagnostics::expectedAGeneric, baseExpr->type);",
+          "context_before": [
+            "        return CompleteOverloadCandidate(context, *context.bestCandidate);",
+            "    }",
+            "    else",
+            "    {",
+            "        // Nothing at all was found that we could even consider invoking"
+          ],
+          "context_after": [
+            "        return CreateErrorExpr(genericAppExpr);",
+            "    }",
+            "}",
+            "",
+            "} // namespace Slang"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 39999,
+      "severity": "Error",
+      "name": "genericArgumentInferenceFailed",
+      "message": "could not specialize generic for arguments of type $0",
+      "line": 2044,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-overload.cpp",
+          "line": 1159,
+          "statement": "getSink()->diagnose(context.loc, Diagnostics::genericArgumentInferenceFailed, callString);",
+          "context_before": [
+            "{",
+            "    // special case for generic argument inference failure",
+            "    if (candidate.status == OverloadCandidate::Status::GenericArgumentInferenceFailed)",
+            "    {",
+            "        String callString = getCallSignatureString(context);"
+          ],
+          "context_after": [
+            "",
+            "        String declString = ASTPrinter::getDeclSignatureString(candidate.item, m_astBuilder);",
+            "        getSink()->diagnose(candidate.item.declRef, Diagnostics::genericSignatureTried, declString);",
+            "        goto error;",
+            "    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": [
+            "genericSignatureTried"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 39999,
+      "severity": "Error",
+      "name": "ambiguousReference",
+      "message": "ambiguous reference to '$0'",
+      "line": 2050,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-conversion.cpp",
+          "line": 1244,
+          "statement": "Diagnostics::ambiguousReference, declCandidate->declRef);",
+          "context_before": [
+            "                                      : nullptr;",
+            "            if (auto declCandidate = as<DeclRefExpr>(firstCandidate))",
+            "            {",
+            "                sink->diagnose(",
+            "                    fromExpr->loc,"
+          ],
+          "context_after": [
+            "                    declCandidate->declRef);",
+            "            }",
+            "            else",
+            "            {",
+            "                sink->diagnose(fromExpr->loc, Diagnostics::ambiguousExpression);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-ir-glsl-legalize.cpp",
+          "line": 5313,
+          "statement": "Diagnostics::ambiguousReference, param);",
+          "context_before": [
+            "        }",
+            "        else",
+            "        {",
+            "            context->getSink()->diagnose(",
+            "                param->firstUse->getUser(),"
+          ],
+          "context_after": [
+            "                param);",
+            "        }",
+            "    }",
+            "}",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 1900,
+          "statement": "Diagnostics::ambiguousReference, targetIntrinsic->scrutinee.name);",
+          "context_before": [
+            "                }",
+            "                if (scrutineeResults.isOverloaded())",
+            "                {",
+            "                    getSink()->diagnose(",
+            "                        targetIntrinsic->scrutinee.loc,"
+          ],
+          "context_after": [
+            "                        targetIntrinsic->scrutinee.name);",
+            "                }",
+            "                targetIntrinsic->scrutineeDeclRef = scrutineeResults.item.declRef;",
+            "            }",
+            "        }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 1278,
+          "statement": "Diagnostics::ambiguousReference, lookupResult.items[0].declRef.getName());",
+          "context_before": [
+            "    OverloadedExpr* overloadedExpr,",
+            "    LookupResult const& lookupResult)",
+            "{",
+            "    getSink()->diagnose(",
+            "        overloadedExpr,"
+          ],
+          "context_after": [
+            "        lookupResult.items[0].declRef.getName());",
+            "",
+            "    for (auto item : lookupResult.items)",
+            "    {",
+            "        String declString = ASTPrinter::getDeclSignatureString(item, m_astBuilder);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 39999,
+      "severity": "Error",
+      "name": "ambiguousExpression",
+      "message": "ambiguous reference",
+      "line": 2051,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-conversion.cpp",
+          "line": 1249,
+          "statement": "sink->diagnose(fromExpr->loc, Diagnostics::ambiguousExpression);",
+          "context_before": [
+            "                    Diagnostics::ambiguousReference,",
+            "                    declCandidate->declRef);",
+            "            }",
+            "            else",
+            "            {"
+          ],
+          "context_after": [
+            "            }",
+            "        }",
+            "        return false;",
+            "    }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 1296,
+          "statement": "getSink()->diagnose(expr, Diagnostics::ambiguousExpression);",
+          "context_before": [
+            "    {",
+            "        diagnoseAmbiguousReference(overloadedExpr, overloadedExpr->lookupResult2);",
+            "    }",
+            "    else",
+            "    {"
+          ],
+          "context_after": [
+            "    }",
+            "    expr->type = m_astBuilder->getErrorType();",
+            "}",
+            "",
+            "Expr* SemanticsVisitor::_resolveOverloadedExprImpl("
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 39999,
+      "severity": "Error",
+      "name": "declarationDidntDeclareAnything",
+      "message": "declaration does not declare anything",
+      "line": 2053,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-parser.cpp",
+          "line": 3034,
+          "statement": "parser->sink->diagnose(startPosition, Diagnostics::declarationDidntDeclareAnything);",
+          "context_before": [
+            "        // that might not be an error.",
+            "",
+            "        auto result = declGroupBuilder.getResult();",
+            "        if (!result)",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "        return result;",
+            "    }",
+            "",
+            "    // It is possible that we have a plain `struct`, `enum`,"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 39999,
+      "severity": "Error",
+      "name": "expectedPrefixOperator",
+      "message": "function called as prefix operator was not declared `__prefix`",
+      "line": 2055,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-overload.cpp",
+          "line": 232,
+          "statement": "getSink()->diagnose(context.loc, Diagnostics::expectedPrefixOperator);",
+          "context_before": [
+            "        if (decl->hasModifier<PrefixModifier>())",
+            "            return true;",
+            "",
+            "        if (context.mode != OverloadResolveContext::Mode::JustTrying)",
+            "        {"
+          ],
+          "context_after": [
+            "            getSink()->diagnose(decl, Diagnostics::seeDefinitionOf, decl->getName());",
+            "        }",
+            "",
+            "        return false;",
+            "    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": [
+            "seeDefinitionOf"
+          ]
+        }
+      ]
+    }
+  ],
+  "notes_reference": {}
+}

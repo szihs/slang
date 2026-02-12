@@ -1,0 +1,3726 @@
+{
+  "chunk_index": 1,
+  "total_chunks": 6,
+  "diagnostics": [
+    {
+      "id": 20001,
+      "severity": "Error",
+      "name": "unexpectedTokenExpectedTokenName",
+      "message": "unexpected $0, expected '$1'",
+      "line": 495,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-parser.cpp",
+          "line": 305,
+          "statement": "Diagnostics::unexpectedTokenExpectedTokenName, parser->tokenReader.peekTokenType(), expected);",
+          "context_before": [
+            "    // Don't emit \"unexpected token\" errors if we are in recovering mode",
+            "    if (!parser->isRecovering)",
+            "    {",
+            "        parser->sink->diagnose(",
+            "            parser->tokenReader.peekLoc(),"
+          ],
+          "context_after": [
+            "            parser->tokenReader.peekTokenType(),",
+            "            expected);",
+            "",
+            "        // Switch into recovery mode, to suppress additional errors",
+            "        parser->isRecovering = true;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 0,
+      "severity": "Error",
+      "name": "tokenNameExpectedButEOF",
+      "message": "\\\"$0\\\" expected but end of file encountered.",
+      "line": 497,
+      "param_count": 1,
+      "call_sites": []
+    },
+    {
+      "id": 0,
+      "severity": "Error",
+      "name": "tokenTypeExpectedButEOF",
+      "message": "$0 expected but end of file encountered.",
+      "line": 498,
+      "param_count": 1,
+      "call_sites": []
+    },
+    {
+      "id": 20001,
+      "severity": "Error",
+      "name": "tokenNameExpected",
+      "message": "\\\"$0\\\" expected",
+      "line": 499,
+      "param_count": 1,
+      "call_sites": []
+    },
+    {
+      "id": 20001,
+      "severity": "Error",
+      "name": "tokenNameExpectedButEOF2",
+      "message": "\\\"$0\\\" expected but end of file encountered.",
+      "line": 500,
+      "param_count": 1,
+      "call_sites": []
+    },
+    {
+      "id": 20001,
+      "severity": "Error",
+      "name": "tokenTypeExpected",
+      "message": "$0 expected",
+      "line": 501,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-parser.cpp",
+          "line": 2387,
+          "statement": "Diagnostics::tokenTypeExpected, \"'>'\");",
+          "context_before": [
+            "    else if (parser->LookAheadToken(TokenType::OpGreater))",
+            "        parser->ReadToken(TokenType::OpGreater);",
+            "    else",
+            "        parser->sink->diagnose(",
+            "            parser->tokenReader.peekToken(),"
+          ],
+          "context_after": [
+            "            \"'>'\");",
+            "    return genericApp;",
+            "}",
+            "",
+            "static bool isGenericName(Parser* parser, Name* name)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 20001,
+      "severity": "Error",
+      "name": "tokenTypeExpectedButEOF2",
+      "message": "$0 expected but end of file encountered.",
+      "line": 502,
+      "param_count": 1,
+      "call_sites": []
+    },
+    {
+      "id": 20001,
+      "severity": "Error",
+      "name": "typeNameExpectedBut",
+      "message": "unexpected $0, expected type name",
+      "line": 503,
+      "param_count": 1,
+      "call_sites": []
+    },
+    {
+      "id": 20001,
+      "severity": "Error",
+      "name": "typeNameExpectedButEOF",
+      "message": "type name expected but end of file encountered.",
+      "line": 504,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 20001,
+      "severity": "Error",
+      "name": "unexpectedEOF",
+      "message": " Unexpected end of file.",
+      "line": 505,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 20002,
+      "severity": "Error",
+      "name": "syntaxError",
+      "message": "syntax error.",
+      "line": 506,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-parser.cpp",
+          "line": 7668,
+          "statement": "parser->diagnose(parser->tokenReader.peekLoc(), Diagnostics::syntaxError);",
+          "context_before": [
+            "{",
+            "    switch (peekTokenType(parser))",
+            "    {",
+            "    default:",
+            "        // TODO: should this return an error expression instead of NULL?"
+          ],
+          "context_after": [
+            "        return parser->astBuilder->create<IncompleteExpr>();",
+            "",
+            "    // Either:",
+            "    // - parenthesized expression `(exp)`",
+            "    // - cast `(type) exp`"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-parser.cpp",
+          "line": 8823,
+          "statement": "parser->diagnose(newExpr->loc, Diagnostics::syntaxError);",
+          "context_before": [
+            "                    newExpr->arguments = invokeExpr->arguments;",
+            "                    newExpr->argumentDelimeterLocs = invokeExpr->argumentDelimeterLocs;",
+            "                }",
+            "                else",
+            "                {"
+          ],
+          "context_after": [
+            "                    newExpr->functionExpr = parser->astBuilder->create<IncompleteExpr>();",
+            "                }",
+            "                return newExpr;",
+            "            }",
+            "            else if (AdvanceIf(parser, \"spirv_asm\"))"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-linkable.cpp",
+          "line": 796,
+          "statement": "sink->diagnose(SourceLoc(), Diagnostics::syntaxError);",
+          "context_before": [
+            "    SLANG_AST_BUILDER_RAII(linkage->getASTBuilder());",
+            "    auto astBuilder = linkage->getASTBuilder();",
+            "    Scope* scope = _getOrCreateScopeForLegacyLookup(astBuilder);",
+            "    Expr* expr = linkage->parseTermString(exprStr, scope);",
+            "    if (!expr || as<IncompleteExpr>(expr))"
+          ],
+          "context_after": [
+            "    return expr;",
+            "}",
+            "",
+            "Type* ComponentType::getTypeFromString(String const& typeStr, DiagnosticSink* sink)",
+            "{"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 4207,
+          "statement": "Expect(context, TokenType::LParent, Diagnostics::syntaxError);",
+          "context_before": [
+            "SLANG_PRAGMA_DIRECTIVE_CALLBACK(handlePragmaWarningDirective)",
+            "{",
+            "    auto directiveLoc = GetDirectiveLoc(context);",
+            "    SLANG_UNUSED(subDirectiveToken)",
+            "    SLANG_UNUSED(directiveLoc);"
+          ],
+          "context_after": [
+            "    Token tk = PeekToken(context);",
+            "    auto finish = [&]() -> void { SkipToEndOfLine(context); };",
+            "    if (tk.type == TokenType::Identifier)",
+            "    {",
+            "        // #pragma warning (push)"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 4246,
+          "statement": "Expect(context, TokenType::Identifier, Diagnostics::syntaxError, &id);",
+          "context_before": [
+            "                // and the token is 'suppress' located at the macro definition on line (a)",
+            "                // The #pragma warning should take effect from line (b), not line (a),",
+            "                // So we need the raw token location.",
+            "                SourceLoc specifierLocation = PeekRawToken(context).loc;",
+            "                Token id;"
+          ],
+          "context_after": [
+            "                PragmaWarningSpecifier specifier;",
+            "                SourceLoc nextLineEnd = {}; // Needed for suppress",
+            "                if (id.getContent() == \"default\")",
+            "                {",
+            "                    specifier = PragmaWarningSpecifier::Default;"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 4287,
+          "statement": "Expect(context, TokenType::Colon, Diagnostics::syntaxError);",
+          "context_before": [
+            "                        specifierLocation,",
+            "                        Diagnostics::pragmaWarningUnknownSpecifier,",
+            "                        id.getContent());",
+            "                    return finish();",
+            "                }"
+          ],
+          "context_after": [
+            "                // Read the id list",
+            "                while (true)",
+            "                {",
+            "                    // Same logic as for the specifierLocation",
+            "                    SourceLoc idLocation = PeekRawToken(context).loc;"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 4335,
+          "statement": "GetSink(context)->diagnose(tk, Diagnostics::syntaxError);",
+          "context_before": [
+            "            }",
+            "        }",
+            "    }",
+            "    else",
+            "    {"
+          ],
+          "context_after": [
+            "        return finish();",
+            "    }",
+            "    Expect(context, TokenType::RParent, Diagnostics::syntaxError);",
+            "}",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 4338,
+          "statement": "Expect(context, TokenType::RParent, Diagnostics::syntaxError);",
+          "context_before": [
+            "    else",
+            "    {",
+            "        GetSink(context)->diagnose(tk, Diagnostics::syntaxError);",
+            "        return finish();",
+            "    }"
+          ],
+          "context_after": [
+            "}",
+            "",
+            "// Information about a specific `#pragma` directive",
+            "struct PragmaDirective",
+            "{"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 20004,
+      "severity": "Error",
+      "name": "unexpectedTokenExpectedComponentDefinition",
+      "message": "unexpected token '$0', only component definitions are allowed in a shader scope.",
+      "line": 507,
+      "param_count": 1,
+      "call_sites": []
+    },
+    {
+      "id": 20005,
+      "severity": "Error",
+      "name": "invalidEmptyParenthesisExpr",
+      "message": "empty parenthesis '()' is not a valid expression.",
+      "line": 512,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-parser.cpp",
+          "line": 7735,
+          "statement": "parser->diagnose(openParen, Diagnostics::invalidEmptyParenthesisExpr);",
+          "context_before": [
+            "                    }",
+            "                    else",
+            "                    {",
+            "                        // We don't support empty parentheses `()` as a valid expression prior to",
+            "                        // Slang 2026."
+          ],
+          "context_after": [
+            "                        base = parser->astBuilder->create<IncompleteExpr>();",
+            "                        base->type = parser->astBuilder->getErrorType();",
+            "                    }",
+            "                }",
+            "                else"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 20008,
+      "severity": "Error",
+      "name": "invalidOperator",
+      "message": "invalid operator '$0'.",
+      "line": 517,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-parser.cpp",
+          "line": 1431,
+          "statement": "parser->sink->diagnose(nameToken.loc, Diagnostics::invalidOperator, nameToken);",
+          "context_before": [
+            "                // Concat : onto ?",
+            "                nameToken.setContent(UnownedStringSlice::fromLiteral(\"?:\"));",
+            "                break;",
+            "            }; // fall-thru",
+            "        default:"
+          ],
+          "context_after": [
+            "            break;",
+            "        }",
+            "",
+            "        if (nameToken.type == TokenType::LParent)",
+            "            return NameLoc(getName(parser, \"()\"), nameToken.loc);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 20011,
+      "severity": "Error",
+      "name": "unexpectedColon",
+      "message": "unexpected ':'.",
+      "line": 518,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 20012,
+      "severity": "Error",
+      "name": "invalidSPIRVVersion",
+      "message": "Expecting SPIR-V version as either 'major.minor', or quoted if has patch (eg for SPIR-V 1.2, '1.2' or \\\"1.2\\\"')",
+      "line": 519,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-parser.cpp",
+          "line": 9256,
+          "statement": "parser->sink->diagnose(token, Diagnostics::invalidSPIRVVersion);",
+          "context_before": [
+            "    {",
+            "        auto modifier = parser->astBuilder->create<RequiredSPIRVVersionModifier>();",
+            "        modifier->version = version;",
+            "        return modifier;",
+            "    }"
+          ],
+          "context_after": [
+            "    return nullptr;",
+            "}",
+            "",
+            "static NodeBase* parseCUDASMVersionModifier(Parser* parser, void* /*userData*/)",
+            "{"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 20013,
+      "severity": "Error",
+      "name": "invalidCUDASMVersion",
+      "message": "Expecting CUDA SM version as either 'major.minor', or quoted if has patch (eg for '7.0' or \\\"7.0\\\"')",
+      "line": 525,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-parser.cpp",
+          "line": 9270,
+          "statement": "parser->sink->diagnose(token, Diagnostics::invalidCUDASMVersion);",
+          "context_before": [
+            "    {",
+            "        auto modifier = parser->astBuilder->create<RequiredCUDASMVersionModifier>();",
+            "        modifier->version = version;",
+            "        return modifier;",
+            "    }"
+          ],
+          "context_after": [
+            "    return nullptr;",
+            "}",
+            "",
+            "static NodeBase* parseSharedModifier(Parser* parser, void* /*userData*/)",
+            "{"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 20014,
+      "severity": "Error",
+      "name": "classIsReservedKeyword",
+      "message": "'class' is a reserved keyword in this context; use 'struct' instead.",
+      "line": 531,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 20015,
+      "severity": "Error",
+      "name": "unknownSPIRVCapability",
+      "message": "unknown SPIR-V capability '$0'.",
+      "line": 536,
+      "param_count": 1,
+      "call_sites": []
+    },
+    {
+      "id": 20016,
+      "severity": "Error",
+      "name": "missingLayoutBindingModifier",
+      "message": "Expecting 'binding' modifier in the layout qualifier here",
+      "line": 537,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 2263,
+          "statement": "getSink()->diagnose(glslOffsetAttribute, Diagnostics::missingLayoutBindingModifier);",
+          "context_before": [
+            "                    glslOffsetAttribute->offset);",
+            "            }",
+            "        }",
+            "        else",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "    }",
+            "",
+            "    postProcessingOnModifiers(m_astBuilder, syntaxNode->modifiers);",
+            "}"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 20017,
+      "severity": "Error",
+      "name": "constNotAllowedOnCStylePtrDecl",
+      "message": "'const' not allowed on pointer typed declarations using the C style '*' operator. If the intent is to restrict the pointed-to value to read-only, use 'Ptr<T, Access.Read>'; if the intent is to make the pointer itself immutable, use 'let' or 'const Ptr<...>'.",
+      "line": 542,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 1730,
+          "statement": "getSink()->diagnose(m, Diagnostics::constNotAllowedOnCStylePtrDecl);",
+          "context_before": [
+            "        if (auto varDeclBase = as<VarDeclBase>(syntaxNode))",
+            "        {",
+            "            if (as<PointerTypeExpr>(varDeclBase->type.exp))",
+            "            {",
+            "                // Disallow `const T*` syntax."
+          ],
+          "context_after": [
+            "                return nullptr;",
+            "            }",
+            "        }",
+            "    }",
+            "    if (auto glslLayoutAttribute = as<UncheckedGLSLLayoutAttribute>(m))"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 20018,
+      "severity": "Error",
+      "name": "constNotAllowedOnType",
+      "message": "cannot use 'const' as a type modifier",
+      "line": 549,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 6273,
+          "statement": "getSink()->diagnose(modifier, Diagnostics::constNotAllowedOnType);",
+          "context_before": [
+            "    {",
+            "        return m_astBuilder->getNoDiffModifierVal();",
+            "    }",
+            "    else if (as<ConstModifier>(modifier))",
+            "    {"
+          ],
+          "context_after": [
+            "        return nullptr;",
+            "    }",
+            "    else",
+            "    {",
+            "        // TODO: more complete error message here"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 20101,
+      "severity": "Warning",
+      "name": "unintendedEmptyStatement",
+      "message": "potentially unintended empty statement at this location; use {} instead.",
+      "line": 551,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-parser.cpp",
+          "line": 6268,
+          "statement": "sink->diagnose(tokenReader.peekLoc(), Diagnostics::unintendedEmptyStatement);",
+          "context_before": [
+            "        if (as<IfStmt>(parentStmt))",
+            "        {",
+            "            // An empty statement after an `if` is probably a mistake,",
+            "            // so we will diagnose it as such.",
+            "            //"
+          ],
+          "context_after": [
+            "        }",
+            "        statement = astBuilder->create<EmptyStmt>();",
+            "        FillPosition(statement);",
+            "        ReadToken(TokenType::Semicolon);",
+            "    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 20102,
+      "severity": "Error",
+      "name": "unexpectedBodyAfterSemicolon",
+      "message": "unexpected function body after signature declaration, is this ';' a typo?",
+      "line": 556,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-parser.cpp",
+          "line": 1847,
+          "statement": "parser->sink->diagnose(semiColonToken.loc, Diagnostics::unexpectedBodyAfterSemicolon);",
+          "context_before": [
+            "        // empty body",
+            "        // if we see a `{` after a `;`, it is very likely an user error to",
+            "        // have the `;`, so we will provide a better diagnostic for it.",
+            "        if (peekTokenType(parser) == TokenType::LBrace)",
+            "        {"
+          ],
+          "context_after": [
+            "",
+            "            // Fall through to parse the block stmt.",
+            "        }",
+            "        else",
+            "        {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30102,
+      "severity": "Error",
+      "name": "declNotAllowed",
+      "message": "$0 is not allowed here.",
+      "line": 561,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-parser.cpp",
+          "line": 5029,
+          "statement": "parser->sink->diagnose(decl->loc, Diagnostics::declNotAllowed, decl->astNodeType);",
+          "context_before": [
+            "        if (!isDeclAllowed(",
+            "                parser->options.isInLanguageServer,",
+            "                containerDecl->astNodeType,",
+            "                decl->astNodeType))",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "        else",
+            "        {",
+            "            // For generic decls, we also need to check if the inner decl type is allowed to be",
+            "            // nested here."
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-parser.cpp",
+          "line": 5044,
+          "statement": "Diagnostics::declNotAllowed, declToModify->astNodeType);",
+          "context_before": [
+            "                        containerDecl->astNodeType,",
+            "                        declToModify->astNodeType))",
+            "                {",
+            "                    parser->sink->diagnose(",
+            "                        decl->loc,"
+          ],
+          "context_after": [
+            "                        declToModify->astNodeType);",
+            "                }",
+            "            }",
+            "        }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-parser.cpp",
+          "line": 6446,
+          "statement": "sink->diagnose(decl->loc, Diagnostics::declNotAllowed, decl->astNodeType);",
+          "context_before": [
+            "    else if (as<UsingDecl>(decl))",
+            "    {",
+            "    }",
+            "    else",
+            "    {"
+          ],
+          "context_after": [
+            "    }",
+            "    return varDeclrStatement;",
+            "}",
+            "",
+            "static Expr* constructIfLetPredicate(Parser* parser, VarExpr* varExpr)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 29000,
+      "severity": "Error",
+      "name": "snippetParsingFailed",
+      "message": "unable to parse target intrinsic snippet: $0",
+      "line": 564,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-spirv-legalize.cpp",
+          "line": 2467,
+          "statement": "m_sink->diagnose(intrinsic, Diagnostics::snippetParsingFailed, intrinsic->getDefinition());",
+          "context_before": [
+            "        return snippet.Ptr();",
+            "    }",
+            "    snippet = SpvSnippet::parse(*m_grammarInfo, intrinsic->getDefinition());",
+            "    if (!snippet)",
+            "    {"
+          ],
+          "context_after": [
+            "        return nullptr;",
+            "    }",
+            "    m_parsedSpvSnippets[intrinsic] = snippet;",
+            "    return snippet;",
+            "}"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 29100,
+      "severity": "Error",
+      "name": "unrecognizedSPIRVOpcode",
+      "message": "unrecognized spirv opcode: $0",
+      "line": 566,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-parser.cpp",
+          "line": 8618,
+          "statement": "Diagnostics::unrecognizedSPIRVOpcode, ret.opcode.token);",
+          "context_before": [
+            "    // an error",
+            "    if (!opInfo && resultOperand)",
+            "    {",
+            "        parser->diagnose(",
+            "            resultOperand->token,"
+          ],
+          "context_after": [
+            "            ret.opcode.token);",
+            "        return std::nullopt;",
+            "    }",
+            "",
+            "    // If we have an explicit result operand (because this was a `x ="
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-parser.cpp",
+          "line": 8718,
+          "statement": "Diagnostics::unrecognizedSPIRVOpcode, ret.opcode.token);",
+          "context_before": [
+            "        }",
+            "        else",
+            "        {",
+            "            parser->diagnose(",
+            "                ret.opcode.token,"
+          ],
+          "context_after": [
+            "                ret.opcode.token);",
+            "            return std::nullopt;",
+            "        }",
+            "    }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 29101,
+      "severity": "Error",
+      "name": "misplacedResultIdMarker",
+      "message": "the result-id marker must only be used in the last instruction of a spriv_asm expression",
+      "line": 567,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 6455,
+          "statement": "getSink()->diagnose(operand.token, Diagnostics::misplacedResultIdMarker);",
+          "context_before": [
+            "",
+            "                    // TODO: We could consider relaxing this, because SPIR-V",
+            "                    // does have forward references for decorations and such",
+            "                    if (!isLast)",
+            "                    {"
+          ],
+          "context_after": [
+            "                        getSink()->diagnoseWithoutSourceView(",
+            "                            expr,",
+            "                            Diagnostics::considerOpCopyObject);",
+            "                    }",
+            "                }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": [
+            "considerOpCopyObject"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 29104,
+      "severity": "Error",
+      "name": "spirvInstructionWithoutResultId",
+      "message": "cannot use this 'x = $0...' syntax because $0 does not have a <result-id> operand",
+      "line": 578,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-parser.cpp",
+          "line": 8629,
+          "statement": "Diagnostics::spirvInstructionWithoutResultId, ret.opcode.token);",
+          "context_before": [
+            "    // OpFoo` instruction) then diagnose if we don't know where to put it",
+            "    if (resultOperand && opInfo && opInfo->resultIdIndex == -1)",
+            "    {",
+            "        parser->diagnose(",
+            "            resultOperand->token,"
+          ],
+          "context_after": [
+            "            ret.opcode.token);",
+            "        return std::nullopt;",
+            "    }",
+            "",
+            "    // Likewise for the type"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 29105,
+      "severity": "Error",
+      "name": "spirvInstructionWithoutResultTypeId",
+      "message": "cannot use this 'x : <type> = $0...' syntax because $0 does not have a <result-type-id> operand",
+      "line": 583,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-parser.cpp",
+          "line": 8639,
+          "statement": "Diagnostics::spirvInstructionWithoutResultTypeId, ret.opcode.token);",
+          "context_before": [
+            "    // Likewise for the type",
+            "    if (resultTypeOperand && opInfo && opInfo->resultTypeIndex == -1)",
+            "    {",
+            "        parser->diagnose(",
+            "            resultTypeOperand->token,"
+          ],
+          "context_after": [
+            "            ret.opcode.token);",
+            "    }",
+            "",
+            "    //",
+            "    // Now we've parsed the tricky preamble, grab the rest of the operands"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 29106,
+      "severity": "Warning",
+      "name": "spirvInstructionWithTooManyOperands",
+      "message": "too many operands for $0 (expected max $1), did you forget a semicolon?",
+      "line": 590,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-parser.cpp",
+          "line": 8682,
+          "statement": "Diagnostics::spirvInstructionWithTooManyOperands, ret.opcode.token, opInfo->maxOperandCount);",
+          "context_before": [
+            "                token.type == TokenType::OpMod && (parser->LookAheadToken(TokenType::OpAssign, 2) ||",
+            "                                                   parser->LookAheadToken(TokenType::Colon, 2)))",
+            "            {",
+            "                parser->diagnose(",
+            "                    parser->tokenReader.peekLoc(),"
+          ],
+          "context_after": [
+            "                    ret.opcode.token,",
+            "                    opInfo->maxOperandCount);",
+            "            }",
+            "        }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 6353,
+          "statement": "Diagnostics::spirvInstructionWithTooManyOperands, inst.opcode.token, 0);",
+          "context_before": [
+            "        if (opInfo && opInfo->numOperandTypes == 0 && inst.operands.getCount())",
+            "        {",
+            "            failed = true;",
+            "            getSink()->diagnose(",
+            "                inst.opcode.token,"
+          ],
+          "context_after": [
+            "                inst.opcode.token,",
+            "                0);",
+            "            continue;",
+            "        }",
+            "        int resultIdIndex = -1;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 29107,
+      "severity": "Error",
+      "name": "spirvUnableToResolveName",
+      "message": "unknown SPIR-V identifier $0, it's not a known enumerator or opcode",
+      "line": 595,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 6489,
+          "statement": "Diagnostics::spirvUnableToResolveName, operand.token.getContent());",
+          "context_before": [
+            "                    if (!enumValue)",
+            "                    {",
+            "                        failed = true;",
+            "                        getSink()->diagnose(",
+            "                            operand.token,"
+          ],
+          "context_after": [
+            "                            operand.token.getContent());",
+            "                        return;",
+            "                    }",
+            "",
+            "                    operand.knownValue = *enumValue;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 6509,
+          "statement": "Diagnostics::spirvUnableToResolveName, operand.token.getContent());",
+          "context_before": [
+            "                    if (!builtinVarKind)",
+            "                    {",
+            "                        failed = true;",
+            "                        getSink()->diagnose(",
+            "                            operand.token,"
+          ],
+          "context_after": [
+            "                            operand.token.getContent());",
+            "                        return;",
+            "                    }",
+            "                    operand.knownValue = builtinVarKind.value();",
+            "                }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 29108,
+      "severity": "Error",
+      "name": "spirvNonConstantBitwiseOr",
+      "message": "only integer literals and enum names can appear in a bitwise or expression",
+      "line": 600,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 6532,
+          "statement": "getSink()->diagnose(operand.token, Diagnostics::spirvNonConstantBitwiseOr);",
+          "context_before": [
+            "                if (operand.bitwiseOrWith.getCount() &&",
+            "                    operand.flavor != SPIRVAsmOperand::Literal &&",
+            "                    operand.flavor != SPIRVAsmOperand::NamedValue)",
+            "                {",
+            "                    failed = true;"
+          ],
+          "context_after": [
+            "                }",
+            "                for (auto& o : operand.bitwiseOrWith)",
+            "                {",
+            "                    if (o.flavor != SPIRVAsmOperand::Literal &&",
+            "                        o.flavor != SPIRVAsmOperand::NamedValue)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 6540,
+          "statement": "getSink()->diagnose(operand.token, Diagnostics::spirvNonConstantBitwiseOr);",
+          "context_before": [
+            "                {",
+            "                    if (o.flavor != SPIRVAsmOperand::Literal &&",
+            "                        o.flavor != SPIRVAsmOperand::NamedValue)",
+            "                    {",
+            "                        failed = true;"
+          ],
+          "context_after": [
+            "                    }",
+            "                    go(go, o);",
+            "                    operand.knownValue |= o.knownValue;",
+            "                }",
+            "            };"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 29109,
+      "severity": "Error",
+      "name": "spirvOperandRange",
+      "message": "Literal ints must be in the range 0 to 0xffffffff",
+      "line": 605,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-parser.cpp",
+          "line": 8525,
+          "statement": "parser->diagnose(tok, Diagnostics::spirvOperandRange);",
+          "context_before": [
+            "    else if (parser->LookAheadToken(TokenType::IntegerLiteral))",
+            "    {",
+            "        const auto tok = parser->ReadToken();",
+            "        const auto v = getIntegerLiteralValue(tok, parser->sink);",
+            "        if (v < 0 || v > 0xffffffff)"
+          ],
+          "context_after": [
+            "        return SPIRVAsmOperand{SPIRVAsmOperand::Literal, tok, nullptr, {}, SpvWord(v)};",
+            "    }",
+            "    // A literal string",
+            "    else if (parser->LookAheadToken(TokenType::StringLiteral))",
+            "    {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 29110,
+      "severity": "Error",
+      "name": "unknownTargetName",
+      "message": "unknown target name '$0'",
+      "line": 607,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-parser.cpp",
+          "line": 5872,
+          "statement": "Diagnostics::unknownTargetName, caseName.getContent());",
+          "context_before": [
+            "                auto cap = findCapabilityName(caseName.getContent());",
+            "                if (caseName.getContent().getLength() && cap == CapabilityName::Invalid)",
+            "                {",
+            "                    parser->sink->diagnose(",
+            "                        caseName.loc,"
+          ],
+          "context_after": [
+            "                        caseName.getContent());",
+            "                }",
+            "                targetCase->capability = (int32_t)cap;",
+            "                targetCase->capabilityToken = caseName;",
+            "                targetCase->loc = caseName.loc;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 29111,
+      "severity": "Error",
+      "name": "spirvInvalidTruncate",
+      "message": "__truncate has been given a source smaller than its target",
+      "line": 609,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-emit-spirv.cpp",
+          "line": 9987,
+          "statement": "m_sink->diagnose(inst, Diagnostics::spirvInvalidTruncate);",
+          "context_before": [
+            "                    const auto toVector = cast<IRVectorType>(unwrapAttributedType(toType));",
+            "                    const auto toVectorSize = getIntVal(toVector->getElementCount());",
+            "                    const auto fromVector = cast<IRVectorType>(unwrapAttributedType(fromType));",
+            "                    const auto fromVectorSize = getIntVal(fromVector->getElementCount());",
+            "                    if (toVectorSize > fromVectorSize)"
+          ],
+          "context_after": [
+            "                    last = emitInstCustomOperandFunc(",
+            "                        parent,",
+            "                        isLast ? as<IRInst>(inst) : spvInst,",
+            "                        SpvOpVectorShuffle,",
+            "                        [&]()"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 29112,
+      "severity": "Error",
+      "name": "spirvInstructionWithNotEnoughOperands",
+      "message": "not enough operands for $0",
+      "line": 614,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 6388,
+          "statement": "Diagnostics::spirvInstructionWithNotEnoughOperands, inst.opcode.token);",
+          "context_before": [
+            "            if (inst.operands.getCount() <= resultIdIndex)",
+            "            {",
+            "                failed = true;",
+            "                getSink()->diagnose(",
+            "                    inst.opcode.token,"
+          ],
+          "context_after": [
+            "                    inst.opcode.token);",
+            "                continue;",
+            "            }",
+            "            auto& resultIdOperand = inst.operands[resultIdIndex];",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 29113,
+      "severity": "Error",
+      "name": "spirvIdRedefinition",
+      "message": "SPIRV id '%$0' is already defined in the current assembly block",
+      "line": 615,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 6399,
+          "statement": "Diagnostics::spirvIdRedefinition, inst.opcode.token);",
+          "context_before": [
+            "            if (!definedIds.add(resultIdOperand.token.getName()))",
+            "            {",
+            "                failed = true;",
+            "                getSink()->diagnose(",
+            "                    inst.opcode.token,"
+          ],
+          "context_after": [
+            "                    inst.opcode.token);",
+            "                continue;",
+            "            }",
+            "        }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 29114,
+      "severity": "Error",
+      "name": "spirvUndefinedId",
+      "message": "SPIRV id '%$0' is not defined in the current assembly block location",
+      "line": 620,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 6522,
+          "statement": "Diagnostics::spirvUndefinedId, operand.token);",
+          "context_before": [
+            "                    if (!definedIds.contains(operand.token.getName()))",
+            "                    {",
+            "                        failed = true;",
+            "                        getSink()->diagnose(",
+            "                            operand.token,"
+          ],
+          "context_after": [
+            "                            operand.token);",
+            "                        return;",
+            "                    }",
+            "                }",
+            "                if (operand.bitwiseOrWith.getCount() &&"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 29115,
+      "severity": "Error",
+      "name": "targetSwitchCaseCannotBeAStage",
+      "message": "cannot use a stage name in '__target_switch', use '__stage_switch' for stage-specific code.",
+      "line": 626,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-stmt.cpp",
+          "line": 460,
+          "statement": "Diagnostics::targetSwitchCaseCannotBeAStage);",
+          "context_before": [
+            "        {",
+            "            if (isStage)",
+            "            {",
+            "                getSink()->diagnose(",
+            "                    caseStmt->capabilityToken.loc,"
+          ],
+          "context_after": [
+            "            }",
+            "            else if (",
+            "                caseStmt->capabilityToken.getContentLength() != 0 &&",
+            "                (set.getCapabilityTargetSets().getCount() != 1 || set.isInvalid() || set.isEmpty()))",
+            "            {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30002,
+      "severity": "Error",
+      "name": "divideByZero",
+      "message": "divide by zero",
+      "line": 635,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-sccp.cpp",
+          "line": 987,
+          "statement": "shared->sink->diagnose(inst->sourceLoc, Diagnostics::divideByZero);",
+          "context_before": [
+            "                    {",
+            "                        auto c = as<IRConstant>(divisor.value);",
+            "                        if (c->value.intVal == 0)",
+            "                        {",
+            "                            if (shared->sink)"
+          ],
+          "context_after": [
+            "                            return LatticeVal::getAny();",
+            "                        }",
+            "                    }",
+            "                }",
+            "                return evalDiv(inst->getDataType(), getLatticeVal(inst->getOperand(0)), divisor);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-ir-sccp.cpp",
+          "line": 1007,
+          "statement": "shared->sink->diagnose(inst->sourceLoc, Diagnostics::divideByZero);",
+          "context_before": [
+            "                    {",
+            "                        auto c = as<IRConstant>(divisor.value);",
+            "                        if (c->value.intVal == 0)",
+            "                        {",
+            "                            if (shared->sink)"
+          ],
+          "context_after": [
+            "                            return LatticeVal::getAny();",
+            "                        }",
+            "                    }",
+            "                }",
+            "                return evalRem(inst->getDataType(), getLatticeVal(inst->getOperand(0)), divisor);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-ast-val.cpp",
+          "line": 1653,
+          "statement": "sink->diagnose(newFuncDecl.getLoc(), Diagnostics::divideByZero); \\",
+          "context_before": [
+            "    if (opNameSlice == toSlice(#op))                                             \\",
+            "    {                                                                            \\",
+            "        if (constArgs[1]->getValue() == 0)                                       \\",
+            "        {                                                                        \\",
+            "            if (sink)                                                            \\"
+          ],
+          "context_after": [
+            "            return nullptr;                                                      \\",
+            "        }                                                                        \\",
+            "        resultValue = constArgs[0]->getValue() op constArgs[1]->getValue();      \\",
+            "    }                                                                            \\",
+            "    else"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30003,
+      "severity": "Error",
+      "name": "breakOutsideLoop",
+      "message": "'break' must appear inside loop or switch constructs.",
+      "line": 636,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-stmt.cpp",
+          "line": 197,
+          "statement": "getSink()->diagnose(stmt, Diagnostics::breakOutsideLoop);",
+          "context_before": [
+            "        // enclosing statement that is a valid `break` target.",
+            "        //",
+            "        targetOuterStmt = FindOuterStmt<BreakableStmt>();",
+            "        if (!targetOuterStmt)",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "    }",
+            "",
+            "    // We do not (currently) allow a `break` to proceed \"through\"",
+            "    // an enclosing `defer` statement. Thus, we search for"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30004,
+      "severity": "Error",
+      "name": "continueOutsideLoop",
+      "message": "'continue' must appear inside loop constructs.",
+      "line": 637,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-stmt.cpp",
+          "line": 231,
+          "statement": "getSink()->diagnose(stmt, Diagnostics::continueOutsideLoop);",
+          "context_before": [
+            "void SemanticsStmtVisitor::visitContinueStmt(ContinueStmt* stmt)",
+            "{",
+            "    auto targetOuterStmt = FindOuterStmt<LoopStmt>();",
+            "    if (!targetOuterStmt)",
+            "    {"
+          ],
+          "context_after": [
+            "    }",
+            "    else",
+            "    {",
+            "        if (FindOuterStmt<DeferStmt>(targetOuterStmt))",
+            "        {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30005,
+      "severity": "Error",
+      "name": "whilePredicateTypeError",
+      "message": "'while': expression must evaluate to int.",
+      "line": 638,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 30006,
+      "severity": "Error",
+      "name": "ifPredicateTypeError",
+      "message": "'if': expression must evaluate to int.",
+      "line": 639,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 30006,
+      "severity": "Error",
+      "name": "returnNeedsExpression",
+      "message": "'return' should have an expression.",
+      "line": 640,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-stmt.cpp",
+          "line": 567,
+          "statement": "getSink()->diagnose(stmt, Diagnostics::returnNeedsExpression);",
+          "context_before": [
+            "    if (!stmt->expression)",
+            "    {",
+            "        if (expectedReturnType && !expectedReturnType->equals(m_astBuilder->getVoidType()) &&",
+            "            !as<ConstructorDecl>(function))",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "    }",
+            "    else",
+            "    {",
+            "        stmt->expression = CheckTerm(stmt->expression);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30007,
+      "severity": "Error",
+      "name": "componentReturnTypeMismatch",
+      "message": "expression type '$0' does not match component's type '$1'",
+      "line": 641,
+      "param_count": 2,
+      "call_sites": []
+    },
+    {
+      "id": 30007,
+      "severity": "Error",
+      "name": "functionReturnTypeMismatch",
+      "message": "expression type '$0' does not match function's return type '$1'",
+      "line": 646,
+      "param_count": 2,
+      "call_sites": []
+    },
+    {
+      "id": 30008,
+      "severity": "Error",
+      "name": "variableNameAlreadyDefined",
+      "message": "variable $0 already defined.",
+      "line": 651,
+      "param_count": 1,
+      "call_sites": []
+    },
+    {
+      "id": 30009,
+      "severity": "Error",
+      "name": "invalidTypeVoid",
+      "message": "invalid type 'void'.",
+      "line": 652,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-type.cpp",
+          "line": 439,
+          "statement": "getSink()->diagnose(result.exp, Diagnostics::invalidTypeVoid);",
+          "context_before": [
+            "    {",
+            "        // TODO: `void` shouldn't be a basic type, to make this easier to avoid",
+            "        if (basicType->getBaseType() == BaseType::Void)",
+            "        {",
+            "            // TODO(tfoley): pick the right diagnostic message"
+          ],
+          "context_after": [
+            "            result.type = m_astBuilder->getErrorType();",
+            "            return result;",
+            "        }",
+            "    }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 2208,
+          "statement": "getSink()->diagnose(varDecl, Diagnostics::invalidTypeVoid);",
+          "context_before": [
+            "        SemanticsVisitor subVisitor(withDeclToExcludeFromLookup(varDecl));",
+            "        TypeExp typeExp = subVisitor.CheckUsableType(varDecl->type, varDecl);",
+            "        varDecl->type = typeExp;",
+            "        if (varDecl->type.equals(m_astBuilder->getVoidType()))",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "",
+            "        // If this is an unsized array variable, then we first want to give",
+            "        // it a chance to infer an array size from its initializer",
+            "        //"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30010,
+      "severity": "Error",
+      "name": "whilePredicateTypeError2",
+      "message": "'while': expression must evaluate to int.",
+      "line": 653,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 30011,
+      "severity": "Error",
+      "name": "assignNonLValue",
+      "message": "left of '=' is not an l-value.",
+      "line": 654,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 2838,
+          "statement": "getSink()->diagnose(expr, Diagnostics::assignNonLValue);",
+          "context_before": [
+            "        else",
+            "        {",
+            "            // Provide a more helpful diagnostic about const variable assignment",
+            "            maybeDiagnoseConstVariableAssignment(expr->left);",
+            ""
+          ],
+          "context_after": [
+            "        }",
+            "    }",
+            "    expr->type = type;",
+            "    return expr;",
+            "}"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30012,
+      "severity": "Error",
+      "name": "noApplicationUnaryOperator",
+      "message": "no overload found for operator $0 ($1).",
+      "line": 655,
+      "param_count": 2,
+      "call_sites": []
+    },
+    {
+      "id": 30012,
+      "severity": "Error",
+      "name": "noOverloadFoundForBinOperatorOnTypes",
+      "message": "no overload found for operator $0  ($1, $2).",
+      "line": 656,
+      "param_count": 3,
+      "call_sites": []
+    },
+    {
+      "id": 30013,
+      "severity": "Error",
+      "name": "subscriptNonArray",
+      "message": "no subscript operation found for type '$0'",
+      "line": 661,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 2722,
+          "statement": "getSink()->diagnose(subscriptExpr, Diagnostics::subscriptNonArray, baseType);",
+          "context_before": [
+            "    if (!lookupResult.isValid())",
+            "    {",
+            "        if (!diagnosed)",
+            "        {",
+            "            if (!maybeDiagnoseAmbiguousReference(baseExpr))"
+          ],
+          "context_after": [
+            "        }",
+            "        return CreateErrorExpr(subscriptExpr);",
+            "    }",
+            "    auto subscriptFuncExpr = createLookupResultExpr(",
+            "        operatorName,"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30014,
+      "severity": "Error",
+      "name": "subscriptIndexNonInteger",
+      "message": "index expression must evaluate to int.",
+      "line": 662,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 30016,
+      "severity": "Error",
+      "name": "callOperatorNotFound",
+      "message": "no call operation found for type '$0'",
+      "line": 663,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 3395,
+          "statement": "getSink()->diagnose(expr, Diagnostics::callOperatorNotFound, baseType);",
+          "context_before": [
+            "        lookupResult =",
+            "            filterLookupResultByVisibilityAndDiagnose(lookupResult, expr->loc, diagnosed);",
+            "        if (!lookupResult.isValid())",
+            "        {",
+            "            if (!diagnosed)"
+          ],
+          "context_after": [
+            "            return CreateErrorExpr(expr);",
+            "        }",
+            "        auto callFuncExpr = createLookupResultExpr(",
+            "            operatorName,",
+            "            lookupResult,"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30015,
+      "severity": "Error",
+      "name": "undefinedIdentifier2",
+      "message": "undefined identifier '$0'.",
+      "line": 664,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 1893,
+          "statement": "Diagnostics::undefinedIdentifier2, targetIntrinsic->scrutinee.name);",
+          "context_before": [
+            "                    genDecl->ownedScope);",
+            "                if (!scrutineeResults.isValid())",
+            "                {",
+            "                    getSink()->diagnose(",
+            "                        targetIntrinsic->scrutinee.loc,"
+          ],
+          "context_after": [
+            "                        targetIntrinsic->scrutinee.name);",
+            "                }",
+            "                if (scrutineeResults.isOverloaded())",
+            "                {",
+            "                    getSink()->diagnose("
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 3513,
+          "statement": "getSink()->diagnose(expr, Diagnostics::undefinedIdentifier2, expr->name);",
+          "context_before": [
+            "            return maybeRegisterLambdaCapture(lookupResultExpr);",
+            "        return lookupResultExpr;",
+            "    }",
+            "",
+            "    if (!diagnosed)"
+          ],
+          "context_after": [
+            "",
+            "    return resultExpr;",
+            "}",
+            "",
+            "Expr* SemanticsExprVisitor::maybeRegisterLambdaCapture(Expr* exprIn)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 1361,
+          "statement": "sink->diagnose(loc, Diagnostics::undefinedIdentifier2, declRef.getName());",
+          "context_before": [
+            "        // this as an undefined identifier.",
+            "        //",
+            "        // TODO: This code could break if we ever go down this path with",
+            "        // an identifier that doesn't have a name.",
+            "        //"
+          ],
+          "context_after": [
+            "    }",
+            "    return QualType(astBuilder->getErrorType());",
+            "}",
+            "",
+            "QualType getTypeForDeclRef(ASTBuilder* astBuilder, DeclRef<Decl> declRef, SourceLoc loc)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30019,
+      "severity": "Error",
+      "name": "typeMismatch",
+      "message": "expected an expression of type '$0', got '$1'",
+      "line": 665,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-conversion.cpp",
+          "line": 1024,
+          "statement": "sink->diagnose(fromExpr->loc, Diagnostics::typeMismatch, toType, fromExpr->type);",
+          "context_before": [
+            "        }",
+            "        else",
+            "        {",
+            "            if (sink)",
+            "            {"
+          ],
+          "context_after": [
+            "            }",
+            "        }",
+            "    }",
+            "    return false;",
+            "}"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-conversion.cpp",
+          "line": 1983,
+          "statement": "sink->diagnose(fromExpr, Diagnostics::typeMismatch, toType, fromType);",
+          "context_before": [
+            "        {",
+            "            if (cost >= kConversionCost_Explicit)",
+            "            {",
+            "                if (sink)",
+            "                {"
+          ],
+          "context_after": [
+            "                    sink->diagnoseWithoutSourceView(",
+            "                        fromExpr,",
+            "                        Diagnostics::noteExplicitConversionPossible,",
+            "                        fromType,",
+            "                        toType);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": [
+            "noteExplicitConversionPossible"
+          ]
+        },
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 1564,
+          "statement": "Diagnostics::typeMismatch, diffType, declRefExpr->type);",
+          "context_before": [
+            "        derivativeMemberAttr->memberDeclRef = declRefExpr;",
+            "        if (!diffType->equals(declRefExpr->type))",
+            "        {",
+            "            getSink()->diagnose(",
+            "                derivativeMemberAttr,"
+          ],
+          "context_after": [
+            "                diffType,",
+            "                declRefExpr->type);",
+            "        }",
+            "        if (!varDecl->parentDecl)",
+            "        {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 4075,
+          "statement": "Diagnostics::typeMismatch, \"uint3\", expr->threadGroupSize->type);",
+          "context_before": [
+            "    expr->threadGroupSize = dispatchExpr(expr->threadGroupSize, *this);",
+            "    if (!isInt3Type(expr->threadGroupSize->type.type))",
+            "    {",
+            "        getSink()->diagnose(",
+            "            expr->threadGroupSize,"
+          ],
+          "context_after": [
+            "            \"uint3\",",
+            "            expr->threadGroupSize->type);",
+            "    }",
+            "    expr->dispatchSize = dispatchExpr(expr->dispatchSize, *this);",
+            "    if (!isInt3Type(expr->dispatchSize->type.type))"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 4084,
+          "statement": "Diagnostics::typeMismatch, \"uint3\", expr->dispatchSize->type);",
+          "context_before": [
+            "    expr->dispatchSize = dispatchExpr(expr->dispatchSize, *this);",
+            "    if (!isInt3Type(expr->dispatchSize->type.type))",
+            "    {",
+            "        getSink()->diagnose(",
+            "            expr->dispatchSize,"
+          ],
+          "context_after": [
+            "            \"uint3\",",
+            "            expr->dispatchSize->type);",
+            "    }",
+            "    PassthroughHighOrderExprCheckingActionsBase<DispatchKernelExpr> actions;",
+            "    return _checkHigherOrderInvokeExpr(this, expr, &actions);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 4128,
+          "statement": "getSink()->diagnose(expr, Diagnostics::typeMismatch, \"array\", expr->arrayExpr->type);",
+          "context_before": [
+            "    }",
+            "    else",
+            "    {",
+            "        if (!as<ErrorType>(expr->arrayExpr->type))",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "        expr->type = m_astBuilder->getErrorType();",
+            "    }",
+            "    return expr;",
+            "}"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30021,
+      "severity": "Error",
+      "name": "noApplicationFunction",
+      "message": "$0: no overload takes arguments ($1)",
+      "line": 666,
+      "param_count": 2,
+      "call_sites": []
+    },
+    {
+      "id": 30022,
+      "severity": "Error",
+      "name": "invalidTypeCast",
+      "message": "invalid type cast between \\\"$0\\\" and \\\"$1\\\".",
+      "line": 667,
+      "param_count": 2,
+      "call_sites": []
+    },
+    {
+      "id": 30023,
+      "severity": "Error",
+      "name": "typeHasNoPublicMemberOfName",
+      "message": "\\\"$0\\\" does not have public member \\\"$1\\\".",
+      "line": 668,
+      "param_count": 2,
+      "call_sites": []
+    },
+    {
+      "id": 30024,
+      "severity": "Error",
+      "name": "cannotConvertArrayOfSmallerToLargerSize",
+      "message": "Cannot convert array of size $0 to array of size $1 as this would truncate data",
+      "line": 669,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-glsl-legalize.cpp",
+          "line": 1931,
+          "statement": "Diagnostics::cannotConvertArrayOfSmallerToLargerSize, fromSize, toSize);",
+          "context_before": [
+            "                    auto fromSize = getIntVal(declaredArraySize);",
+            "                    if (toSize < fromSize)",
+            "                    {",
+            "                        context->getSink()->diagnose(",
+            "                            userDeclaredParamVarLayout,"
+          ],
+          "context_after": [
+            "                            fromSize,",
+            "                            toSize);",
+            "                    }",
+            "                }",
+            "            }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30025,
+      "severity": "Error",
+      "name": "invalidArraySize",
+      "message": "array size must be non-negative.",
+      "line": 674,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 2668,
+          "statement": "Diagnostics::invalidArraySize);",
+          "context_before": [
+            "            {",
+            "                if (constElementCount->getValue() < 0)",
+            "                {",
+            "                    getSink()->diagnose(",
+            "                        subscriptExpr->indexExprs[0],"
+          ],
+          "context_after": [
+            "                    return CreateErrorExpr(subscriptExpr);",
+            "                }",
+            "            }",
+            "        }",
+            "        else if (subscriptExpr->indexExprs.getCount() != 0)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 4121,
+          "statement": "getSink()->diagnose(expr, Diagnostics::invalidArraySize);",
+          "context_before": [
+            "    if (auto arrType = as<ArrayExpressionType>(expr->arrayExpr->type))",
+            "    {",
+            "        expr->type = m_astBuilder->getIntType();",
+            "        if (arrType->isUnsized())",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "    }",
+            "    else",
+            "    {",
+            "        if (!as<ErrorType>(expr->arrayExpr->type))"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 10434,
+          "statement": "getSink()->diagnose(varDecl, Diagnostics::invalidArraySize);",
+          "context_before": [
+            "    {",
+            "        // Note(tfoley): For now we allow arrays of unspecified size",
+            "        // everywhere, because some source languages (e.g., GLSL)",
+            "        // allow them in specific cases.",
+            "#if 0"
+          ],
+          "context_after": [
+            "#endif",
+            "        return;",
+            "    }",
+            "",
+            "    // TODO(tfoley): How to handle the case where bound isn't known?"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 10443,
+          "statement": "getSink()->diagnose(varDecl, Diagnostics::invalidArraySize);",
+          "context_before": [
+            "",
+            "    // TODO(tfoley): How to handle the case where bound isn't known?",
+            "    auto elementCount = arrayType->getElementCount();",
+            "    if (GetMinBound(elementCount) < 0)",
+            "    {"
+          ],
+          "context_after": [
+            "        return;",
+            "    }",
+            "",
+            "    if (elementCount->isLinkTimeVal())",
+            "    {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30027,
+      "severity": "Error",
+      "name": "disallowedArrayOfNonAddressableType",
+      "message": "Arrays of non-addressable type '$0' are not allowed",
+      "line": 675,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 10465,
+          "statement": "getSink()->diagnose(varDecl, Diagnostics::disallowedArrayOfNonAddressableType, elementType);",
+          "context_before": [
+            "",
+            "    // Check if the element type has the NonAddressable tag",
+            "    TypeTag elementTags = getTypeTags(elementType);",
+            "    if ((int)elementTags & (int)TypeTag::NonAddressable)",
+            "    {"
+          ],
+          "context_after": [
+            "        return;",
+            "    }",
+            "}",
+            "",
+            "bool getExtensionTargetDeclList("
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30028,
+      "severity": "Error",
+      "name": "nonAddressableTypeInStructuredBuffer",
+      "message": "'$0' is non-addressable and cannot be used in StructuredBuffer",
+      "line": 681,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 14959,
+          "statement": "Diagnostics::nonAddressableTypeInStructuredBuffer, elementType);",
+          "context_before": [
+            "    TypeTag elementTags = visitor->getTypeTags(elementType);",
+            "    if ((int)elementTags & (int)TypeTag::NonAddressable)",
+            "    {",
+            "        visitor->getSink()->diagnose(",
+            "            varDecl->loc,"
+          ],
+          "context_after": [
+            "            elementType);",
+            "    }",
+            "}",
+            "",
+            "void diagnoseMissingCapabilityProvenance("
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30029,
+      "severity": "Error",
+      "name": "arrayIndexOutOfBounds",
+      "message": "array index '$0' is out of bounds for array of size '$1'.",
+      "line": 686,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-out-of-bound-access.cpp",
+          "line": 55,
+          "statement": "sink->diagnose(inst, Diagnostics::arrayIndexOutOfBounds, indexValue, arraySizeValue);",
+          "context_before": [
+            "        IRIntegerValue arraySizeValue = arraySizeLit->getValue();",
+            "",
+            "        // Check bounds: index should be >= 0 and < arraySize",
+            "        if (indexValue < 0 || indexValue >= arraySizeValue)",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "    }",
+            "",
+            "    void processModule()",
+            "    {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30026,
+      "severity": "Error",
+      "name": "returnInComponentMustComeLast",
+      "message": "'return' can only appear as the last statement in component definition.",
+      "line": 691,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 30027,
+      "severity": "Error",
+      "name": "noMemberOfNameInType",
+      "message": "'$0' is not a member of '$1'.",
+      "line": 696,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 5727,
+          "statement": "getSink()->diagnose(expr, Diagnostics::noMemberOfNameInType, expr->name, baseType);",
+          "context_before": [
+            "",
+            "    expr->type = QualType(m_astBuilder->getErrorType());",
+            "    if (!supressDiagnostic)",
+            "    {",
+            "        if (!maybeDiagnoseAmbiguousReference(GetBaseExpr(expr)))"
+          ],
+          "context_after": [
+            "    }",
+            "    return expr;",
+            "}",
+            "",
+            "Expr* SemanticsVisitor::maybeInsertImplicitOpForMemberBase("
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30028,
+      "severity": "Error",
+      "name": "forPredicateTypeError",
+      "message": "'for': predicate expression must evaluate to bool.",
+      "line": 697,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 30030,
+      "severity": "Error",
+      "name": "projectionOutsideImportOperator",
+      "message": "'project': invalid use outside import operator.",
+      "line": 702,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 30031,
+      "severity": "Error",
+      "name": "projectTypeMismatch",
+      "message": "'project': expression must evaluate to record type '$0'.",
+      "line": 707,
+      "param_count": 1,
+      "call_sites": []
+    },
+    {
+      "id": 30033,
+      "severity": "Error",
+      "name": "invalidTypeForLocalVariable",
+      "message": "cannot declare a local variable of this type.",
+      "line": 712,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 30035,
+      "severity": "Error",
+      "name": "componentOverloadTypeMismatch",
+      "message": "'$0': type of overloaded component mismatches previous definition.",
+      "line": 717,
+      "param_count": 1,
+      "call_sites": []
+    },
+    {
+      "id": 30041,
+      "severity": "Error",
+      "name": "bitOperationNonIntegral",
+      "message": "bit operation: operand must be integral type.",
+      "line": 722,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 30043,
+      "severity": "Error",
+      "name": "getStringHashRequiresStringLiteral",
+      "message": "getStringHash parameter can only accept a string literal",
+      "line": 723,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 30047,
+      "severity": "Error",
+      "name": "argumentExpectedLValue",
+      "message": "argument passed to parameter '$0' must be l-value.",
+      "line": 728,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 3113,
+          "statement": "Diagnostics::argumentExpectedLValue, pp);",
+          "context_before": [
+            "                                    }",
+            "                                }",
+            "",
+            "                                getSink()->diagnose(",
+            "                                    argExpr,"
+          ],
+          "context_after": [
+            "                                    pp);",
+            "",
+            "",
+            "                                if (implicitCastExpr)",
+            "                                {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30048,
+      "severity": "Error",
+      "name": "argumentHasMoreMemoryQualifiersThanParam",
+      "message": "argument passed in to parameter has a memory qualifier the parameter type is missing: '$0'",
+      "line": 733,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 2944,
+          "statement": "getSink()->diagnose(arg, Diagnostics::argumentHasMoreMemoryQualifiersThanParam, \"coherent\");",
+          "context_before": [
+            "    if (paramMemMods)",
+            "        paramQualifiers = paramMemMods->getMemoryQualifierBit();",
+            "",
+            "    if (argQualifiers & MemoryQualifierSetModifier::Flags::kCoherent &&",
+            "        !(paramQualifiers & MemoryQualifierSetModifier::Flags::kCoherent))"
+          ],
+          "context_after": [
+            "    if (argQualifiers & MemoryQualifierSetModifier::Flags::kReadOnly &&",
+            "        !(paramQualifiers & MemoryQualifierSetModifier::Flags::kReadOnly))",
+            "        getSink()->diagnose(arg, Diagnostics::argumentHasMoreMemoryQualifiersThanParam, \"readonly\");",
+            "    if (argQualifiers & MemoryQualifierSetModifier::Flags::kWriteOnly &&",
+            "        !(paramQualifiers & MemoryQualifierSetModifier::Flags::kWriteOnly))"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 2947,
+          "statement": "getSink()->diagnose(arg, Diagnostics::argumentHasMoreMemoryQualifiersThanParam, \"readonly\");",
+          "context_before": [
+            "    if (argQualifiers & MemoryQualifierSetModifier::Flags::kCoherent &&",
+            "        !(paramQualifiers & MemoryQualifierSetModifier::Flags::kCoherent))",
+            "        getSink()->diagnose(arg, Diagnostics::argumentHasMoreMemoryQualifiersThanParam, \"coherent\");",
+            "    if (argQualifiers & MemoryQualifierSetModifier::Flags::kReadOnly &&",
+            "        !(paramQualifiers & MemoryQualifierSetModifier::Flags::kReadOnly))"
+          ],
+          "context_after": [
+            "    if (argQualifiers & MemoryQualifierSetModifier::Flags::kWriteOnly &&",
+            "        !(paramQualifiers & MemoryQualifierSetModifier::Flags::kWriteOnly))",
+            "        getSink()->diagnose(",
+            "            arg,",
+            "            Diagnostics::argumentHasMoreMemoryQualifiersThanParam,"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 2952,
+          "statement": "Diagnostics::argumentHasMoreMemoryQualifiersThanParam, \"writeonly\");",
+          "context_before": [
+            "        getSink()->diagnose(arg, Diagnostics::argumentHasMoreMemoryQualifiersThanParam, \"readonly\");",
+            "    if (argQualifiers & MemoryQualifierSetModifier::Flags::kWriteOnly &&",
+            "        !(paramQualifiers & MemoryQualifierSetModifier::Flags::kWriteOnly))",
+            "        getSink()->diagnose(",
+            "            arg,"
+          ],
+          "context_after": [
+            "            \"writeonly\");",
+            "    if (argQualifiers & MemoryQualifierSetModifier::Flags::kVolatile &&",
+            "        !(paramQualifiers & MemoryQualifierSetModifier::Flags::kVolatile))",
+            "        getSink()->diagnose(arg, Diagnostics::argumentHasMoreMemoryQualifiersThanParam, \"volatile\");",
+            "    // dropping a `restrict` qualifier from arguments is allowed in GLSL with memory qualifiers"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 2956,
+          "statement": "getSink()->diagnose(arg, Diagnostics::argumentHasMoreMemoryQualifiersThanParam, \"volatile\");",
+          "context_before": [
+            "            arg,",
+            "            Diagnostics::argumentHasMoreMemoryQualifiersThanParam,",
+            "            \"writeonly\");",
+            "    if (argQualifiers & MemoryQualifierSetModifier::Flags::kVolatile &&",
+            "        !(paramQualifiers & MemoryQualifierSetModifier::Flags::kVolatile))"
+          ],
+          "context_after": [
+            "    // dropping a `restrict` qualifier from arguments is allowed in GLSL with memory qualifiers",
+            "}",
+            "",
+            "Expr* SemanticsVisitor::CheckInvokeExprWithCheckedOperands(InvokeExpr* expr)",
+            "{"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30050,
+      "severity": "Error",
+      "name": "mutatingMethodOnImmutableValue",
+      "message": "mutating method '$0' cannot be called on an immutable value",
+      "line": 746,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-overload.cpp",
+          "line": 964,
+          "statement": "Diagnostics::mutatingMethodOnImmutableValue, funcDeclRef.getName());",
+          "context_before": [
+            "            {",
+            "                if (context.mode == OverloadResolveContext::Mode::ForReal)",
+            "                {",
+            "                    getSink()->diagnose(",
+            "                        context.loc,"
+          ],
+          "context_after": [
+            "                        funcDeclRef.getName());",
+            "                    maybeDiagnoseConstVariableAssignment(context.baseExpr);",
+            "                }",
+            "                return false;",
+            "            }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30051,
+      "severity": "Error",
+      "name": "invalidValueForArgument",
+      "message": "invalid value for argument '$0'",
+      "line": 752,
+      "param_count": 1,
+      "call_sites": []
+    },
+    {
+      "id": 30052,
+      "severity": "Error",
+      "name": "invalidSwizzleExpr",
+      "message": "invalid swizzle pattern '$0' on type '$1'",
+      "line": 753,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 5309,
+          "statement": "->diagnose(memberExpr, Diagnostics::invalidSwizzleExpr, swizzleText, baseTupleType);",
+          "context_before": [
+            "        elementCoord = (uint32_t)StringUtil::parseIntAndAdvancePos(span, pos);",
+            "",
+            "        if (elementCoord >= tupleElementCount)",
+            "        {",
+            "            getSink()"
+          ],
+          "context_after": [
+            "            return CreateErrorExpr(memberExpr);",
+            "        }",
+            "",
+            "        // Check if we've seen this index before",
+            "        for (int ee = 0; ee < elementCoords.getCount(); ee++)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30053,
+      "severity": "Error",
+      "name": "breakLabelNotFound",
+      "message": "label '$0' used as break target is not found.",
+      "line": 754,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-stmt.cpp",
+          "line": 170,
+          "statement": "getSink()->diagnose(stmt, Diagnostics::breakLabelNotFound, stmt->targetLabel.getName());",
+          "context_before": [
+            "        // an outer statement matching that label.",
+            "        //",
+            "        auto foundOuterStmt = findOuterStmtWithLabel(stmt->targetLabel.getName());",
+            "        if (!foundOuterStmt)",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "        else",
+            "        {",
+            "            // It is possible that the labelled statement",
+            "            // is not a valid one for a `break` to target,"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30054,
+      "severity": "Error",
+      "name": "targetLabelDoesNotMarkBreakableStmt",
+      "message": "invalid break target: statement labeled '$0' is not breakable.",
+      "line": 755,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-stmt.cpp",
+          "line": 183,
+          "statement": "Diagnostics::targetLabelDoesNotMarkBreakableStmt, stmt->targetLabel.getName());",
+          "context_before": [
+            "            targetOuterStmt = as<BreakableStmt>(foundOuterStmt);",
+            "            if (!targetOuterStmt)",
+            "            {",
+            "                getSink()->diagnose(",
+            "                    stmt,"
+          ],
+          "context_after": [
+            "                    stmt->targetLabel.getName());",
+            "            }",
+            "        }",
+            "    }",
+            "    else"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30055,
+      "severity": "Error",
+      "name": "useOfNonShortCircuitingOperatorInDiffFunc",
+      "message": "non-short-circuiting `?:` operator is not allowed in a differentiable function, use `select` instead.",
+      "line": 760,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 3246,
+          "statement": "getSink()->diagnose(expr->loc, Diagnostics::useOfNonShortCircuitingOperatorInDiffFunc);",
+          "context_before": [
+            "",
+            "    if (getParentDifferentiableAttribute())",
+            "    {",
+            "        // If we are in a differentiable func, issue",
+            "        // a diagnostic on use of non short-circuiting select."
+          ],
+          "context_after": [
+            "    }",
+            "    else",
+            "    {",
+            "        // For all other functions, we issue a warning for deprecation of vector-typed ?: operator.",
+            "        getSink()->diagnose(expr->loc, Diagnostics::useOfNonShortCircuitingOperator);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30056,
+      "severity": "Warning",
+      "name": "useOfNonShortCircuitingOperator",
+      "message": "non-short-circuiting `?:` operator is deprecated, use 'select' instead.",
+      "line": 766,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 3251,
+          "statement": "getSink()->diagnose(expr->loc, Diagnostics::useOfNonShortCircuitingOperator);",
+          "context_before": [
+            "        getSink()->diagnose(expr->loc, Diagnostics::useOfNonShortCircuitingOperatorInDiffFunc);",
+            "    }",
+            "    else",
+            "    {",
+            "        // For all other functions, we issue a warning for deprecation of vector-typed ?: operator."
+          ],
+          "context_after": [
+            "    }",
+            "    return result;",
+            "}",
+            "",
+            "Expr* SemanticsExprVisitor::convertToLogicOperatorExpr(InvokeExpr* expr)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30057,
+      "severity": "Error",
+      "name": "assignmentInPredicateExpr",
+      "message": "use an assignment operation as predicate expression is not allowed, wrap the assignment with '()' to clarify the intent.",
+      "line": 771,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-stmt.cpp",
+          "line": 252,
+          "statement": "getSink()->diagnose(expr, Diagnostics::assignmentInPredicateExpr);",
+          "context_before": [
+            "",
+            "Expr* SemanticsVisitor::checkPredicateExpr(Expr* expr)",
+            "{",
+            "    if (as<AssignExpr>(expr))",
+            "    {"
+          ],
+          "context_after": [
+            "    }",
+            "    Expr* e = expr;",
+            "    e = CheckTerm(e);",
+            "    e = coerce(CoercionSite::General, m_astBuilder->getBoolType(), e, getSink());",
+            "    return e;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30058,
+      "severity": "Warning",
+      "name": "danglingEqualityExpr",
+      "message": "result of '==' not used, did you intend '='?",
+      "line": 777,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-stmt.cpp",
+          "line": 679,
+          "statement": "getSink()->diagnose(operatorExpr, Diagnostics::danglingEqualityExpr);",
+          "context_before": [
+            "    {",
+            "        if (auto func = as<VarExpr>(operatorExpr->functionExpr))",
+            "        {",
+            "            if (func->name && func->name->text == \"==\")",
+            "            {"
+          ],
+          "context_after": [
+            "            }",
+            "        }",
+            "    }",
+            "}",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30060,
+      "severity": "Error",
+      "name": "expectedAType",
+      "message": "expected a type, got a '$0'",
+      "line": 779,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-type.cpp",
+          "line": 127,
+          "statement": "getSink()->diagnose(expr, Diagnostics::expectedAType, expr->type);",
+          "context_before": [
+            "    else if (const auto errorType = as<ErrorType>(expr->type))",
+            "    {",
+            "        return expr;",
+            "    }",
+            ""
+          ],
+          "context_after": [
+            "    return CreateErrorExpr(expr);",
+            "}",
+            "",
+            "Type* SemanticsVisitor::ExpectAType(Expr* expr)",
+            "{"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-type.cpp",
+          "line": 276,
+          "statement": "Diagnostics::expectedAType, originalExpr->getClass().getName());",
+          "context_before": [
+            "                // diagnostic.",
+            "",
+            "                // Get the AST node type info, so we can output a 'got' name",
+            "                diagSink->diagnose(",
+            "                    originalExpr,"
+          ],
+          "context_after": [
+            "                    originalExpr->getClass().getName());",
+            "            }",
+            "        }",
+            "",
+            "        if (outProperType)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30061,
+      "severity": "Error",
+      "name": "expectedANamespace",
+      "message": "expected a namespace, got a '$0'",
+      "line": 780,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 11541,
+          "statement": "getSink()->diagnose(decl->arg, Diagnostics::expectedANamespace, decl->arg->type);",
+          "context_before": [
+            "    }",
+            "",
+            "    if (!scopesAdded)",
+            "    {",
+            "        if (!hasValidNamespace)"
+          ],
+          "context_after": [
+            "        return;",
+            "    }",
+            "}",
+            "",
+            "void SemanticsDeclScopeWiringVisitor::visitNamespaceDecl(NamespaceDecl* decl)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30065,
+      "severity": "Error",
+      "name": "newCanOnlyBeUsedToInitializeAClass",
+      "message": "`new` can only be used to initialize a class",
+      "line": 801,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-overload.cpp",
+          "line": 128,
+          "statement": "getSink()->diagnose(context.originalExpr, Diagnostics::newCanOnlyBeUsedToInitializeAClass);",
+          "context_before": [
+            "        isNewExpr = true;",
+            "    }",
+            "",
+            "    if (isNewExpr && !isClassType)",
+            "    {"
+          ],
+          "context_after": [
+            "        return false;",
+            "    }",
+            "    if (!isNewExpr && isClassType && context.originalExpr)",
+            "    {",
+            "        getSink()->diagnose(context.originalExpr, Diagnostics::classCanOnlyBeInitializedWithNew);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30066,
+      "severity": "Error",
+      "name": "classCanOnlyBeInitializedWithNew",
+      "message": "a class can only be initialized by a `new` clause",
+      "line": 806,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-overload.cpp",
+          "line": 133,
+          "statement": "getSink()->diagnose(context.originalExpr, Diagnostics::classCanOnlyBeInitializedWithNew);",
+          "context_before": [
+            "        getSink()->diagnose(context.originalExpr, Diagnostics::newCanOnlyBeUsedToInitializeAClass);",
+            "        return false;",
+            "    }",
+            "    if (!isNewExpr && isClassType && context.originalExpr)",
+            "    {"
+          ],
+          "context_after": [
+            "        return false;",
+            "    }",
+            "    return true;",
+            "}",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30067,
+      "severity": "Error",
+      "name": "mutatingMethodOnFunctionInputParameterError",
+      "message": "mutating method '$0' called on `in` parameter '$1'; changes will not be visible to caller. copy the parameter into a local variable if this behavior is intended",
+      "line": 812,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-overload.cpp",
+          "line": 987,
+          "statement": "isNonCopyable ? Diagnostics::mutatingMethodOnFunctionInputParameterError : Diagnostics::mutatingMethodOnFunctionInputParameterWarning;",
+          "context_before": [
+            "                if (auto paramDecl = isReferenceIntoFunctionInputParameter(context.baseExpr))",
+            "                {",
+            "                    const bool isNonCopyable = isNonCopyableType(paramDecl->getType());",
+            "",
+            "                    const auto& diagnotic ="
+          ],
+          "context_after": [
+            "                                      : Diagnostics::mutatingMethodOnFunctionInputParameterWarning;",
+            "",
+            "                    getSink()->diagnose(",
+            "                        context.loc,",
+            "                        diagnotic,"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": [
+            "mutatingMethodOnFunctionInputParameterWarning"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 30068,
+      "severity": "Warning",
+      "name": "mutatingMethodOnFunctionInputParameterWarning",
+      "message": "mutating method '$0' called on `in` parameter '$1'; changes will not be visible to caller. copy the parameter into a local variable if this behavior is intended",
+      "line": 818,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-overload.cpp",
+          "line": 988,
+          "statement": ": Diagnostics::mutatingMethodOnFunctionInputParameterWarning;",
+          "context_before": [
+            "                {",
+            "                    const bool isNonCopyable = isNonCopyableType(paramDecl->getType());",
+            "",
+            "                    const auto& diagnotic =",
+            "                        isNonCopyable ? Diagnostics::mutatingMethodOnFunctionInputParameterError"
+          ],
+          "context_after": [
+            "",
+            "                    getSink()->diagnose(",
+            "                        context.loc,",
+            "                        diagnotic,",
+            "                        funcDeclRef.getName(),"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30070,
+      "severity": "Error",
+      "name": "unsizedMemberMustAppearLast",
+      "message": "member with unknown size at compile time can only appear as the last member in a composite type.",
+      "line": 825,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 2943,
+          "statement": "getSink()->diagnose(varDecl, Diagnostics::unsizedMemberMustAppearLast);",
+          "context_before": [
+            "",
+            "                // At this point we've run into a non-`static` variable declaration",
+            "                // that comes *after* the unsized variable declaration, which",
+            "                // means the unsized variable declaration is invalid.",
+            "                //"
+          ],
+          "context_after": [
+            "                break;",
+            "            }",
+            "        }",
+            "    }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30071,
+      "severity": "Error",
+      "name": "varCannotBeUnsized",
+      "message": "cannot instantiate a variable of unsized type.",
+      "line": 831,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 2958,
+          "statement": "getSink()->diagnose(varDecl, Diagnostics::varCannotBeUnsized);",
+          "context_before": [
+            "    if (isGlobalOrLocalVar)",
+            "    {",
+            "        bool isUnsized = (((int)varTypeTags & (int)TypeTag::Unsized) != 0);",
+            "        if (isUnsized)",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "",
+            "        bool isOpaque = (((int)varTypeTags & (int)TypeTag::Opaque) != 0);",
+            "        if (isOpaque && isGlobalDecl(varDecl) && !varDecl->hasModifier<ConstModifier>() &&",
+            "            varDecl->hasModifier<HLSLStaticModifier>())"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30072,
+      "severity": "Error",
+      "name": "paramCannotBeUnsized",
+      "message": "function parameter cannot be unsized.",
+      "line": 832,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 9745,
+          "statement": "getSink()->diagnose(paramDecl, Diagnostics::paramCannotBeUnsized, paramDecl);",
+          "context_before": [
+            "    auto typeExpr = paramDecl->type;",
+            "",
+            "    if (!as<ArrayExpressionType>(paramDecl->type) &&",
+            "        doesTypeHaveTag(paramDecl->type, TypeTag::Unsized))",
+            "    {"
+          ],
+          "context_after": [
+            "    }",
+            "",
+            "    // The \"initializer\" expression for a parameter represents",
+            "    // a default argument value to use if an explicit one is",
+            "    // not supplied."
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30075,
+      "severity": "Error",
+      "name": "cannotSpecializeGeneric",
+      "message": "cannot specialize generic '$0' with the provided arguments.",
+      "line": 834,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-overload.cpp",
+          "line": 350,
+          "statement": "Diagnostics::cannotSpecializeGeneric, candidate.item.declRef);",
+          "context_before": [
+            "    {",
+            "        if (context.mode != OverloadResolveContext::Mode::JustTrying)",
+            "        {",
+            "            getSink()->diagnose(",
+            "                context.loc,"
+          ],
+          "context_after": [
+            "                candidate.item.declRef);",
+            "        }",
+            "    };",
+            "    List<QualType> paramTypes;",
+            "    for (auto memberRef : getMembers(m_astBuilder, genericDeclRef))"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30076,
+      "severity": "Error",
+      "name": "globalVarCannotHaveOpaqueType",
+      "message": "global variable cannot have opaque type.",
+      "line": 840,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 2966,
+          "statement": "getSink()->diagnose(varDecl, Diagnostics::globalVarCannotHaveOpaqueType);",
+          "context_before": [
+            "        bool isOpaque = (((int)varTypeTags & (int)TypeTag::Opaque) != 0);",
+            "        if (isOpaque && isGlobalDecl(varDecl) && !varDecl->hasModifier<ConstModifier>() &&",
+            "            varDecl->hasModifier<HLSLStaticModifier>())",
+            "        {",
+            "            // Opaque type global variable must be const."
+          ],
+          "context_after": [
+            "            if (varDecl->initExpr)",
+            "                getSink()->diagnose(varDecl, Diagnostics::doYouMeanStaticConst);",
+            "            else",
+            "                getSink()->diagnose(varDecl, Diagnostics::doYouMeanUniform);",
+            "        }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": [
+            "doYouMeanStaticConst"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 30077,
+      "severity": "Error",
+      "name": "concreteArgumentToOutputInterface",
+      "message": "argument passed to parameter '$0' is of concrete type '$1', but interface-typed output parameters require interface-typed arguments. To allow passing a concrete type to this function, you can replace '$2 $0' with a generic 'T $0' and a 'where T : $2' constraint.",
+      "line": 841,
+      "param_count": 3,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-overload.cpp",
+          "line": 789,
+          "statement": "Diagnostics::concreteArgumentToOutputInterface, name, arg.type, paramType.type);",
+          "context_before": [
+            "                    else",
+            "                        name.append(paramIndex, 10);",
+            "",
+            "                    getSink()->diagnose(",
+            "                        context.loc,"
+          ],
+          "context_after": [
+            "                        name,",
+            "                        arg.type,",
+            "                        paramType.type);",
+            "                }",
+            "                return {nullptr, nullptr};"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30078,
+      "severity": "Error",
+      "name": "coherentKeywordOnAPointer",
+      "message": "cannot have a `globallycoherent T*` or a `coherent T*`, use explicit methods for coherent operations instead",
+      "line": 850,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 2417,
+          "statement": "getSink()->diagnose(varDecl, Diagnostics::coherentKeywordOnAPointer);",
+          "context_before": [
+            "    // Not allowed a `globallycoherent T*` or related",
+            "    if (as<PtrType>(varDecl->type))",
+            "        if (auto memoryQualifierSet = varDecl->findModifier<MemoryQualifierSetModifier>())",
+            "            if (memoryQualifierSet->getMemoryQualifierBit() &",
+            "                MemoryQualifierSetModifier::Flags::kCoherent)"
+          ],
+          "context_after": [
+            "",
+            "    // Check for static const variables without initializers",
+            "    if (!varDecl->initExpr)",
+            "    {",
+            "        bool isStatic = false;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30079,
+      "severity": "Error",
+      "name": "cannotTakeConstantPointers",
+      "message": "Not allowed to take the address of an immutable object",
+      "line": 856,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 3105,
+          "statement": "Diagnostics::cannotTakeConstantPointers);",
+          "context_before": [
+            "                                            if (constantIntVal->getValue() ==",
+            "                                                (int)KnownBuiltinDeclName::OperatorAddressOf)",
+            "                                            {",
+            "                                                getSink()->diagnose(",
+            "                                                    argExpr,"
+          ],
+          "context_after": [
+            "                                            }",
+            "                                        }",
+            "                                    }",
+            "                                }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 33180,
+      "severity": "Error",
+      "name": "cannotSpecializeGenericWithExistential",
+      "message": "specializing '$0' with an existential type is not allowed. All generic arguments must be statically resolvable at compile time.",
+      "line": 861,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-typeflow-specialize.cpp",
+          "line": 4427,
+          "statement": "Diagnostics::cannotSpecializeGenericWithExistential, as<IRSpecialize>(callee)->getBase());",
+          "context_before": [
+            "                    // In Slang 2025 and later, specializing a generic with multiple types is not",
+            "                    // allowed, so we'll throw a diagnostic message.",
+            "                    //",
+            "                    sink->diagnose(",
+            "                        inst->sourceLoc,"
+          ],
+          "context_after": [
+            "                        as<IRSpecialize>(callee)->getBase());",
+            "                    return false;",
+            "                }",
+            "                else",
+            "                {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30100,
+      "severity": "Error",
+      "name": "staticRefToNonStaticMember",
+      "message": "type '$0' cannot be used to refer to non-static member '$1'",
+      "line": 867,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 420,
+          "statement": "Diagnostics::staticRefToNonStaticMember, typeType->getType(), declRef.getName());",
+          "context_before": [
+            "            expr->type = type;",
+            "            if (getSink() && !isDeclUsableAsStaticMember(declRef.getDecl()))",
+            "            {",
+            "                getSink()->diagnose(",
+            "                    loc,"
+          ],
+          "context_after": [
+            "                    typeType->getType(),",
+            "                    declRef.getName());",
+            "                expr->type = m_astBuilder->getErrorType();",
+            "            }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 5627,
+          "statement": "Diagnostics::staticRefToNonStaticMember, type, expr->name);",
+          "context_before": [
+            "                    else",
+            "                    {",
+            "                        // Otherwise, it is time to report an error.",
+            "                        getSink()->diagnose(",
+            "                            expr->loc,"
+          ],
+          "context_after": [
+            "                            type,",
+            "                            expr->name);",
+            "                        hasErrors = true;",
+            "                        return;",
+            "                    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30101,
+      "severity": "Error",
+      "name": "cannotDereferenceType",
+      "message": "cannot dereference type '$0', do you mean to use '.'?",
+      "line": 872,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 5886,
+          "statement": "Diagnostics::cannotDereferenceType, expr->baseExpression->type);",
+          "context_before": [
+            "        // The user is trying to use the `->` operator on something that can't be",
+            "        // dereferenced, so we should diagnose that.",
+            "        if (!as<ErrorType>(expr->baseExpression->type))",
+            "            getSink()->diagnose(",
+            "                expr->memberOperatorLoc,"
+          ],
+          "context_after": [
+            "                expr->baseExpression->type);",
+            "    }",
+            "",
+            "    auto baseType = expr->baseExpression->type;",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30102,
+      "severity": "Error",
+      "name": "staticRefToThis",
+      "message": "static function cannot refer to non-static member `$0` via `this`",
+      "line": 877,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 472,
+          "statement": "getSink()->diagnose(loc, Diagnostics::staticRefToThis, declRef.getName());",
+          "context_before": [
+            "            // It's not valid to reference a non-static member with a static",
+            "            // func using 'this'.",
+            "            if (getSink() && m_parentFunc && m_parentFunc->hasModifier<HLSLStaticModifier>() &&",
+            "                !isDeclUsableAsStaticMember(declRef.getDecl()) && as<ThisExpr>(baseExpr))",
+            "            {"
+          ],
+          "context_after": [
+            "                expr->type = m_astBuilder->getErrorType();",
+            "            }",
+            "",
+            "            // When referring to a member through an expression,",
+            "            // the result is only an l-value if both the base"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30200,
+      "severity": "Error",
+      "name": "redeclaration",
+      "message": "declaration of '$0' conflicts with existing declaration",
+      "line": 883,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 9541,
+          "statement": "getSink()->diagnose(newDecl, Diagnostics::redeclaration, newDecl->getName());",
+          "context_before": [
+            "    //   tell them apart at a use site.",
+            "",
+            "    // We will diagnose a redeclaration error at the new declaration,",
+            "    // and point to the old declaration for context.",
+            "    //"
+          ],
+          "context_after": [
+            "    getSink()->diagnose(oldDecl, Diagnostics::seePreviousDeclarationOf, oldDecl->getName());",
+            "    return SLANG_FAIL;",
+            "}",
+            "",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": [
+            "seePreviousDeclarationOf"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 30201,
+      "severity": "Error",
+      "name": "functionRedefinition",
+      "message": "function '$0' already has a body",
+      "line": 884,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 9451,
+          "statement": "Diagnostics::functionRedefinition, newDecl->getName());",
+          "context_before": [
+            "                    // Redefinition",
+            "                    if (!hasConflict)",
+            "                    {",
+            "                        getSink()->diagnose(",
+            "                            newDecl,"
+          ],
+          "context_after": [
+            "                            newDecl->getName());",
+            "                    }",
+            "",
+            "                    auto prevDecl = *found;",
+            "                    getSink()->diagnose("
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30202,
+      "severity": "Error",
+      "name": "functionRedeclarationWithDifferentReturnType",
+      "message": "function '$0' declared to return '$1' was previously declared to return '$2'",
+      "line": 885,
+      "param_count": 3,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 9375,
+          "statement": "Diagnostics::functionRedeclarationWithDifferentReturnType, newDecl->getName(), resultType, prevResultType);",
+          "context_before": [
+            "    if (!resultType->equals(prevResultType))",
+            "    {",
+            "        // Bad redeclaration",
+            "        getSink()->diagnose(",
+            "            newDecl,"
+          ],
+          "context_after": [
+            "            newDecl->getName(),",
+            "            resultType,",
+            "            prevResultType);",
+            "        getSink()->diagnose(oldDecl, Diagnostics::seePreviousDeclarationOf, newDecl->getName());",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30300,
+      "severity": "Error",
+      "name": "isOperatorValueMustBeInterfaceType",
+      "message": "'is'/'as' operator requires an interface-typed expression.",
+      "line": 891,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 4769,
+          "statement": "getSink()->diagnose(expr, Diagnostics::isOperatorValueMustBeInterfaceType);",
+          "context_before": [
+            "    if (expr->witnessArg)",
+            "    {",
+            "        // For now we can only support the scenario where `expr->value` is an interface type.",
+            "        if (!optionalWitness && !isInterfaceType(originalVal->type))",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "        return expr;",
+            "    }",
+            "    return expr;",
+            "}"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 4815,
+          "statement": "getSink()->diagnose(expr, Diagnostics::isOperatorValueMustBeInterfaceType);",
+          "context_before": [
+            "    if (expr->witnessArg)",
+            "    {",
+            "        // For now we can only support the scenario where `expr->value` is an interface type.",
+            "        if (!isInterfaceType(expr->value->type.type))",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "        expr->value = maybeOpenExistential(expr->value);",
+            "        return expr;",
+            "    }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30301,
+      "severity": "Error",
+      "name": "isOperatorCannotUseInterfaceAsRHS",
+      "message": "cannot use 'is' operator with an interface type as the right-hand side without a corresponding optional constraint. Use a concrete type instead, or add an optional constraint for the interface type.",
+      "line": 897,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 4755,
+          "statement": "getSink()->diagnose(expr, Diagnostics::isOperatorCannotUseInterfaceAsRHS);",
+          "context_before": [
+            "    // Check if the right-hand side type is an interface type. For 'is'",
+            "    // statements, that's only allowed if it's related to an optional",
+            "    // constraint.",
+            "    if (isInterfaceType(expr->typeExpr.type) && !optionalWitness)",
+            "    {"
+          ],
+          "context_after": [
+            "        return expr;",
+            "    }",
+            "",
+            "    // Otherwise, if the target type is a subtype of value->type, we need to grab the",
+            "    // subtype witness for runtime checks."
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30302,
+      "severity": "Error",
+      "name": "asOperatorCannotUseInterfaceAsRHS",
+      "message": "cannot use 'as' operator with an interface type as the right-hand side. Use a concrete type instead. If you want to use an optional constraint, use an 'if (T is IInterface)' block instead.",
+      "line": 905,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 4785,
+          "statement": "getSink()->diagnose(expr, Diagnostics::asOperatorCannotUseInterfaceAsRHS);",
+          "context_before": [
+            "    typeExpr = CheckProperType(typeExpr);",
+            "",
+            "    // Check if the right-hand side type is an interface type",
+            "    if (isInterfaceType(typeExpr.type))",
+            "    {"
+          ],
+          "context_after": [
+            "        expr->type = m_astBuilder->getErrorType();",
+            "        return expr;",
+            "    }",
+            "",
+            "    expr->value = CheckTerm(expr->value);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 33070,
+      "severity": "Error",
+      "name": "expectedFunction",
+      "message": "expected a function, got '$0'",
+      "line": 913,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-overload.cpp",
+          "line": 2763,
+          "statement": "getSink()->diagnose(funcExpr->loc, Diagnostics::expectedFunction, funcExpr->type);",
+          "context_before": [
+            "            AddOverloadCandidate(context, candidate, baseCost + baseCost1);",
+            "        }",
+            "        else",
+            "        {",
+            "            // Unhandled case for the inner expr."
+          ],
+          "context_after": [
+            "            funcExpr->type = this->getASTBuilder()->getErrorType();",
+            "        }",
+            "    }",
+            "}",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-overload.cpp",
+          "line": 3195,
+          "statement": "getSink()->diagnose(expr->functionExpr, Diagnostics::expectedFunction, funcExpr->type);",
+          "context_before": [
+            "        {",
+            "            diagnoseAmbiguousReference(funcExpr);",
+            "            return CreateErrorExpr(expr);",
+            "        }",
+            "    }"
+          ],
+          "context_after": [
+            "    expr->type = QualType(m_astBuilder->getErrorType());",
+            "    return expr;",
+            "}",
+            "",
+            "void SemanticsVisitor::AddGenericOverloadCandidate("
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 3873,
+          "statement": "Diagnostics::expectedFunction, funcExpr->type.type);",
+          "context_before": [
+            "        if (!baseFuncType)",
+            "        {",
+            "            resultDiffExpr->type = semantics->getASTBuilder()->getErrorType();",
+            "            semantics->getSink()->diagnose(",
+            "                funcExpr,"
+          ],
+          "context_after": [
+            "                funcExpr->type.type);",
+            "            return;",
+            "        }",
+            "        resultDiffExpr->type = semantics->getForwardDiffFuncType(baseFuncType);",
+            "        if (auto declRefExpr = as<DeclRefExpr>(getInnerMostExprFromHigherOrderExpr(funcExpr)))"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 3914,
+          "statement": "Diagnostics::expectedFunction, funcExpr->type.type);",
+          "context_before": [
+            "        if (!baseFuncType)",
+            "        {",
+            "            resultDiffExpr->type = semantics->getASTBuilder()->getErrorType();",
+            "            semantics->getSink()->diagnose(",
+            "                funcExpr,"
+          ],
+          "context_after": [
+            "                funcExpr->type.type);",
+            "            return;",
+            "        }",
+            "        resultDiffExpr->type = semantics->getBackwardDiffFuncType(baseFuncType);",
+            "        if (auto declRefExpr = as<DeclRefExpr>(getInnerMostExprFromHigherOrderExpr(funcExpr)))"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 3964,
+          "statement": "Diagnostics::expectedFunction, funcExpr->type.type);",
+          "context_before": [
+            "        if (!baseFuncType)",
+            "        {",
+            "            resultDiffExpr->type = semantics->getASTBuilder()->getErrorType();",
+            "            semantics->getSink()->diagnose(",
+            "                funcExpr,"
+          ],
+          "context_after": [
+            "                funcExpr->type.type);",
+            "            return;",
+            "        }",
+            "        resultDiffExpr->type = baseFuncType;",
+            "        if (auto declRefExpr = as<DeclRefExpr>(getInnerMostExprFromHigherOrderExpr(funcExpr)))"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 33071,
+      "severity": "Error",
+      "name": "expectedAStringLiteral",
+      "message": "expected a string literal",
+      "line": 915,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 83,
+          "statement": "getSink()->diagnose(expr, Diagnostics::expectedAStringLiteral);",
+          "context_before": [
+            "            *outVal = stringLitExpr->value;",
+            "        }",
+            "        return true;",
+            "    }",
+            ""
+          ],
+          "context_after": [
+            "",
+            "    return false;",
+            "}",
+            "",
+            "bool SemanticsVisitor::checkCapabilityName(Expr* expr, CapabilityName& outCapabilityName)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 1179,
+          "statement": "getSink()->diagnose(attr->args[1], Diagnostics::expectedAStringLiteral);",
+          "context_before": [
+            "        {",
+            "            requirePreludeAttr->prelude = getStringLiteralTokenValue(stringLitExpr->token);",
+            "        }",
+            "        else",
+            "        {"
+          ],
+          "context_after": [
+            "            return nullptr;",
+            "        }",
+            "        return attr;",
+            "    }",
+            "    else"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 33072,
+      "severity": "Error",
+      "name": "cannotHaveGenericDynInterface",
+      "message": "dyn interfaces cannot be generic: '$0'.",
+      "line": 918,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 117,
+          "statement": "sink->diagnose(decl, Diagnostics::cannotHaveGenericDynInterface, decl);",
+          "context_before": [
+            "    }",
+            "",
+            "    // dyn interface cannot be generic",
+            "    if (visitor->GetOuterGeneric(decl))",
+            "    {"
+          ],
+          "context_after": [
+            "    }",
+            "}",
+            "",
+            "static void validateDynInterfaceUseWithInheritanceDecl(",
+            "    SemanticsDeclVisitorBase* visitor,"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 33073,
+      "severity": "Error",
+      "name": "cannotHaveAssociatedTypeInDynInterface",
+      "message": "dyn interfaces cannot have associatedType members.",
+      "line": 919,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 69,
+          "statement": "sink->diagnose(m, Diagnostics::cannotHaveAssociatedTypeInDynInterface);",
+          "context_before": [
+            "    // validate members inside `dyn interface`",
+            "    for (auto m : decl->getDirectMemberDecls())",
+            "    {",
+            "        if (isAssociatedTypeDecl(m))",
+            "        {"
+          ],
+          "context_after": [
+            "            continue;",
+            "        }",
+            "        else if (auto genericDecl = as<GenericDecl>(m))",
+            "        {",
+            "            if (as<FuncDecl>(genericDecl->inner))"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 33074,
+      "severity": "Error",
+      "name": "cannotHaveGenericMethodInDynInterface",
+      "message": "dyn interfaces cannot have generic methods.",
+      "line": 924,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 76,
+          "statement": "sink->diagnose(m, Diagnostics::cannotHaveGenericMethodInDynInterface);",
+          "context_before": [
+            "        }",
+            "        else if (auto genericDecl = as<GenericDecl>(m))",
+            "        {",
+            "            if (as<FuncDecl>(genericDecl->inner))",
+            "            {"
+          ],
+          "context_after": [
+            "            }",
+            "            continue;",
+            "        }",
+            "        else if (auto funcDecl = as<FuncDecl>(m))",
+            "        {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 33075,
+      "severity": "Error",
+      "name": "cannotHaveMutatingMethodInDynInterface",
+      "message": "dyn interfaces cannot have [mutating] methods.",
+      "line": 929,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 87,
+          "statement": "sink->diagnose(m, Diagnostics::cannotHaveMutatingMethodInDynInterface);",
+          "context_before": [
+            "            visitor->ensureDecl(m, DeclCheckState::ModifiersChecked);",
+            "            for (auto modifier : funcDecl->modifiers)",
+            "            {",
+            "                if (as<MutatingAttribute>(modifier))",
+            "                {"
+          ],
+          "context_after": [
+            "                }",
+            "                else if (as<DifferentiableAttribute>(modifier))",
+            "                {",
+            "                    sink->diagnose(m, Diagnostics::cannotHaveDifferentiableMethodInDynInterface);",
+            "                }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 33076,
+      "severity": "Error",
+      "name": "cannotHaveDifferentiableMethodInDynInterface",
+      "message": "dyn interfaces cannot have [Differentiable] methods.",
+      "line": 934,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 91,
+          "statement": "sink->diagnose(m, Diagnostics::cannotHaveDifferentiableMethodInDynInterface);",
+          "context_before": [
+            "                {",
+            "                    sink->diagnose(m, Diagnostics::cannotHaveMutatingMethodInDynInterface);",
+            "                }",
+            "                else if (as<DifferentiableAttribute>(modifier))",
+            "                {"
+          ],
+          "context_after": [
+            "                }",
+            "            }",
+            "            continue;",
+            "        }",
+            "        else if (auto inheritanceDecl = as<InheritanceDecl>(m))"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    }
+  ],
+  "notes_reference": {}
+}

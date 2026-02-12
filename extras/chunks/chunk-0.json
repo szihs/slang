@@ -1,0 +1,4513 @@
+{
+  "chunk_index": 0,
+  "total_chunks": 6,
+  "diagnostics": [
+    {
+      "id": 1,
+      "severity": "Error",
+      "name": "cannotOpenFile",
+      "message": "cannot open file '$0'.",
+      "line": 91,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-session.cpp",
+          "line": 1705,
+          "statement": "sink->diagnose(requestingLoc, Diagnostics::cannotOpenFile, defaultSourceFileName);",
+          "context_before": [
+            "    // of the candidate file names from the loop above",
+            "    // got furthest along in the process (or just a",
+            "    // list of the file names that were tried, if",
+            "    // nothing was even found via the include system).",
+            "    //"
+          ],
+          "context_after": [
+            "",
+            "    // If the attempt to import the module failed, then",
+            "    // we will stick a null pointer into the map of loaded",
+            "    // modules, so that subsequent attempts to load a module",
+            "    // with this name will return null without having to"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-session.cpp",
+          "line": 1841,
+          "statement": "sink->diagnose(loc, Diagnostics::cannotOpenFile, getText(name));",
+          "context_before": [
+            "",
+            "    IncludeSystem includeSystem;",
+            "    auto sourceFile = findFile(name, loc, includeSystem);",
+            "    if (!sourceFile)",
+            "    {"
+          ],
+          "context_after": [
+            "        return result;",
+            "    }",
+            "",
+            "    // If the file has already been included, don't need to do anything further.",
+            "    if (auto existingFileDecl = module->getIncludedSourceFileMap().tryGetValue(sourceFile))"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-compile-request.cpp",
+          "line": 666,
+          "statement": "getSink()->diagnose(SourceLoc(), Diagnostics::cannotOpenFile, path);",
+          "context_before": [
+            "    }",
+            "",
+            "    if (SLANG_FAILED(existsRes))",
+            "    {",
+            "        // Emit a diagnostic!"
+          ],
+          "context_after": [
+            "        return;",
+            "    }",
+            "",
+            "    addTranslationUnitSourceArtifact(translationUnitIndex, sourceArtifact);",
+            "}"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 3224,
+          "statement": "m_sink->diagnose(arg.loc, Diagnostics::cannotOpenFile, fileName.value);",
+          "context_before": [
+            "                        fileName.value,",
+            "                        FileMode::Open,",
+            "                        FileAccess::Read,",
+            "                        FileShare::None)))",
+            "                {"
+          ],
+          "context_after": [
+            "                    return SLANG_FAIL;",
+            "                }",
+            "",
+            "                List<uint8_t> buffer;",
+            "                file.seek(SeekOrigin::End, 0);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 3302,
+          "statement": "m_sink->diagnose(arg.loc, Diagnostics::cannotOpenFile, fileName.value);",
+          "context_before": [
+            "                        fileName.value,",
+            "                        FileMode::Open,",
+            "                        FileAccess::Read,",
+            "                        FileShare::None)))",
+            "                {"
+          ],
+          "context_after": [
+            "                    return SLANG_FAIL;",
+            "                }",
+            "",
+            "                List<uint8_t> buffer;",
+            "                file.seek(SeekOrigin::End, 0);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-translation-unit.cpp",
+          "line": 202,
+          "statement": "sink->diagnose(SourceLoc(), Diagnostics::cannotOpenFile, pathInfo.getName());",
+          "context_before": [
+            "        {",
+            "            const SlangResult res = artifact->loadBlob(ArtifactKeep::Yes, blob.writeRef());",
+            "            if (SLANG_FAILED(res))",
+            "            {",
+            "                // Report couldn't load"
+          ],
+          "context_after": [
+            "                return res;",
+            "            }",
+            "        }",
+            "",
+            "        // If we don't have a blob on the artifact we can now add the one we have"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "severity": "Error",
+      "name": "cannotFindFile",
+      "message": "cannot find file '$0'.",
+      "line": 92,
+      "param_count": 1,
+      "call_sites": []
+    },
+    {
+      "id": 2,
+      "severity": "Error",
+      "name": "unsupportedCompilerMode",
+      "message": "unsupported compiler mode.",
+      "line": 93,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 4,
+      "severity": "Error",
+      "name": "cannotWriteOutputFile",
+      "message": "cannot write output file '$0'.",
+      "line": 94,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-artifact-output-util.cpp",
+          "line": 184,
+          "statement": "sink->diagnose(SourceLoc(), Diagnostics::cannotWriteOutputFile, writerName);",
+          "context_before": [
+            "    SLANG_RETURN_ON_FAIL(_requireBlob(artifact, sink, blob));",
+            "",
+            "    const auto res = write(artifact->getDesc(), blob, writer);",
+            "    if (SLANG_FAILED(res))",
+            "    {"
+          ],
+          "context_after": [
+            "    }",
+            "    return res;",
+            "}",
+            "",
+            "/* static */ SlangResult ArtifactOutputUtil::maybeConvertAndWrite("
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-artifact-output-util.cpp",
+          "line": 262,
+          "statement": "sink->diagnose(SourceLoc(), Diagnostics::cannotWriteOutputFile, path);",
+          "context_before": [
+            "    SLANG_RETURN_ON_FAIL(_requireBlob(artifact, sink, blob));",
+            "",
+            "    const auto res = writeToFile(artifact, path);",
+            "    if (SLANG_FAILED(res) && sink)",
+            "    {"
+          ],
+          "context_after": [
+            "    }",
+            "",
+            "    return res;",
+            "}",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "severity": "Error",
+      "name": "failedToLoadDynamicLibrary",
+      "message": "failed to load dynamic library '$0'",
+      "line": 95,
+      "param_count": 1,
+      "call_sites": []
+    },
+    {
+      "id": 6,
+      "severity": "Error",
+      "name": "tooManyOutputPathsSpecified",
+      "message": "$0 output paths specified, but only $1 entry points given",
+      "line": 96,
+      "param_count": 2,
+      "call_sites": []
+    },
+    {
+      "id": 7,
+      "severity": "Error",
+      "name": "noOutputPathSpecifiedForEntryPoint",
+      "message": "no output path specified for entry point '$0' (the '-o' option for an entry point must precede the corresponding '-entry')",
+      "line": 102,
+      "param_count": 1,
+      "call_sites": []
+    },
+    {
+      "id": 8,
+      "severity": "Error",
+      "name": "outputPathsImplyDifferentFormats",
+      "message": "the output paths '$0' and '$1' require different code-generation targets",
+      "line": 109,
+      "param_count": 2,
+      "call_sites": []
+    },
+    {
+      "id": 10,
+      "severity": "Error",
+      "name": "explicitOutputPathsAndMultipleTargets",
+      "message": "canot use both explicit output paths ('-o') and multiple targets ('-target')",
+      "line": 115,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 12,
+      "severity": "Error",
+      "name": "cannotDeduceSourceLanguage",
+      "message": "can't deduce language for input file '$0'",
+      "line": 120,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 1515,
+          "statement": "Diagnostics::cannotDeduceSourceLanguage, inPath);",
+          "context_before": [
+            "    }",
+            "    if (sourceLanguage == SLANG_SOURCE_LANGUAGE_UNKNOWN)",
+            "    {",
+            "        m_requestImpl->getSink()->diagnose(",
+            "            SourceLoc(),"
+          ],
+          "context_after": [
+            "            inPath);",
+            "        return SLANG_FAIL;",
+            "    }",
+            "",
+            "    addInputForeignShaderPath(path, sourceLanguage, impliedStage);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "severity": "Error",
+      "name": "unknownCodeGenerationTarget",
+      "message": "unknown code generation target '$0'",
+      "line": 121,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 2640,
+          "statement": "Diagnostics::unknownCodeGenerationTarget, name.value);",
+          "context_before": [
+            "",
+            "                if (format == CodeGenTarget::Unknown)",
+            "                {",
+            "                    m_sink->diagnose(",
+            "                        name.loc,"
+          ],
+          "context_after": [
+            "                        name.value);",
+            "                    return SLANG_FAIL;",
+            "                }",
+            "",
+            "                RawTarget rawTarget;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "severity": "Error",
+      "name": "unknownProfile",
+      "message": "unknown profile '$0'",
+      "line": 122,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 2222,
+          "statement": "m_sink->diagnose(operand.loc, Diagnostics::unknownProfile, profileName);",
+          "context_before": [
+            "    UnownedStringSlice profileName = sliceCount >= 1 ? slices[0] : UnownedTerminatedStringSlice(\"\");",
+            "",
+            "    SlangProfileID profileID = SlangProfileID(Slang::Profile::lookUp(profileName).raw);",
+            "    if (profileID == SLANG_PROFILE_UNKNOWN)",
+            "    {"
+          ],
+          "context_after": [
+            "        return SLANG_FAIL;",
+            "    }",
+            "    else",
+            "    {",
+            "        auto profile = Profile(profileID);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 2247,
+          "statement": "m_sink->diagnose(operand.loc, Diagnostics::unknownProfile, atomName);",
+          "context_before": [
+            "    {",
+            "        UnownedStringSlice atomName = slices[i];",
+            "        CapabilityName atom = findCapabilityName(atomName);",
+            "        if (atom == CapabilityName::Invalid)",
+            "        {"
+          ],
+          "context_after": [
+            "            return SLANG_FAIL;",
+            "        }",
+            "",
+            "        addCapabilityAtom(getCurrentTarget(), atom);",
+            "    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 2725,
+          "statement": "m_sink->diagnose(operand.loc, Diagnostics::unknownProfile, atomName);",
+          "context_before": [
+            "                {",
+            "                    UnownedStringSlice atomName = slices[i];",
+            "                    CapabilityName atom = findCapabilityName(atomName);",
+            "                    if (atom == CapabilityName::Invalid)",
+            "                    {"
+          ],
+          "context_after": [
+            "                        return SLANG_FAIL;",
+            "                    }",
+            "",
+            "                    addCapabilityAtom(getCurrentTarget(), atom);",
+            "                }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "severity": "Error",
+      "name": "unknownStage",
+      "message": "unknown stage '$0'",
+      "line": 123,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 2759,
+          "statement": "m_sink->diagnose(name.loc, Diagnostics::unknownStage, name.value);",
+          "context_before": [
+            "                SLANG_RETURN_ON_FAIL(m_reader.expectArg(name));",
+            "",
+            "                Stage stage = findStageByName(name.value);",
+            "                if (stage == Stage::Unknown)",
+            "                {"
+          ],
+          "context_after": [
+            "                    return SLANG_FAIL;",
+            "                }",
+            "                else",
+            "                {",
+            "                    setStage(getCurrentEntryPoint(), stage);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "severity": "Error",
+      "name": "unknownPassThroughTarget",
+      "message": "unknown pass-through target '$0'",
+      "line": 124,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 2861,
+          "statement": "m_sink->diagnose(name.loc, Diagnostics::unknownPassThroughTarget, name.value);",
+          "context_before": [
+            "",
+            "                SlangPassThrough passThrough = SLANG_PASS_THROUGH_NONE;",
+            "                if (SLANG_FAILED(",
+            "                        TypeTextUtil::findPassThrough(name.value.getUnownedSlice(), passThrough)))",
+            "                {"
+          ],
+          "context_after": [
+            "                    return SLANG_FAIL;",
+            "                }",
+            "",
+            "                m_compileRequest->setPassThrough(passThrough);",
+            "                break;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 3111,
+          "statement": "Diagnostics::unknownPassThroughTarget, compilerArg.value);",
+          "context_before": [
+            "                        compilerArg.value.getUnownedSlice(),",
+            "                        compiler)))",
+            "                {",
+            "                    m_sink->diagnose(",
+            "                        compilerArg.loc,"
+          ],
+          "context_after": [
+            "                        compilerArg.value);",
+            "                    return SLANG_FAIL;",
+            "                }",
+            "",
+            "                if (SLANG_FAILED(m_session->setDefaultDownstreamCompiler(sourceLanguage, compiler)))"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "severity": "Error",
+      "name": "unknownCommandLineOption",
+      "message": "unknown command-line option '$0'",
+      "line": 125,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 2301,
+          "statement": "m_sink->diagnose(arg.loc, Diagnostics::unknownCommandLineOption, argValue);",
+          "context_before": [
+            "",
+            "        const Index optionIndex = m_cmdOptions->findOptionByName(argValue.getUnownedSlice());",
+            "",
+            "        if (optionIndex < 0)",
+            "        {"
+          ],
+          "context_after": [
+            "            _outputMinimalUsage();",
+            "            return SLANG_FAIL;",
+            "        }",
+            "",
+            "        const auto optionKind = OptionKind(m_cmdOptions->getOptionAt(optionIndex).userValue);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 3401,
+          "statement": "m_sink->diagnose(arg.loc, Diagnostics::unknownCommandLineOption, argValue);",
+          "context_before": [
+            "            }",
+            "        default:",
+            "            {",
+            "                // Hmmm, we looked up and produced a valid enum, but it wasn't handled in the",
+            "                // switch..."
+          ],
+          "context_after": [
+            "",
+            "                _outputMinimalUsage();",
+            "                return SLANG_FAIL;",
+            "            }",
+            "        }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "severity": "Warning",
+      "name": "separateDebugInfoUnsupportedForTarget",
+      "message": "'-separate-debug-info' is not supported for target '$0'. This option is only supported for SPIR-V binary targets.",
+      "line": 126,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 4131,
+          "statement": "Diagnostics::separateDebugInfoUnsupportedForTarget, targetName);",
+          "context_before": [
+            "                // Get the target name for the warning message",
+            "                UnownedStringSlice targetName =",
+            "                    TypeTextUtil::getCompileTargetName(asExternal(rawTarget.format));",
+            "                m_sink->diagnose(",
+            "                    SourceLoc(),"
+          ],
+          "context_after": [
+            "                    targetName);",
+            "            }",
+            "        }",
+            "",
+            "        // Also check the default target if no explicit targets were specified"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 4146,
+          "statement": "Diagnostics::separateDebugInfoUnsupportedForTarget, targetName);",
+          "context_before": [
+            "                // Get the target name for the warning message",
+            "                UnownedStringSlice targetName =",
+            "                    TypeTextUtil::getCompileTargetName(asExternal(m_defaultTarget.format));",
+            "                m_sink->diagnose(",
+            "                    SourceLoc(),"
+          ],
+          "context_after": [
+            "                    targetName);",
+            "            }",
+            "        }",
+            "    }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "severity": "Error",
+      "name": "unknownSourceLanguage",
+      "message": "unknown source language '$0'",
+      "line": 132,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 2837,
+          "statement": "m_sink->diagnose(name.loc, Diagnostics::unknownSourceLanguage, name.value);",
+          "context_before": [
+            "                const SourceLanguage sourceLanguage =",
+            "                    (SourceLanguage)TypeTextUtil::findSourceLanguage(name.value.getUnownedSlice());",
+            "",
+            "                if (sourceLanguage == SourceLanguage::Unknown)",
+            "                {"
+          ],
+          "context_after": [
+            "                    return SLANG_FAIL;",
+            "                }",
+            "                else",
+            "                {",
+            "                    while (m_reader.hasArg() && !m_reader.peekValue().startsWith(\"-\"))"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 3099,
+          "statement": "Diagnostics::unknownSourceLanguage, sourceLanguageArg.value);",
+          "context_before": [
+            "                    TypeTextUtil::findSourceLanguage(sourceLanguageArg.value.getUnownedSlice());",
+            "                if (sourceLanguage == SLANG_SOURCE_LANGUAGE_UNKNOWN)",
+            "                {",
+            "                    m_sink->diagnose(",
+            "                        sourceLanguageArg.loc,"
+          ],
+          "context_after": [
+            "                        sourceLanguageArg.value);",
+            "                    return SLANG_FAIL;",
+            "                }",
+            "",
+            "                SlangPassThrough compiler;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "severity": "Error",
+      "name": "entryPointsNeedToBeAssociatedWithTranslationUnits",
+      "message": "when using multiple source files, entry points must be specified after their corresponding source file(s)",
+      "line": 134,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 3510,
+          "statement": "Diagnostics::entryPointsNeedToBeAssociatedWithTranslationUnits);",
+          "context_before": [
+            "            }",
+            "            if (anyEntryPointWithoutTranslationUnit)",
+            "            {",
+            "                m_sink->diagnose(",
+            "                    SourceLoc(),"
+          ],
+          "context_after": [
+            "                return SLANG_FAIL;",
+            "            }",
+            "        }",
+            "",
+            "        // Now that entry points are associated with translation units,"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "severity": "Error",
+      "name": "unknownDownstreamCompiler",
+      "message": "unknown downstream compiler '$0'",
+      "line": 141,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 3150,
+          "statement": "Diagnostics::unknownDownstreamCompiler, passThroughSlice);",
+          "context_before": [
+            "                    }",
+            "                    else",
+            "                    {",
+            "                        m_sink->diagnose(",
+            "                            arg.loc,"
+          ],
+          "context_after": [
+            "                            passThroughSlice);",
+            "                        return SLANG_FAIL;",
+            "                    }",
+            "                }",
+            "                break;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "severity": "Error",
+      "name": "unknownOptimiziationLevel",
+      "message": "unknown optimization level '$0'",
+      "line": 143,
+      "param_count": 1,
+      "call_sites": []
+    },
+    {
+      "id": 28,
+      "severity": "Error",
+      "name": "unableToGenerateCodeForTarget",
+      "message": "unable to generate code for target '$0'",
+      "line": 145,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-emit-llvm.cpp",
+          "line": 786,
+          "statement": "Diagnostics::unableToGenerateCodeForTarget, TypeTextUtil::getCompileTargetName( SlangCompileTarget(codeGenContext->getTargetFormat())));",
+          "context_before": [
+            "        ISlangSharedLibrary* library = codeGenContext->getSession()->getOrLoadSlangLLVM();",
+            "        if (!library)",
+            "        {",
+            "            codeGenContext->getSink()->diagnose(",
+            "                SourceLoc(),"
+          ],
+          "context_after": [
+            "                TypeTextUtil::getCompileTargetName(",
+            "                    SlangCompileTarget(codeGenContext->getTargetFormat())));",
+            "            return SLANG_FAIL;",
+            "        }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-emit.cpp",
+          "line": 2190,
+          "statement": "Diagnostics::unableToGenerateCodeForTarget, TypeTextUtil::getCompileTargetName(SlangCompileTarget(target)));",
+          "context_before": [
+            "",
+            "    if (!sourceEmitter)",
+            "    {",
+            "        sink->diagnose(",
+            "            SourceLoc(),"
+          ],
+          "context_after": [
+            "            TypeTextUtil::getCompileTargetName(SlangCompileTarget(target)));",
+            "        return SLANG_FAIL;",
+            "    }",
+            "",
+            "    SLANG_RETURN_ON_FAIL(sourceEmitter->init());"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-emit.cpp",
+          "line": 2874,
+          "statement": "Diagnostics::unableToGenerateCodeForTarget, TypeTextUtil::getCompileTargetName(SlangCompileTarget(target)));",
+          "context_before": [
+            "    ISlangSharedLibrary* library = codeGenContext->getSession()->getOrLoadSlangLLVM();",
+            "    if (!library)",
+            "    {",
+            "        codeGenContext->getSink()->diagnose(",
+            "            SourceLoc(),"
+          ],
+          "context_after": [
+            "            TypeTextUtil::getCompileTargetName(SlangCompileTarget(target)));",
+            "        return SLANG_FAIL;",
+            "    }",
+            "",
+            "    LinkedIR linkedIR;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "severity": "Warning",
+      "name": "sameStageSpecifiedMoreThanOnce",
+      "message": "the stage '$0' was specified more than once for entry point '$1'",
+      "line": 147,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 3559,
+          "statement": "Diagnostics::sameStageSpecifiedMoreThanOnce, rawEntryPoint.stage, rawEntryPoint.name);",
+          "context_before": [
+            "            }",
+            "            else if (rawEntryPoint.redundantStageSet)",
+            "            {",
+            "                m_sink->diagnose(",
+            "                    SourceLoc(),"
+          ],
+          "context_after": [
+            "                    rawEntryPoint.stage,",
+            "                    rawEntryPoint.name);",
+            "            }",
+            "            else if (rawEntryPoint.translationUnitIndex != -1)",
+            "            {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "severity": "Error",
+      "name": "conflictingStagesForEntryPoint",
+      "message": "conflicting stages have been specified for entry point '$0'",
+      "line": 152,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 3552,
+          "statement": "Diagnostics::conflictingStagesForEntryPoint, rawEntryPoint.name);",
+          "context_before": [
+            "        {",
+            "            if (rawEntryPoint.conflictingStagesSet)",
+            "            {",
+            "                m_sink->diagnose(",
+            "                    SourceLoc(),"
+          ],
+          "context_after": [
+            "                    rawEntryPoint.name);",
+            "            }",
+            "            else if (rawEntryPoint.redundantStageSet)",
+            "            {",
+            "                m_sink->diagnose("
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 32,
+      "severity": "Warning",
+      "name": "explicitStageDoesntMatchImpliedStage",
+      "message": "the stage specified for entry point '$0' ('$1') does not match the stage implied by the source file name ('$2')",
+      "line": 157,
+      "param_count": 3,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 3577,
+          "statement": "Diagnostics::explicitStageDoesntMatchImpliedStage, rawEntryPoint.name, rawEntryPoint.stage, rawTranslationUnit.impliedStage);",
+          "context_before": [
+            "                    rawEntryPoint.stage != Stage::Unknown &&",
+            "                    rawTranslationUnit.impliedStage != rawEntryPoint.stage)",
+            "                {",
+            "                    m_sink->diagnose(",
+            "                        SourceLoc(),"
+          ],
+          "context_after": [
+            "                        rawEntryPoint.name,",
+            "                        rawEntryPoint.stage,",
+            "                        rawTranslationUnit.impliedStage);",
+            "                }",
+            "            }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 33,
+      "severity": "Error",
+      "name": "stageSpecificationIgnoredBecauseNoEntryPoints",
+      "message": "one or more stages were specified, but no entry points were specified with '-entry'",
+      "line": 163,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 3469,
+          "statement": "Diagnostics::stageSpecificationIgnoredBecauseNoEntryPoints);",
+          "context_before": [
+            "            {",
+            "                if (m_rawEntryPoints.getCount() == 0)",
+            "                {",
+            "                    m_sink->diagnose(",
+            "                        SourceLoc(),"
+          ],
+          "context_after": [
+            "                }",
+            "                else",
+            "                {",
+            "                    m_sink->diagnose(",
+            "                        SourceLoc(),"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 34,
+      "severity": "Error",
+      "name": "stageSpecificationIgnoredBecauseBeforeAllEntryPoints",
+      "message": "when compiling multiple entry points, any '-stage' options must follow the '-entry' option that they apply to",
+      "line": 168,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 3475,
+          "statement": "Diagnostics::stageSpecificationIgnoredBecauseBeforeAllEntryPoints);",
+          "context_before": [
+            "                }",
+            "                else",
+            "                {",
+            "                    m_sink->diagnose(",
+            "                        SourceLoc(),"
+          ],
+          "context_after": [
+            "                }",
+            "            }",
+            "        }",
+            "",
+            "        // Slang requires that every explicit entry point indicate the translation"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 35,
+      "severity": "Error",
+      "name": "noStageSpecifiedInPassThroughMode",
+      "message": "no stage was specified for entry point '$0'; when using the '-pass-through' option, stages must be fully specified on the command line",
+      "line": 174,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 3598,
+          "statement": "Diagnostics::noStageSpecifiedInPassThroughMode, rawEntryPoint.name);",
+          "context_before": [
+            "            {",
+            "                if (rawEntryPoint.stage == Stage::Unknown)",
+            "                {",
+            "                    m_sink->diagnose(",
+            "                        SourceLoc(),"
+          ],
+          "context_after": [
+            "                        rawEntryPoint.name);",
+            "                }",
+            "            }",
+            "        }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 36,
+      "severity": "Error",
+      "name": "expectingAnInteger",
+      "message": "expecting an integer value",
+      "line": 180,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 1903,
+          "statement": "m_sink->diagnose(arg.loc, Diagnostics::expectingAnInteger);",
+          "context_before": [
+            "    CommandLineArg arg;",
+            "    SLANG_RETURN_ON_FAIL(m_reader.expectArg(arg));",
+            "",
+            "    if (SLANG_FAILED(StringUtil::parseInt(arg.value.getUnownedSlice(), outInt)))",
+            "    {"
+          ],
+          "context_after": [
+            "        return SLANG_FAIL;",
+            "    }",
+            "    return SLANG_OK;",
+            "}",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 40,
+      "severity": "Warning",
+      "name": "sameProfileSpecifiedMoreThanOnce",
+      "message": "the '$0' was specified more than once for target '$0'",
+      "line": 182,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 3810,
+          "statement": "Diagnostics::sameProfileSpecifiedMoreThanOnce, rawTarget.optionSet.getProfileVersion(), rawTarget.format);",
+          "context_before": [
+            "            }",
+            "            else if (rawTarget.redundantProfileSet)",
+            "            {",
+            "                m_sink->diagnose(",
+            "                    SourceLoc(),"
+          ],
+          "context_after": [
+            "                    rawTarget.optionSet.getProfileVersion(),",
+            "                    rawTarget.format);",
+            "            }",
+            "        }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 41,
+      "severity": "Error",
+      "name": "conflictingProfilesSpecifiedForTarget",
+      "message": "conflicting profiles have been specified for target '$0'",
+      "line": 187,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 3803,
+          "statement": "Diagnostics::conflictingProfilesSpecifiedForTarget, rawTarget.format);",
+          "context_before": [
+            "        {",
+            "            if (rawTarget.conflictingProfilesSet)",
+            "            {",
+            "                m_sink->diagnose(",
+            "                    SourceLoc(),"
+          ],
+          "context_after": [
+            "                    rawTarget.format);",
+            "            }",
+            "            else if (rawTarget.redundantProfileSet)",
+            "            {",
+            "                m_sink->diagnose("
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 42,
+      "severity": "Error",
+      "name": "profileSpecificationIgnoredBecauseNoTargets",
+      "message": "a '-profile' option was specified, but no target was specified with '-target'",
+      "line": 193,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 3773,
+          "statement": "Diagnostics::profileSpecificationIgnoredBecauseNoTargets);",
+          "context_before": [
+            "                    // so we didn't try to infer a target, or if the `-profile` option",
+            "                    // somehow didn't imply a target.",
+            "                    //",
+            "                    m_sink->diagnose(",
+            "                        SourceLoc(),"
+          ],
+          "context_after": [
+            "                }",
+            "                else",
+            "                {",
+            "                    m_sink->diagnose(",
+            "                        SourceLoc(),"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 43,
+      "severity": "Error",
+      "name": "profileSpecificationIgnoredBecauseBeforeAllTargets",
+      "message": "when using multiple targets, any '-profile' option must follow the '-target' it applies to",
+      "line": 198,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 3779,
+          "statement": "Diagnostics::profileSpecificationIgnoredBecauseBeforeAllTargets);",
+          "context_before": [
+            "                }",
+            "                else",
+            "                {",
+            "                    m_sink->diagnose(",
+            "                        SourceLoc(),"
+          ],
+          "context_after": [
+            "                }",
+            "            }",
+            "",
+            "            if (defaultTargetFloatingPointMode != FloatingPointMode::Default)",
+            "            {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 42,
+      "severity": "Error",
+      "name": "targetFlagsIgnoredBecauseNoTargets",
+      "message": "target options were specified, but no target was specified with '-target'",
+      "line": 204,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 3787,
+          "statement": "m_sink->diagnose(SourceLoc(), Diagnostics::targetFlagsIgnoredBecauseNoTargets);",
+          "context_before": [
+            "",
+            "            if (defaultTargetFloatingPointMode != FloatingPointMode::Default)",
+            "            {",
+            "                if (m_rawTargets.getCount() == 0)",
+            "                {"
+          ],
+          "context_after": [
+            "                }",
+            "                else",
+            "                {",
+            "                    m_sink->diagnose(",
+            "                        SourceLoc(),"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 43,
+      "severity": "Error",
+      "name": "targetFlagsIgnoredBecauseBeforeAllTargets",
+      "message": "when using multiple targets, any target options must follow the '-target' they apply to",
+      "line": 209,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 3793,
+          "statement": "Diagnostics::targetFlagsIgnoredBecauseBeforeAllTargets);",
+          "context_before": [
+            "                }",
+            "                else",
+            "                {",
+            "                    m_sink->diagnose(",
+            "                        SourceLoc(),"
+          ],
+          "context_after": [
+            "                }",
+            "            }",
+            "        }",
+            "        for (auto& rawTarget : m_rawTargets)",
+            "        {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 50,
+      "severity": "Error",
+      "name": "duplicateTargets",
+      "message": "the target '$0' has been specified more than once",
+      "line": 215,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 3683,
+          "statement": "m_sink->diagnose(SourceLoc(), Diagnostics::duplicateTargets, format);",
+          "context_before": [
+            "            {",
+            "                auto format = m_rawTargets[targetIndex].format;",
+            "",
+            "                if (mapFormatToTargetIndex.containsKey(format))",
+            "                {"
+          ],
+          "context_after": [
+            "                }",
+            "                else",
+            "                {",
+            "                    mapFormatToTargetIndex[format] = targetIndex;",
+            "                }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 51,
+      "severity": "Error",
+      "name": "unhandledLanguageForSourceEmbedding",
+      "message": "unhandled source language for source embedding",
+      "line": 217,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 3186,
+          "statement": "m_sink->diagnose(arg.loc, Diagnostics::unhandledLanguageForSourceEmbedding);",
+          "context_before": [
+            "                SLANG_RETURN_ON_FAIL(_expectValue(m_requestImpl->m_sourceEmbedLanguage));",
+            "",
+            "                if (!SourceEmbedUtil::isSupported(",
+            "                        (SlangSourceLanguage)m_requestImpl->m_sourceEmbedLanguage))",
+            "                {"
+          ],
+          "context_after": [
+            "                    return SLANG_FAIL;",
+            "                }",
+            "",
+            "                break;",
+            "            }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 60,
+      "severity": "Error",
+      "name": "cannotDeduceOutputFormatFromPath",
+      "message": "cannot infer an output format from the output path '$0'",
+      "line": 223,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 3944,
+          "statement": "Diagnostics::cannotDeduceOutputFormatFromPath, rawOutput.path);",
+          "context_before": [
+            "                    // format, but the file path doesn't direclty imply a format",
+            "                    // (it doesn't have a suffix like `.spv` that tells us what to write).",
+            "                    //",
+            "                    m_sink->diagnose(",
+            "                        SourceLoc(),"
+          ],
+          "context_after": [
+            "                        rawOutput.path);",
+            "                }",
+            "                else if (mapFormatToTargetIndex.tryGetValue(rawOutput.impliedFormat, targetIndex))",
+            "                {",
+            "                    rawOutput.targetIndex = targetIndex;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 61,
+      "severity": "Error",
+      "name": "cannotMatchOutputFileToTarget",
+      "message": "no specified '-target' option matches the output path '$0', which implies the '$1' format",
+      "line": 228,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 3955,
+          "statement": "Diagnostics::cannotMatchOutputFileToTarget, rawOutput.path, rawOutput.impliedFormat);",
+          "context_before": [
+            "                }",
+            "                else",
+            "                {",
+            "                    m_sink->diagnose(",
+            "                        SourceLoc(),"
+          ],
+          "context_after": [
+            "                        rawOutput.path,",
+            "                        rawOutput.impliedFormat);",
+            "                }",
+            "            }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 62,
+      "severity": "Error",
+      "name": "unknownCommandLineValue",
+      "message": "unknown value for option. Valid values are '$0'",
+      "line": 234,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 1826,
+          "statement": "m_sink->diagnose(arg.loc, Diagnostics::unknownCommandLineValue, buf);",
+          "context_before": [
+            "        m_cmdOptions->getCategoryOptionNames(categoryIndex, names);",
+            "",
+            "        StringBuilder buf;",
+            "        StringUtil::join(names.getBuffer(), names.getCount(), toSlice(\", \"), buf);",
+            ""
+          ],
+          "context_after": [
+            "        return SLANG_FAIL;",
+            "    }",
+            "",
+            "    outValue = m_cmdOptions->getOptionAt(optionIndex).userValue;",
+            "    return SLANG_OK;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 1880,
+          "statement": "m_sink->diagnose(arg.loc, Diagnostics::unknownCommandLineValue, buf);",
+          "context_before": [
+            "    }",
+            "",
+            "    StringBuilder buf;",
+            "    StringUtil::join(names.getBuffer(), names.getCount(), toSlice(\", \"), buf);",
+            ""
+          ],
+          "context_after": [
+            "    return SLANG_FAIL;",
+            "}",
+            "",
+            "SlangResult OptionsParser::_expectValue(",
+            "    ValueCategory valueCategory,"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 63,
+      "severity": "Error",
+      "name": "unknownHelpCategory",
+      "message": "unknown help category",
+      "line": 235,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 2093,
+          "statement": "m_sink->diagnose(catArg.loc, Diagnostics::unknownHelpCategory);",
+          "context_before": [
+            "                m_cmdOptions->findCategoryByCaseInsensitiveName(catArg.value.getUnownedSlice());",
+            "        }",
+            "",
+            "        if (categoryIndex < 0)",
+            "        {"
+          ],
+          "context_after": [
+            "            return SLANG_FAIL;",
+            "        }",
+            "    }",
+            "",
+            "    CommandOptionsWriter::Options writerOptions;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 70,
+      "severity": "Error",
+      "name": "cannotMatchOutputFileToEntryPoint",
+      "message": "the output path '$0' is not associated with any entry point; a '-o' option for a compiled kernel must follow the '-entry' option for its corresponding entry point",
+      "line": 237,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 4017,
+          "statement": "Diagnostics::cannotMatchOutputFileToEntryPoint, rawOutput.path);",
+          "context_before": [
+            "                    default:",
+            "                        if (rawOutput.path.getLength() != 0)",
+            "                        {",
+            "                            m_sink->diagnose(",
+            "                                SourceLoc(),"
+          ],
+          "context_after": [
+            "                                rawOutput.path);",
+            "                        }",
+            "                        break;",
+            "                    }",
+            "                }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 71,
+      "severity": "Error",
+      "name": "invalidTypeConformanceOptionString",
+      "message": "syntax error in type conformance option '$0'.",
+      "line": 243,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-shader.cpp",
+          "line": 1525,
+          "statement": "Diagnostics::invalidTypeConformanceOptionString, stringValue);",
+          "context_before": [
+            "        Index sequentialId = -1;",
+            "        if (!parseTypeConformanceArgString(stringValue, typeName, interfaceName, sequentialId))",
+            "        {",
+            "            compileRequest->getSink()->diagnose(",
+            "                SourceLoc(),"
+          ],
+          "context_after": [
+            "                stringValue);",
+            "            continue;",
+            "        }",
+            "        auto concreteType = globalComponentType->getTypeFromString(",
+            "            String(typeName).getBuffer(),"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 72,
+      "severity": "Error",
+      "name": "invalidTypeConformanceOptionNoType",
+      "message": "invalid conformance option '$0', type '$0' is not found.",
+      "line": 248,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-shader.cpp",
+          "line": 1536,
+          "statement": "Diagnostics::invalidTypeConformanceOptionNoType, stringValue, typeName);",
+          "context_before": [
+            "            compileRequest->getSink());",
+            "        if (!concreteType)",
+            "        {",
+            "            compileRequest->getSink()->diagnose(",
+            "                SourceLoc(),"
+          ],
+          "context_after": [
+            "                stringValue,",
+            "                typeName);",
+            "            continue;",
+            "        }",
+            "        auto interfaceType = globalComponentType->getTypeFromString("
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-shader.cpp",
+          "line": 1548,
+          "statement": "Diagnostics::invalidTypeConformanceOptionNoType, stringValue, interfaceName);",
+          "context_before": [
+            "            compileRequest->getSink());",
+            "        if (!interfaceType)",
+            "        {",
+            "            compileRequest->getSink()->diagnose(",
+            "                SourceLoc(),"
+          ],
+          "context_after": [
+            "                stringValue,",
+            "                interfaceName);",
+            "            continue;",
+            "        }",
+            "        ComPtr<slang::ITypeConformance> conformanceComponent;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 73,
+      "severity": "Error",
+      "name": "cannotCreateTypeConformance",
+      "message": "cannot create type conformance '$0'.",
+      "line": 253,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-shader.cpp",
+          "line": 1568,
+          "statement": "Diagnostics::cannotCreateTypeConformance, stringValue);",
+          "context_before": [
+            "            // If we failed to create the conformance component, then",
+            "            // we should report the diagnostics that were generated.",
+            "            //",
+            "            compileRequest->getSink()->diagnose(",
+            "                SourceLoc(),"
+          ],
+          "context_after": [
+            "                stringValue);",
+            "            if (diagnostics)",
+            "            {",
+            "                compileRequest->getSink()->diagnoseRaw(",
+            "                    Severity::Error,"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 80,
+      "severity": "Error",
+      "name": "duplicateOutputPathsForEntryPointAndTarget",
+      "message": "multiple output paths have been specified entry point '$0' on target '$1'",
+      "line": 255,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 4083,
+          "statement": "Diagnostics::duplicateOutputPathsForEntryPointAndTarget, entryPointReq->getName(), target->getTarget());",
+          "context_before": [
+            "            // String outputPath;",
+            "            if (targetInfo->entryPointOutputPaths.containsKey(entryPointID))",
+            "            {",
+            "                m_sink->diagnose(",
+            "                    SourceLoc(),"
+          ],
+          "context_after": [
+            "                    entryPointReq->getName(),",
+            "                    target->getTarget());",
+            "            }",
+            "            else",
+            "            {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 81,
+      "severity": "Error",
+      "name": "duplicateOutputPathsForTarget",
+      "message": "multiple output paths have been specified for target '$0'",
+      "line": 260,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 4052,
+          "statement": "Diagnostics::duplicateOutputPathsForTarget, target->getTarget());",
+          "context_before": [
+            "        {",
+            "            if (targetInfo->wholeTargetOutputPath != \"\")",
+            "            {",
+            "                m_sink->diagnose(",
+            "                    SourceLoc(),"
+          ],
+          "context_after": [
+            "                    target->getTarget());",
+            "            }",
+            "            else",
+            "            {",
+            "                target->getOptionSet().addTargetFlags(SLANG_TARGET_FLAG_GENERATE_WHOLE_PROGRAM);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 82,
+      "severity": "Error",
+      "name": "duplicateDependencyOutputPaths",
+      "message": "the -dep argument can only be specified once",
+      "line": 265,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 2966,
+          "statement": "Diagnostics::duplicateDependencyOutputPaths);",
+          "context_before": [
+            "                }",
+            "                else",
+            "                {",
+            "                    m_sink->diagnose(",
+            "                        dependencyPath.loc,"
+          ],
+          "context_after": [
+            "                    return SLANG_FAIL;",
+            "                }",
+            "                break;",
+            "            }",
+            "        case OptionKind::LineDirectiveMode:"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 82,
+      "severity": "Error",
+      "name": "unableToWriteReproFile",
+      "message": "unable to write repro file '%0'",
+      "line": 271,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-end-to-end-request.cpp",
+          "line": 1551,
+          "statement": "getSink()->diagnose(SourceLoc(), Diagnostics::unableToWriteReproFile, dumpRepro);",
+          "context_before": [
+            "        if (dumpRepro.getLength())",
+            "        {",
+            "            SlangResult saveRes = ReproUtil::saveState(this, dumpRepro);",
+            "            if (SLANG_FAILED(saveRes))",
+            "            {"
+          ],
+          "context_after": [
+            "                return saveRes;",
+            "            }",
+            "        }",
+            "        else if (dumpReproOnError && SLANG_FAILED(res))",
+            "        {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-end-to-end-request.cpp",
+          "line": 1570,
+          "statement": "Diagnostics::unableToWriteReproFile, reproFileName);",
+          "context_before": [
+            "",
+            "            if (SLANG_FAILED(saveRes))",
+            "            {",
+            "                getSink()->diagnose(",
+            "                    SourceLoc(),"
+          ],
+          "context_after": [
+            "                    reproFileName);",
+            "            }",
+            "        }",
+            "    }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 83,
+      "severity": "Error",
+      "name": "unableToWriteModuleContainer",
+      "message": "unable to write module container '%0'",
+      "line": 272,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 84,
+      "severity": "Error",
+      "name": "unableToReadModuleContainer",
+      "message": "unable to read module container '%0'",
+      "line": 273,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 85,
+      "severity": "Error",
+      "name": "unableToAddReferenceToModuleContainer",
+      "message": "unable to add a reference to a module container",
+      "line": 274,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 86,
+      "severity": "Error",
+      "name": "unableToCreateModuleContainer",
+      "message": "unable to create module container",
+      "line": 279,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-end-to-end-request.cpp",
+          "line": 574,
+          "statement": "getSink()->diagnose(SourceLoc(), Diagnostics::unableToCreateModuleContainer);",
+          "context_before": [
+            "    {",
+            "        OwnedMemoryStream stream(FileAccess::Write);",
+            "        SlangResult res = writeContainerToStream(&stream);",
+            "        if (SLANG_FAILED(res))",
+            "        {"
+          ],
+          "context_after": [
+            "            return res;",
+            "        }",
+            "",
+            "        // Need to turn into a blob",
+            "        List<uint8_t> blobData;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 87,
+      "severity": "Error",
+      "name": "unableToSetDefaultDownstreamCompiler",
+      "message": "unable to set default downstream compiler for source language '%0' to '%1'",
+      "line": 281,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 3120,
+          "statement": "Diagnostics::unableToSetDefaultDownstreamCompiler, compilerArg.value, sourceLanguageArg.value);",
+          "context_before": [
+            "",
+            "                if (SLANG_FAILED(m_session->setDefaultDownstreamCompiler(sourceLanguage, compiler)))",
+            "                {",
+            "                    m_sink->diagnose(",
+            "                        arg.loc,"
+          ],
+          "context_after": [
+            "                        compilerArg.value,",
+            "                        sourceLanguageArg.value);",
+            "                    return SLANG_FAIL;",
+            "                }",
+            "                break;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 88,
+      "severity": "Error",
+      "name": "unknownArchiveType",
+      "message": "archive type '%0' is unknown",
+      "line": 287,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 89,
+      "severity": "Error",
+      "name": "expectingSlangRiffContainer",
+      "message": "expecting a slang riff container",
+      "line": 288,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-repro.cpp",
+          "line": 1243,
+          "statement": "sink->diagnose(SourceLoc(), Diagnostics::expectingSlangRiffContainer);",
+          "context_before": [
+            "        sink->diagnose(SourceLoc(), Diagnostics::unableToReadRiff);",
+            "        return SLANG_FAIL;",
+            "    }",
+            "    if (rootChunk->getType() != kSlangStateFileFourCC)",
+            "    {"
+          ],
+          "context_after": [
+            "        return SLANG_FAIL;",
+            "    }",
+            "",
+            "    auto dataChunk = rootChunk->findDataChunk(kSlangStateDataFourCC);",
+            "    if (!dataChunk)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-repro.cpp",
+          "line": 1250,
+          "statement": "sink->diagnose(SourceLoc(), Diagnostics::expectingSlangRiffContainer);",
+          "context_before": [
+            "    }",
+            "",
+            "    auto dataChunk = rootChunk->findDataChunk(kSlangStateDataFourCC);",
+            "    if (!dataChunk)",
+            "    {"
+          ],
+          "context_after": [
+            "        return SLANG_FAIL;",
+            "    }",
+            "",
+            "    MemoryReader reader(dataChunk->getPayload(), dataChunk->getPayloadSize());",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-repro.cpp",
+          "line": 1261,
+          "statement": "sink->diagnose(SourceLoc(), Diagnostics::expectingSlangRiffContainer);",
+          "context_before": [
+            "    Header header;",
+            "    {",
+            "        auto result = reader.read(header);",
+            "        if (SLANG_FAILED(result))",
+            "        {"
+          ],
+          "context_after": [
+            "            return result;",
+            "        }",
+            "    }",
+            "",
+            "    if (!g_semanticVersion.isBackwardsCompatibleWith(header.m_semanticVersion))"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-repro.cpp",
+          "line": 1293,
+          "statement": "sink->diagnose(SourceLoc(), Diagnostics::expectingSlangRiffContainer);",
+          "context_before": [
+            "",
+            "    {",
+            "        auto result = reader.read(&outBuffer[0], remainingSize);",
+            "        if (SLANG_FAILED(result))",
+            "        {"
+          ],
+          "context_after": [
+            "            return result;",
+            "        }",
+            "    }",
+            "",
+            "    return SLANG_OK;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 90,
+      "severity": "Error",
+      "name": "incompatibleRiffSemanticVersion",
+      "message": "incompatible riff semantic version %0 expecting %1",
+      "line": 289,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-repro.cpp",
+          "line": 1274,
+          "statement": "Diagnostics::incompatibleRiffSemanticVersion, headerBuf, currentBuf);",
+          "context_before": [
+            "        header.m_semanticVersion.append(headerBuf);",
+            "        g_semanticVersion.append(currentBuf);",
+            "",
+            "        sink->diagnose(",
+            "            SourceLoc(),"
+          ],
+          "context_after": [
+            "            headerBuf,",
+            "            currentBuf);",
+            "        return SLANG_FAIL;",
+            "    }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 91,
+      "severity": "Error",
+      "name": "riffHashMismatch",
+      "message": "riff hash mismatch - incompatible riff",
+      "line": 294,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-repro.cpp",
+          "line": 1282,
+          "statement": "sink->diagnose(SourceLoc(), Diagnostics::riffHashMismatch);",
+          "context_before": [
+            "        return SLANG_FAIL;",
+            "    }",
+            "",
+            "    if (header.m_typeHash != _getTypeHash())",
+            "    {"
+          ],
+          "context_after": [
+            "        return SLANG_FAIL;",
+            "    }",
+            "",
+            "    auto remainingSize = reader.getRemainingSize();",
+            "    outBuffer.setCount(remainingSize);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 92,
+      "severity": "Error",
+      "name": "unableToCreateDirectory",
+      "message": "unable to create directory '$0'",
+      "line": 295,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-repro.cpp",
+          "line": 1346,
+          "statement": "sink->diagnose(SourceLoc(), Diagnostics::unableToCreateDirectory, dirPath);",
+          "context_before": [
+            "    String dirPath;",
+            "    SLANG_RETURN_ON_FAIL(ReproUtil::calcDirectoryPathFromFilename(filename, dirPath));",
+            "",
+            "    if (!Path::createDirectory(dirPath))",
+            "    {"
+          ],
+          "context_after": [
+            "        return SLANG_FAIL;",
+            "    }",
+            "",
+            "    // Set up a file system to write into this directory",
+            "    RelativeFileSystem relFileSystem(OSFileSystem::getMutableSingleton(), dirPath);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 93,
+      "severity": "Error",
+      "name": "unableExtractReproToDirectory",
+      "message": "unable to extract repro to directory '$0'",
+      "line": 296,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 2487,
+          "statement": "Diagnostics::unableExtractReproToDirectory, reproName.value);",
+          "context_before": [
+            "                    const Result res = ReproUtil::extractFilesToDirectory(reproName.value, m_sink);",
+            "                    if (SLANG_FAILED(res))",
+            "                    {",
+            "                        m_sink->diagnose(",
+            "                            reproName.loc,"
+          ],
+          "context_after": [
+            "                            reproName.value);",
+            "                        return res;",
+            "                    }",
+            "                }",
+            "                break;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 94,
+      "severity": "Error",
+      "name": "unableToReadRiff",
+      "message": "unable to read as 'riff'/not a 'riff' file",
+      "line": 297,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-repro.cpp",
+          "line": 1221,
+          "statement": "sink->diagnose(SourceLoc(), Diagnostics::unableToReadRiff);",
+          "context_before": [
+            "    List<Byte> streamData;",
+            "    {",
+            "        auto result = StreamUtil::readAll(stream, streamData);",
+            "        if (SLANG_FAILED(result))",
+            "        {"
+          ],
+          "context_after": [
+            "            return result;",
+            "        }",
+            "    }",
+            "",
+            "    return loadState(streamData.getBuffer(), streamData.getCount(), sink, outBuffer);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-repro.cpp",
+          "line": 1238,
+          "statement": "sink->diagnose(SourceLoc(), Diagnostics::unableToReadRiff);",
+          "context_before": [
+            "    List<uint8_t>& outBuffer)",
+            "{",
+            "    auto rootChunk = RIFF::RootChunk::getFromBlob(data, dataSize);",
+            "    if (!rootChunk)",
+            "    {"
+          ],
+          "context_after": [
+            "        return SLANG_FAIL;",
+            "    }",
+            "    if (rootChunk->getType() != kSlangStateFileFourCC)",
+            "    {",
+            "        sink->diagnose(SourceLoc(), Diagnostics::expectingSlangRiffContainer);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 95,
+      "severity": "Error",
+      "name": "unknownLibraryKind",
+      "message": "unknown library kind '$0'",
+      "line": 299,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 1919,
+          "statement": "sink->diagnose(loc, Diagnostics::unknownLibraryKind, Path::getPathExt(path));",
+          "context_before": [
+            "{",
+            "    auto desc = ArtifactDescUtil::getDescFromPath(path.getUnownedSlice());",
+            "",
+            "    if (desc.kind == ArtifactKind::Unknown)",
+            "    {"
+          ],
+          "context_after": [
+            "        return SLANG_FAIL;",
+            "    }",
+            "",
+            "    // If it's a GPU binary, then we'll assume it's a library",
+            "    if (ArtifactDescUtil::isGpuUsable(desc))"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 96,
+      "severity": "Error",
+      "name": "kindNotLinkable",
+      "message": "not a known linkable kind '$0'",
+      "line": 300,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 1937,
+          "statement": "sink->diagnose(loc, Diagnostics::kindNotLinkable, Path::getPathExt(path));",
+          "context_before": [
+            "        desc.payload = ArtifactPayload::CompileResults;",
+            "    }",
+            "",
+            "    if (!ArtifactDescUtil::isLinkable(desc))",
+            "    {"
+          ],
+          "context_after": [
+            "        return SLANG_FAIL;",
+            "    }",
+            "",
+            "    const String name = ArtifactDescUtil::getBaseNameFromPath(desc, path.getUnownedSlice());",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 97,
+      "severity": "Error",
+      "name": "libraryDoesNotExist",
+      "message": "library '$0' does not exist",
+      "line": 301,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 1968,
+          "statement": "sink->diagnose(loc, Diagnostics::libraryDoesNotExist, path);",
+          "context_before": [
+            "            IOSFileArtifactRepresentation::Kind::Reference,",
+            "            path.getUnownedSlice(),",
+            "            nullptr);",
+            "        if (!fileRep->exists())",
+            "        {"
+          ],
+          "context_after": [
+            "            return SLANG_FAIL;",
+            "        }",
+            "    }",
+            "    artifact->addRepresentation(fileRep);",
+            "    *outArtifact = artifact.detach();"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 98,
+      "severity": "Error",
+      "name": "cannotAccessAsBlob",
+      "message": "cannot access as a blob",
+      "line": 302,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-artifact-output-util.cpp",
+          "line": 160,
+          "statement": "sink->diagnose(SourceLoc(), Diagnostics::cannotAccessAsBlob);",
+          "context_before": [
+            "    ComPtr<ISlangBlob>& outBlob)",
+            "{",
+            "    const auto res = artifact->loadBlob(ArtifactKeep::No, outBlob.writeRef());",
+            "    if (SLANG_FAILED(res))",
+            "    {"
+          ],
+          "context_after": [
+            "        return res;",
+            "    }",
+            "    return SLANG_OK;",
+            "}",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 99,
+      "severity": "Error",
+      "name": "unknownDebugOption",
+      "message": "unknown debug option, known options are ($0)",
+      "line": 303,
+      "param_count": 1,
+      "call_sites": []
+    },
+    {
+      "id": 104,
+      "severity": "Error",
+      "name": "needToEnableExperimentFeature",
+      "message": "'$0' is an experimental module, need to enable'-experimental-feature' to load this module",
+      "line": 304,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-session.cpp",
+          "line": 1679,
+          "statement": "Diagnostics::needToEnableExperimentFeature, moduleName);",
+          "context_before": [
+            "                                ->findDecoration<IRExperimentalModuleDecoration>() &&",
+            "                            !m_optionSet.getBoolOption(CompilerOptionName::ExperimentalFeature))",
+            "                        {",
+            "                            sink->diagnose(",
+            "                                requestingLoc,"
+          ],
+          "context_after": [
+            "                                moduleName);",
+            "                        }",
+            "                    }",
+            "                    return module;",
+            "                }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 105,
+      "severity": "Error",
+      "name": "nullComponentType",
+      "message": "componentTypes[$0] is `nullptr`",
+      "line": 310,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-session.cpp",
+          "line": 364,
+          "statement": "sink.diagnose(SourceLoc{}, Diagnostics::nullComponentType, 0);",
+          "context_before": [
+            "    if (componentTypeCount == 1)",
+            "    {",
+            "        auto componentType = componentTypes[0];",
+            "        if (componentType == nullptr)",
+            "        {"
+          ],
+          "context_after": [
+            "            sink.getBlobIfNeeded(outDiagnostics);",
+            "            return SLANG_E_INVALID_ARG;",
+            "        }",
+            "        componentType->addRef();",
+            "        *outCompositeComponentType = componentType;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-session.cpp",
+          "line": 378,
+          "statement": "sink.diagnose(SourceLoc{}, Diagnostics::nullComponentType, cc);",
+          "context_before": [
+            "    List<RefPtr<ComponentType>> childComponents;",
+            "    for (Int cc = 0; cc < componentTypeCount; ++cc)",
+            "    {",
+            "        if (componentTypes[cc] == nullptr)",
+            "        {"
+          ],
+          "context_after": [
+            "            sink.getBlobIfNeeded(outDiagnostics);",
+            "            return SLANG_E_INVALID_ARG;",
+            "        }",
+            "        childComponents.add(asInternal(componentTypes[cc]));",
+            "    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 100,
+      "severity": "Error",
+      "name": "failedToLoadDownstreamCompiler",
+      "message": "failed to load downstream compiler '$0'",
+      "line": 316,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check.cpp",
+          "line": 144,
+          "statement": "sink->diagnose(SourceLoc(), Diagnostics::failedToLoadDownstreamCompiler, type);",
+          "context_before": [
+            "            // \"I need all of these libraries\" vs. \"I need at least one of these",
+            "            // libraries\").",
+            "            //",
+            "            if (sink)",
+            "            {"
+          ],
+          "context_after": [
+            "            }",
+            "            SinkSharedLibraryLoader loader(m_sharedLibraryLoader, sink);",
+            "            locator(m_downstreamCompilerPaths[int(type)], &loader, m_downstreamCompilerSet);",
+            "        }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 101,
+      "severity": "Error",
+      "name": "downstreamCompilerDoesntSupportWholeProgramCompilation",
+      "message": "downstream compiler '$0' doesn't support whole program compilation",
+      "line": 317,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-code-gen.cpp",
+          "line": 686,
+          "statement": "Diagnostics::downstreamCompilerDoesntSupportWholeProgramCompilation, downstreamCompilerName);",
+          "context_before": [
+            "                auto downstreamCompilerName =",
+            "                    TypeTextUtil::getPassThroughName((SlangPassThrough)compilerType);",
+            "",
+            "                sink->diagnose(",
+            "                    SourceLoc(),"
+          ],
+          "context_after": [
+            "                    downstreamCompilerName);",
+            "                return SLANG_FAIL;",
+            "            }",
+            "        }",
+            "        else if (entryPointIndicesCount == 1)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15000,
+      "severity": "Error",
+      "name": "endOfFileInPreprocessorConditional",
+      "message": "end of file encountered during preprocessor conditional",
+      "line": 331,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 4660,
+          "statement": "GetSink(this)->diagnose(eofToken, Diagnostics::endOfFileInPreprocessorConditional);",
+          "context_before": [
+            "    // at the end of the file.",
+            "    //",
+            "    for (auto conditional = inputFile->getInnerMostConditional(); conditional;",
+            "         conditional = conditional->parent)",
+            "    {"
+          ],
+          "context_after": [
+            "        GetSink(this)->diagnose(",
+            "            conditional->ifToken,",
+            "            Diagnostics::seeDirective,",
+            "            conditional->ifToken.getContent());",
+            "    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": [
+            "seeDirective"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 15001,
+      "severity": "Error",
+      "name": "directiveWithoutIf",
+      "message": "'$0' directive without '#if'",
+      "line": 336,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 3335,
+          "statement": "Diagnostics::directiveWithoutIf, GetDirectiveName(context));",
+          "context_before": [
+            "    Conditional* conditional = inputFile->getInnerMostConditional();",
+            "    if (!conditional)",
+            "    {",
+            "        GetSink(context)->diagnose(",
+            "            GetDirectiveLoc(context),"
+          ],
+          "context_after": [
+            "            GetDirectiveName(context));",
+            "        return;",
+            "    }",
+            "",
+            "    // if we've already seen a `#else`, then it is an error"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 3399,
+          "statement": "Diagnostics::directiveWithoutIf, GetDirectiveName(context));",
+          "context_before": [
+            "    Conditional* conditional = inputFile->getInnerMostConditional();",
+            "    if (!conditional)",
+            "    {",
+            "        GetSink(context)->diagnose(",
+            "            GetDirectiveLoc(context),"
+          ],
+          "context_after": [
+            "            GetDirectiveName(context));",
+            "        return;",
+            "    }",
+            "",
+            "    // if we've already seen a `#else`, then it is an error"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 3457,
+          "statement": "Diagnostics::directiveWithoutIf, GetDirectiveName(context));",
+          "context_before": [
+            "    Conditional* conditional = inputFile->getInnerMostConditional();",
+            "    if (!conditional)",
+            "    {",
+            "        GetSink(context)->diagnose(",
+            "            GetDirectiveLoc(context),"
+          ],
+          "context_after": [
+            "            GetDirectiveName(context));",
+            "        return;",
+            "    }",
+            "",
+            "    inputFile->popConditional();"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15002,
+      "severity": "Error",
+      "name": "directiveAfterElse",
+      "message": "'$0' directive without '#if'",
+      "line": 337,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 3345,
+          "statement": "Diagnostics::directiveAfterElse, GetDirectiveName(context));",
+          "context_before": [
+            "    // if we've already seen a `#else`, then it is an error",
+            "    if (conditional->elseToken.type != TokenType::Unknown)",
+            "    {",
+            "        GetSink(context)->diagnose(",
+            "            GetDirectiveLoc(context),"
+          ],
+          "context_after": [
+            "            GetDirectiveName(context));",
+            "        GetSink(context)->diagnose(conditional->elseToken.loc, Diagnostics::seeDirective);",
+            "        return;",
+            "    }",
+            "    conditional->elseToken = context->m_directiveToken;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": [
+            "seeDirective"
+          ]
+        },
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 3409,
+          "statement": "Diagnostics::directiveAfterElse, GetDirectiveName(context));",
+          "context_before": [
+            "    // if we've already seen a `#else`, then it is an error",
+            "    if (conditional->elseToken.type != TokenType::Unknown)",
+            "    {",
+            "        GetSink(context)->diagnose(",
+            "            GetDirectiveLoc(context),"
+          ],
+          "context_after": [
+            "            GetDirectiveName(context));",
+            "        GetSink(context)->diagnose(conditional->elseToken.loc, Diagnostics::seeDirective);",
+            "        return;",
+            "    }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": [
+            "seeDirective"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 15100,
+      "severity": "Error",
+      "name": "expectedPreprocessorDirectiveName",
+      "message": "expected preprocessor directive name",
+      "line": 342,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 4611,
+          "statement": "Diagnostics::expectedPreprocessorDirectiveName);",
+          "context_before": [
+            "    // Otherwise the directive name had better be an identifier",
+            "    if (directiveTokenType != TokenType::Identifier)",
+            "    {",
+            "        GetSink(context)->diagnose(",
+            "            GetDirectiveLoc(context),"
+          ],
+          "context_after": [
+            "        SkipToEndOfLine(context);",
+            "        return;",
+            "    }",
+            "",
+            "    // Look up the handler for the directive."
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15101,
+      "severity": "Error",
+      "name": "unknownPreprocessorDirective",
+      "message": "unknown preprocessor directive '$0'",
+      "line": 343,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 4503,
+          "statement": "Diagnostics::unknownPreprocessorDirective, GetDirectiveName(context));",
+          "context_before": [
+            "// Handle an invalid directive",
+            "static void HandleInvalidDirective(PreprocessorDirectiveContext* context)",
+            "{",
+            "    GetSink(context)->diagnose(",
+            "        GetDirectiveLoc(context),"
+          ],
+          "context_after": [
+            "        GetDirectiveName(context));",
+            "    SkipToEndOfLine(context);",
+            "}",
+            "",
+            "// Callback interface used by preprocessor directives"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15102,
+      "severity": "Error",
+      "name": "expectedTokenInPreprocessorDirective",
+      "message": "expected '$0' in '$1' directive",
+      "line": 344,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 3297,
+          "statement": "Diagnostics::expectedTokenInPreprocessorDirective, &nameToken)) return;",
+          "context_before": [
+            "    // Expect a raw identifier, so we can check if it is defined",
+            "    Token nameToken;",
+            "    if (!ExpectRaw(",
+            "            context,",
+            "            TokenType::Identifier,"
+          ],
+          "context_after": [
+            "            &nameToken))",
+            "        return;",
+            "    Name* name = nameToken.getName();",
+            "",
+            "    // Check if the name is defined."
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 3314,
+          "statement": "Diagnostics::expectedTokenInPreprocessorDirective, &nameToken)) return;",
+          "context_before": [
+            "    // Expect a raw identifier, so we can check if it is defined",
+            "    Token nameToken;",
+            "    if (!ExpectRaw(",
+            "            context,",
+            "            TokenType::Identifier,"
+          ],
+          "context_after": [
+            "            &nameToken))",
+            "        return;",
+            "    Name* name = nameToken.getName();",
+            "",
+            "    // Check if the name is defined."
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 3546,
+          "statement": "Diagnostics::expectedTokenInPreprocessorDirective, &pathToken);",
+          "context_before": [
+            "    {",
+            "        StringBuilder pathSB;",
+            "        Expect(",
+            "            context,",
+            "            TokenType::OpLess,"
+          ],
+          "context_after": [
+            "            &pathToken);",
+            "        while (PeekRawTokenType(context) != TokenType::OpGreater &&",
+            "               PeekRawTokenType(context) != TokenType::EndOfFile)",
+            "        {",
+            "            pathSB << AdvanceRawToken(context).getContent();"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 3556,
+          "statement": "Diagnostics::expectedTokenInPreprocessorDirective)) return;",
+          "context_before": [
+            "            pathSB << AdvanceRawToken(context).getContent();",
+            "        }",
+            "        if (!Expect(",
+            "                context,",
+            "                TokenType::OpGreater,"
+          ],
+          "context_after": [
+            "            return;",
+            "        path = pathSB.produceString();",
+            "        includeMode = IncludeSystem::Mode::System;",
+            "    }",
+            "    else"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 3566,
+          "statement": "Diagnostics::expectedTokenInPreprocessorDirective, &pathToken);",
+          "context_before": [
+            "    else",
+            "    {",
+            "        Expect(",
+            "            context,",
+            "            TokenType::StringLiteral,"
+          ],
+          "context_after": [
+            "            &pathToken);",
+            "        path = getFileNameTokenValue(pathToken);",
+            "    }",
+            "",
+            "    auto directiveLoc = GetDirectiveLoc(context);"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 3793,
+          "statement": "Diagnostics::expectedTokenInPreprocessorDirective, &nameToken)) return;",
+          "context_before": [
+            "{",
+            "    Token nameToken;",
+            "    if (!ExpectRaw(",
+            "            context,",
+            "            TokenType::Identifier,"
+          ],
+          "context_after": [
+            "            &nameToken))",
+            "        return;",
+            "    Name* name = nameToken.getName();",
+            "",
+            "    MacroDefinition* oldMacro = LookupMacro(&context->m_preprocessor->globalEnv, name);"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 4003,
+          "statement": "Diagnostics::expectedTokenInPreprocessorDirective, &nameToken)) return;",
+          "context_before": [
+            "{",
+            "    Token nameToken;",
+            "    if (!ExpectRaw(",
+            "            context,",
+            "            TokenType::Identifier,"
+          ],
+          "context_after": [
+            "            &nameToken))",
+            "        return;",
+            "    Name* name = nameToken.getName();",
+            "",
+            "    Environment* env = &context->m_preprocessor->globalEnv;"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 4155,
+          "statement": "Diagnostics::expectedTokenInPreprocessorDirective);",
+          "context_before": [
+            "",
+            "    default:",
+            "        Expect(",
+            "            context,",
+            "            TokenType::StringLiteral,"
+          ],
+          "context_after": [
+            "        return;",
+            "    }",
+            "",
+            "    auto sourceView = inputStream->getLexer()->m_sourceView;",
+            "    sourceView->addLineDirective(directiveLoc, file, line);"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15102,
+      "severity": "Error",
+      "name": "expected2TokensInPreprocessorDirective",
+      "message": "expected '$0' or '$1' in '$2' directive",
+      "line": 345,
+      "param_count": 3,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 4090,
+          "statement": "Diagnostics::expected2TokensInPreprocessorDirective, TokenType::IntegerLiteral, \"default\", GetDirectiveName(context));",
+          "context_before": [
+            "",
+            "static void _diagnoseInvalidLineDirective(PreprocessorDirectiveContext* context)",
+            "{",
+            "    GetSink(context)->diagnose(",
+            "        PeekLoc(context),"
+          ],
+          "context_after": [
+            "        TokenType::IntegerLiteral,",
+            "        \"default\",",
+            "        GetDirectiveName(context));",
+            "    context->m_parseError = true;",
+            "}"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15103,
+      "severity": "Error",
+      "name": "unexpectedTokensAfterDirective",
+      "message": "unexpected tokens following '$0' directive",
+      "line": 350,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 3489,
+          "statement": "Diagnostics::unexpectedTokensAfterDirective, GetDirectiveName(context));",
+          "context_before": [
+            "        // emit another one for the same directive.",
+            "        if (!context->m_parseError)",
+            "        {",
+            "            GetSink(context)->diagnose(",
+            "                PeekLoc(context),"
+          ],
+          "context_after": [
+            "                GetDirectiveName(context));",
+            "        }",
+            "        SkipToEndOfLine(context);",
+            "    }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15200,
+      "severity": "Error",
+      "name": "expectedTokenInPreprocessorExpression",
+      "message": "expected '$0' in preprocessor expression",
+      "line": 358,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 2937,
+          "statement": "Diagnostics::expectedTokenInPreprocessorExpression)) { GetSink(context)->diagnose(leftParen.loc, Diagnostics::seeOpeningToken, leftParen);",
+          "context_before": [
+            "            Token leftParen = token;",
+            "            PreprocessorExpressionValue value = _parseAndEvaluateExpression(context);",
+            "            if (!Expect(",
+            "                    context,",
+            "                    TokenType::RParent,"
+          ],
+          "context_after": [
+            "            {",
+            "                GetSink(context)->diagnose(leftParen.loc, Diagnostics::seeOpeningToken, leftParen);",
+            "            }",
+            "            return value;",
+            "        }"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": [
+            "seeOpeningToken"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 15201,
+      "severity": "Error",
+      "name": "syntaxErrorInPreprocessorExpression",
+      "message": "syntax error in preprocessor expression",
+      "line": 363,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 2914,
+          "statement": "Diagnostics::syntaxErrorInPreprocessorExpression);",
+          "context_before": [
+            "    {",
+            "    case TokenType::EndOfFile:",
+            "    case TokenType::NewLine:",
+            "        GetSink(context)->diagnose(",
+            "            PeekLoc(context),"
+          ],
+          "context_after": [
+            "        return 0;",
+            "    }",
+            "",
+            "    auto token = AdvanceToken(context);",
+            "    switch (token.type)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 3045,
+          "statement": "GetSink(context)->diagnose(token.loc, Diagnostics::syntaxErrorInPreprocessorExpression);",
+          "context_before": [
+            "                token.getName());",
+            "            return 0;",
+            "        }",
+            "",
+            "    default:"
+          ],
+          "context_after": [
+            "        return 0;",
+            "    }",
+            "}",
+            "",
+            "// Determine the precedence level of an infix operator"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15202,
+      "severity": "Error",
+      "name": "divideByZeroInPreprocessorExpression",
+      "message": "division by zero in preprocessor expression",
+      "line": 368,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 3137,
+          "statement": "Diagnostics::divideByZeroInPreprocessorExpression);",
+          "context_before": [
+            "            {",
+            "                if (!context->m_parseError)",
+            "                {",
+            "                    GetSink(context)->diagnose(",
+            "                        opToken.loc,"
+          ],
+          "context_after": [
+            "                }",
+            "                return 0;",
+            "            }",
+            "            return left / right;",
+            "        }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 3151,
+          "statement": "Diagnostics::divideByZeroInPreprocessorExpression);",
+          "context_before": [
+            "            {",
+            "                if (!context->m_parseError)",
+            "                {",
+            "                    GetSink(context)->diagnose(",
+            "                        opToken.loc,"
+          ],
+          "context_after": [
+            "                }",
+            "                return 0;",
+            "            }",
+            "            return left % right;",
+            "        }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15203,
+      "severity": "Error",
+      "name": "expectedTokenInDefinedExpression",
+      "message": "expected '$0' in 'defined' expression",
+      "line": 373,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 2965,
+          "statement": "Diagnostics::expectedTokenInDefinedExpression, &nameToken)) { return 0;",
+          "context_before": [
+            "                // Expect an identifier",
+            "                Token nameToken;",
+            "                if (!ExpectRaw(",
+            "                        context,",
+            "                        TokenType::Identifier,"
+          ],
+          "context_after": [
+            "                        &nameToken))",
+            "                {",
+            "                    return 0;",
+            "                }",
+            "                Name* name = nameToken.getName();"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 2978,
+          "statement": "Diagnostics::expectedTokenInDefinedExpression)) { GetSink(context)->diagnose( leftParen.loc, Diagnostics::seeOpeningToken, leftParen);",
+          "context_before": [
+            "                if (leftParen.type != TokenType::Unknown)",
+            "                {",
+            "                    if (!ExpectRaw(",
+            "                            context,",
+            "                            TokenType::RParent,"
+          ],
+          "context_after": [
+            "                    {",
+            "                        GetSink(context)->diagnose(",
+            "                            leftParen.loc,",
+            "                            Diagnostics::seeOpeningToken,",
+            "                            leftParen);"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 3006,
+          "statement": "Diagnostics::expectedTokenInDefinedExpression, &nameToken)) { return 0;",
+          "context_before": [
+            "                // Expect an identifier",
+            "                Token nameToken;",
+            "                if (!ExpectRaw(",
+            "                        context,",
+            "                        TokenType::Identifier,"
+          ],
+          "context_after": [
+            "                        &nameToken))",
+            "                {",
+            "                    return 0;",
+            "                }",
+            ""
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 3018,
+          "statement": "Diagnostics::expectedTokenInDefinedExpression)) { GetSink(context)->diagnose( leftParen.loc, Diagnostics::seeOpeningToken, leftParen);",
+          "context_before": [
+            "                if (leftParen.type != TokenType::Unknown)",
+            "                {",
+            "                    if (!ExpectRaw(",
+            "                            context,",
+            "                            TokenType::RParent,"
+          ],
+          "context_after": [
+            "                    {",
+            "                        GetSink(context)->diagnose(",
+            "                            leftParen.loc,",
+            "                            Diagnostics::seeOpeningToken,",
+            "                            leftParen);"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15204,
+      "severity": "Warning",
+      "name": "directiveExpectsExpression",
+      "message": "'$0' directive requires an expression",
+      "line": 374,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 3387,
+          "statement": "Diagnostics::directiveExpectsExpression, GetDirectiveName(context));",
+          "context_before": [
+            "    {",
+            "    case TokenType::EndOfFile:",
+            "    case TokenType::NewLine:",
+            "        GetSink(context)->diagnose(",
+            "            GetDirectiveLoc(context),"
+          ],
+          "context_after": [
+            "            GetDirectiveName(context));",
+            "        HandleElseDirective(context);",
+            "        return;",
+            "    }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15205,
+      "severity": "Warning",
+      "name": "undefinedIdentifierInPreprocessorExpression",
+      "message": "undefined identifier '$0' in preprocessor expression will evaluate to zero",
+      "line": 375,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 3039,
+          "statement": "Diagnostics::undefinedIdentifierInPreprocessorExpression, token.getName());",
+          "context_before": [
+            "            // An identifier here means it was not defined as a macro (or",
+            "            // it is defined, but as a function-like macro. These should",
+            "            // just evaluate to zero (possibly with a warning)",
+            "            GetSink(context)->diagnose(",
+            "                token.loc,"
+          ],
+          "context_after": [
+            "                token.getName());",
+            "            return 0;",
+            "        }",
+            "",
+            "    default:"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15206,
+      "severity": "Error",
+      "name": "expectedIntegralVersionNumber",
+      "message": "Expected integer for #version number",
+      "line": 380,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 4420,
+          "statement": "Diagnostics::expectedIntegralVersionNumber);",
+          "context_before": [
+            "        version = stringToInt(AdvanceToken(context).getContent());",
+            "        break;",
+            "    default:",
+            "        GetSink(context)->diagnose(",
+            "            GetDirectiveLoc(context),"
+          ],
+          "context_after": [
+            "        break;",
+            "    }",
+            "",
+            "    SkipToEndOfLine(context);",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 4478,
+          "statement": "Diagnostics::expectedIntegralVersionNumber);",
+          "context_before": [
+            "        }",
+            "        break;",
+            "    default:",
+            "        GetSink(context)->diagnose(",
+            "            GetDirectiveLoc(context),"
+          ],
+          "context_after": [
+            "        break;",
+            "    }",
+            "",
+            "    SkipToEndOfLine(context);",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15207,
+      "severity": "Error",
+      "name": "unknownLanguageVersion",
+      "message": "unknown language version '$0'.",
+      "line": 381,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-parser.cpp",
+          "line": 5528,
+          "statement": "Diagnostics::unknownLanguageVersion, currentModule->languageVersion);",
+          "context_before": [
+            "    {",
+            "        if (!isValidSlangLanguageVersion(currentModule->languageVersion))",
+            "        {",
+            "            sink->diagnose(",
+            "                program->loc,"
+          ],
+          "context_after": [
+            "                currentModule->languageVersion);",
+            "        }",
+            "    }",
+            "",
+            "    // If the program already has a scope, then"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 2742,
+          "statement": "m_sink->diagnose(name.loc, Diagnostics::unknownLanguageVersion, name.value);",
+          "context_before": [
+            "",
+            "                SlangLanguageVersion stdRevision =",
+            "                    TypeTextUtil::findLanguageVersion(name.value.getUnownedSlice());",
+            "                if (stdRevision == SLANG_LANGUAGE_VERSION_UNKNOWN)",
+            "                {"
+          ],
+          "context_after": [
+            "                    return SLANG_FAIL;",
+            "                }",
+            "                else",
+            "                {",
+            "                    linkage->m_optionSet.add(OptionKind::LanguageVersion, stdRevision);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 4434,
+          "statement": "Diagnostics::unknownLanguageVersion, version);",
+          "context_before": [
+            "    }",
+            "    else",
+            "    {",
+            "        GetSink(context)->diagnose(",
+            "            GetDirectiveLoc(context),"
+          ],
+          "context_after": [
+            "            version);",
+            "    }",
+            "}",
+            "",
+            "static void HandleLanguageDirective(PreprocessorDirectiveContext* context)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 4493,
+          "statement": "Diagnostics::unknownLanguageVersion, version);",
+          "context_before": [
+            "    }",
+            "    else",
+            "    {",
+            "        GetSink(context)->diagnose(",
+            "            GetDirectiveLoc(context),"
+          ],
+          "context_after": [
+            "            version);",
+            "    }",
+            "}",
+            "",
+            "// Handle an invalid directive"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15208,
+      "severity": "Error",
+      "name": "unknownLanguage",
+      "message": "unknown language '$0'.",
+      "line": 382,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 4470,
+          "statement": "Diagnostics::unknownLanguage, token);",
+          "context_before": [
+            "                version = stringToInt(token.getContent());",
+            "            else",
+            "            {",
+            "                GetSink(context)->diagnose(",
+            "                    GetDirectiveLoc(context),"
+          ],
+          "context_after": [
+            "                    token);",
+            "            }",
+            "        }",
+            "        break;",
+            "    default:"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15208,
+      "severity": "Error",
+      "name": "languageVersionDiffersFromIncludingModule",
+      "message": "the source file declares a different language version than the including module.",
+      "line": 383,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-session.cpp",
+          "line": 1907,
+          "statement": "Diagnostics::languageVersionDiffersFromIncludingModule);",
+          "context_before": [
+            "",
+            "    if (slangLanguageVersion != module->getModuleDecl()->languageVersion)",
+            "    {",
+            "        sink->diagnose(",
+            "            tokens.begin()->getLoc(),"
+          ],
+          "context_after": [
+            "    }",
+            "",
+            "    auto outerScope = module->getModuleDecl()->ownedScope;",
+            "    parseSourceFile(",
+            "        module->getASTBuilder(),"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15300,
+      "severity": "Error",
+      "name": "includeFailed",
+      "message": "failed to find include file '$0'",
+      "line": 391,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 3580,
+          "statement": "GetSink(context)->diagnose(pathToken.loc, Diagnostics::includeFailed, path);",
+          "context_before": [
+            "        SourceLocType::Actual);",
+            "",
+            "    IncludeSystem* includeSystem = context->m_preprocessor->includeSystem;",
+            "    if (!includeSystem)",
+            "    {"
+          ],
+          "context_after": [
+            "        GetSink(context)->diagnose(pathToken.loc, Diagnostics::noIncludeHandlerSpecified);",
+            "        return;",
+            "    }",
+            "",
+            "    /* Find the path relative to the foundPath */"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": [
+            "noIncludeHandlerSpecified"
+          ]
+        },
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 3591,
+          "statement": "GetSink(context)->diagnose(pathToken.loc, Diagnostics::includeFailed, path);",
+          "context_before": [
+            "    PathInfo filePathInfo;",
+            "    if (SLANG_FAILED(",
+            "            includeSystem",
+            "                ->findFile(path, includedFromPathInfo.foundPath, filePathInfo, includeMode)))",
+            "    {"
+          ],
+          "context_after": [
+            "        return;",
+            "    }",
+            "",
+            "    // We must have a uniqueIdentity to be compare",
+            "    if (!filePathInfo.hasUniqueIdentity())"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 3630,
+          "statement": "GetSink(context)->diagnose(pathToken.loc, Diagnostics::includeFailed, path);",
+          "context_before": [
+            "    if (!sourceFile)",
+            "    {",
+            "        ComPtr<ISlangBlob> foundSourceBlob;",
+            "        if (SLANG_FAILED(readFile(context, filePathInfo.foundPath, foundSourceBlob.writeRef())))",
+            "        {"
+          ],
+          "context_after": [
+            "            return;",
+            "        }",
+            "",
+            "        sourceFile = sourceManager->createSourceFileWithBlob(filePathInfo, foundSourceBlob);",
+            "        sourceManager->addSourceFile(filePathInfo.uniqueIdentity, sourceFile);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15301,
+      "severity": "Error",
+      "name": "importFailed",
+      "message": "failed to find imported file '$0'",
+      "line": 392,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-serialize-ast.cpp",
+          "line": 1516,
+          "statement": "_sink->diagnose(_requestingSourceLoc, Diagnostics::importFailed, moduleName);",
+          "context_before": [
+            "    serialize(serializer, moduleName);",
+            "    auto module = _linkage->findOrImportModule(moduleName, _requestingSourceLoc, _sink);",
+            "    if (!module)",
+            "    {",
+            "        if (_sink)"
+          ],
+          "context_after": [
+            "        return nullptr;",
+            "    }",
+            "    return module->getModuleDecl();",
+            "}",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15302,
+      "severity": "Error",
+      "name": "cyclicInclude",
+      "message": "cyclic `#include` of file '$0'",
+      "line": 393,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 3644,
+          "statement": "Diagnostics::cyclicInclude, pathToken.getContent());",
+          "context_before": [
+            "    if (context->m_preprocessor->includedFiles.contains(fileIdentity))",
+            "    {",
+            "        // This file has already been included, we should diagnose an error and return.",
+            "        GetSink(context)->diagnose(",
+            "            pathToken.loc,"
+          ],
+          "context_after": [
+            "            pathToken.getContent());",
+            "        return;",
+            "    }",
+            "",
+            "    // If we are running the preprocessor as part of compiling a"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": -1,
+      "severity": "Error",
+      "name": "noIncludeHandlerSpecified",
+      "message": "no `#include` handler was specified",
+      "line": 394,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 3581,
+          "statement": "GetSink(context)->diagnose(pathToken.loc, Diagnostics::noIncludeHandlerSpecified);",
+          "context_before": [
+            "",
+            "    IncludeSystem* includeSystem = context->m_preprocessor->includeSystem;",
+            "    if (!includeSystem)",
+            "    {",
+            "        GetSink(context)->diagnose(pathToken.loc, Diagnostics::includeFailed, path);"
+          ],
+          "context_after": [
+            "        return;",
+            "    }",
+            "",
+            "    /* Find the path relative to the foundPath */",
+            "    PathInfo filePathInfo;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15302,
+      "severity": "Error",
+      "name": "noUniqueIdentity",
+      "message": "`#include` handler didn't generate a unique identity for file '$0'",
+      "line": 395,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 3598,
+          "statement": "GetSink(context)->diagnose(pathToken.loc, Diagnostics::noUniqueIdentity, path);",
+          "context_before": [
+            "    }",
+            "",
+            "    // We must have a uniqueIdentity to be compare",
+            "    if (!filePathInfo.hasUniqueIdentity())",
+            "    {"
+          ],
+          "context_after": [
+            "        return;",
+            "    }",
+            "",
+            "    reportIncludeFileForContentAssist(context->m_preprocessor, pathToken, filePathInfo.foundPath);",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15303,
+      "severity": "Error",
+      "name": "cannotResolveImportedDecl",
+      "message": "cannot resolve imported declaration '$0' from precompiled module '$1'. Make sure module '$1' is up-to-date. If you suspect this to be a compiler bug, file an issue on GitHub (https://github.com/shader-slang/slang/issues) or join the Slang Discord for assistance",
+      "line": 400,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-serialize-ast.cpp",
+          "line": 1566,
+          "statement": "Diagnostics::cannotResolveImportedDecl, mangledName, importedFromModule->getName());",
+          "context_before": [
+            "        importedFromModule->findExportedDeclByMangledName(mangledName.getUnownedSlice());",
+            "    if (!importedDecl)",
+            "    {",
+            "        _sink->diagnose(",
+            "            SourceLoc(),"
+          ],
+          "context_after": [
+            "            mangledName,",
+            "            importedFromModule->getName());",
+            "    }",
+            "    return importedDecl;",
+            "}"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15400,
+      "severity": "Warning",
+      "name": "macroRedefinition",
+      "message": "redefinition of macro '$0'",
+      "line": 410,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 3809,
+          "statement": "sink->diagnose(nameToken.loc, Diagnostics::macroRedefinition, name);",
+          "context_before": [
+            "        {",
+            "            sink->diagnose(nameToken.loc, Diagnostics::builtinMacroRedefinition, name);",
+            "        }",
+            "        else",
+            "        {"
+          ],
+          "context_after": [
+            "            sink->diagnose(oldMacro->getLoc(), Diagnostics::seePreviousDefinitionOf, name);",
+            "        }",
+            "",
+            "        delete oldMacro;",
+            "    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": [
+            "seePreviousDefinitionOf"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 15401,
+      "severity": "Warning",
+      "name": "macroNotDefined",
+      "message": "macro '$0' is not defined",
+      "line": 411,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 4020,
+          "statement": "GetSink(context)->diagnose(nameToken.loc, Diagnostics::macroNotDefined, name);",
+          "context_before": [
+            "        delete macro;",
+            "    }",
+            "    else",
+            "    {",
+            "        // name wasn't defined"
+          ],
+          "context_after": [
+            "    }",
+            "}",
+            "",
+            "static String _readDirectiveMessage(PreprocessorDirectiveContext* context)",
+            "{"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15403,
+      "severity": "Error",
+      "name": "expectedTokenInMacroParameters",
+      "message": "expected '$0' in macro parameters",
+      "line": 412,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 3853,
+          "statement": "Diagnostics::expectedTokenInMacroParameters, &paramNameToken)) break;",
+          "context_before": [
+            "                if (PeekRawTokenType(context) != TokenType::Ellipsis)",
+            "                {",
+            "                    if (!ExpectRaw(",
+            "                            context,",
+            "                            TokenType::Identifier,"
+          ],
+          "context_after": [
+            "                            &paramNameToken))",
+            "                        break;",
+            "                }",
+            "",
+            "                // Whether or not a name was seen, we allow an ellipsis"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 3929,
+          "statement": "ExpectRaw(context, TokenType::Comma, Diagnostics::expectedTokenInMacroParameters);",
+          "context_before": [
+            "",
+            "                // If we see `)` then we are done with arguments",
+            "                if (PeekRawTokenType(context) == TokenType::RParent)",
+            "                    break;",
+            ""
+          ],
+          "context_after": [
+            "            }",
+            "        }",
+            "",
+            "        ExpectRaw(context, TokenType::RParent, Diagnostics::expectedTokenInMacroParameters);",
+            ""
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 3933,
+          "statement": "ExpectRaw(context, TokenType::RParent, Diagnostics::expectedTokenInMacroParameters);",
+          "context_before": [
+            "",
+            "                ExpectRaw(context, TokenType::Comma, Diagnostics::expectedTokenInMacroParameters);",
+            "            }",
+            "        }",
+            ""
+          ],
+          "context_after": [
+            "",
+            "        // Once we have parsed the macro parameters, we can perform the additional validation",
+            "        // step of checking that any parameters before the last parameter are not variadic.",
+            "        //",
+            "        Index lastParamIndex = macro->params.getCount() - 1;"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15404,
+      "severity": "Warning",
+      "name": "builtinMacroRedefinition",
+      "message": "Redefinition of builtin macro '$0'",
+      "line": 413,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 3805,
+          "statement": "sink->diagnose(nameToken.loc, Diagnostics::builtinMacroRedefinition, name);",
+          "context_before": [
+            "    {",
+            "        auto sink = GetSink(context);",
+            "",
+            "        if (oldMacro->isBuiltin())",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "        else",
+            "        {",
+            "            sink->diagnose(nameToken.loc, Diagnostics::macroRedefinition, name);",
+            "            sink->diagnose(oldMacro->getLoc(), Diagnostics::seePreviousDefinitionOf, name);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15405,
+      "severity": "Error",
+      "name": "tokenPasteAtStart",
+      "message": "'##' is not allowed at the start of a macro body",
+      "line": 415,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 3734,
+          "statement": "GetSink(preprocessor)->diagnose(token.loc, Diagnostics::tokenPasteAtStart);",
+          "context_before": [
+            "            break;",
+            "",
+            "        case TokenType::PoundPound:",
+            "            if (macro->ops.getCount() == 0 && (spanBeginIndex == spanEndIndex))",
+            "            {"
+          ],
+          "context_after": [
+            "                continue;",
+            "            }",
+            "",
+            "            if (macro->tokens.m_tokens[cursor].type == TokenType::EndOfFile)",
+            "            {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15406,
+      "severity": "Error",
+      "name": "tokenPasteAtEnd",
+      "message": "'##' is not allowed at the end of a macro body",
+      "line": 416,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 3740,
+          "statement": "GetSink(preprocessor)->diagnose(token.loc, Diagnostics::tokenPasteAtEnd);",
+          "context_before": [
+            "                continue;",
+            "            }",
+            "",
+            "            if (macro->tokens.m_tokens[cursor].type == TokenType::EndOfFile)",
+            "            {"
+          ],
+          "context_after": [
+            "                continue;",
+            "            }",
+            "",
+            "            newOp.opcode = MacroDefinition::Opcode::TokenPaste;",
+            "            newOp.index0 = tokenIndex;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15407,
+      "severity": "Error",
+      "name": "expectedMacroParameterAfterStringize",
+      "message": "'#' in macro body must be followed by the name of a macro parameter",
+      "line": 417,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 3711,
+          "statement": "->diagnose(token.loc, Diagnostics::expectedMacroParameterAfterStringize);",
+          "context_before": [
+            "                auto paramNameTokenIndex = cursor;",
+            "                auto paramNameToken = macro->tokens.m_tokens[paramNameTokenIndex];",
+            "                if (paramNameToken.type != TokenType::Identifier)",
+            "                {",
+            "                    GetSink(preprocessor)"
+          ],
+          "context_after": [
+            "                    continue;",
+            "                }",
+            "                auto paramName = paramNameToken.getName();",
+            "                Index paramIndex = -1;",
+            "                if (!mapParamNameToIndex.tryGetValue(paramName, paramIndex))"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 3719,
+          "statement": "->diagnose(token.loc, Diagnostics::expectedMacroParameterAfterStringize);",
+          "context_before": [
+            "                auto paramName = paramNameToken.getName();",
+            "                Index paramIndex = -1;",
+            "                if (!mapParamNameToIndex.tryGetValue(paramName, paramIndex))",
+            "                {",
+            "                    GetSink(preprocessor)"
+          ],
+          "context_after": [
+            "                    continue;",
+            "                }",
+            "",
+            "                cursor++;",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15408,
+      "severity": "Error",
+      "name": "duplicateMacroParameterName",
+      "message": "redefinition of macro parameter '$0'",
+      "line": 422,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 3916,
+          "statement": "Diagnostics::duplicateMacroParameterName, name);",
+          "context_before": [
+            "                auto paramName = param.nameLoc.name;",
+            "                if (mapParamNameToIndex.containsKey(paramName))",
+            "                {",
+            "                    GetSink(context)->diagnose(",
+            "                        param.nameLoc.loc,"
+          ],
+          "context_after": [
+            "                        name);",
+            "                }",
+            "                else",
+            "                {",
+            "                    mapParamNameToIndex[paramName] = paramIndex;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15409,
+      "severity": "Error",
+      "name": "variadicMacroParameterMustBeLast",
+      "message": "a variadic macro parameter is only allowed at the end of the parameter list",
+      "line": 423,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 3947,
+          "statement": "Diagnostics::variadicMacroParameterMustBeLast, param.nameLoc.name);",
+          "context_before": [
+            "            if (!param.isVariadic)",
+            "                continue;",
+            "",
+            "            GetSink(context)->diagnose(",
+            "                param.nameLoc.loc,"
+          ],
+          "context_after": [
+            "                param.nameLoc.name);",
+            "",
+            "            // As a precaution, we will unmark the variadic-ness of the parameter, so that",
+            "            // logic downstream from this step doesn't have to deal with the possibility",
+            "            // of a variadic parameter in the middle of the parameter list."
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15500,
+      "severity": "Warning",
+      "name": "expectedTokenInMacroArguments",
+      "message": "expected '$0' in macro invocation",
+      "line": 430,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 1844,
+          "statement": "Diagnostics::expectedTokenInMacroArguments, TokenType::RParent, m_inputStreams.peekTokenType());",
+          "context_before": [
+            "                else",
+            "                {",
+            "                    GetSink(preprocessor)",
+            "                        ->diagnose(",
+            "                            m_inputStreams.peekLoc(),"
+          ],
+          "context_after": [
+            "                            TokenType::RParent,",
+            "                            m_inputStreams.peekTokenType());",
+            "                }",
+            "",
+            "                // The number of arguments at the macro invocation site might not"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15501,
+      "severity": "Error",
+      "name": "wrongNumberOfArgumentsToMacro",
+      "message": "wrong number of arguments to macro (expected $0, got $1)",
+      "line": 431,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 1866,
+          "statement": "Diagnostics::wrongNumberOfArgumentsToMacro, paramCount, argCount);",
+          "context_before": [
+            "                    if (argCount != paramCount)",
+            "                    {",
+            "                        GetSink(preprocessor)",
+            "                            ->diagnose(",
+            "                                leftParen.loc,"
+          ],
+          "context_after": [
+            "                                paramCount,",
+            "                                argCount);",
+            "                        return;",
+            "                    }",
+            "                }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 1885,
+          "statement": "Diagnostics::wrongNumberOfArgumentsToMacro, requiredArgCount, argCount);",
+          "context_before": [
+            "                    if (argCount < requiredArgCount)",
+            "                    {",
+            "                        GetSink(preprocessor)",
+            "                            ->diagnose(",
+            "                                leftParen.loc,"
+          ],
+          "context_after": [
+            "                                requiredArgCount,",
+            "                                argCount);",
+            "                        return;",
+            "                    }",
+            "                }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15502,
+      "severity": "Error",
+      "name": "errorParsingToMacroInvocationArgument",
+      "message": "error parsing macro '$0' invocation argument to '$1'",
+      "line": 436,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 1648,
+          "statement": "Diagnostics::errorParsingToMacroInvocationArgument, paramCount, macro->getName());",
+          "context_before": [
+            "            // ahead for a closing `)`. For now it is simplest",
+            "            // to just bail.",
+            "            //",
+            "            getSink()->diagnose(",
+            "                m_inputStreams.peekLoc(),"
+          ],
+          "context_after": [
+            "                paramCount,",
+            "                macro->getName());",
+            "            return;",
+            "        }",
+            "    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15503,
+      "severity": "Warning",
+      "name": "invalidTokenPasteResult",
+      "message": "toking pasting with '##' resulted in the invalid token '$0'",
+      "line": 442,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 2224,
+          "statement": "Diagnostics::invalidTokenPasteResult, pastedContent);",
+          "context_before": [
+            "                //",
+            "                if (lexedTokens.m_tokens.getCount() > 2)",
+            "                {",
+            "                    getSink()->diagnose(",
+            "                        tokenPasteLoc,"
+          ],
+          "context_after": [
+            "                        pastedContent);",
+            "                }",
+            "",
+            "                // No matter what sequence of tokens we got, we can create an input stream to",
+            "                // represent them and push it as the representation of the `##` macro definition op."
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15600,
+      "severity": "Error",
+      "name": "expectedPragmaDirectiveName",
+      "message": "expected a name after '#pragma'",
+      "line": 449,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 4391,
+          "statement": "Diagnostics::expectedPragmaDirectiveName);",
+          "context_before": [
+            "    // The sub-directive had better be an identifier",
+            "    if (subDirectiveToken.type != TokenType::Identifier)",
+            "    {",
+            "        GetSink(context)->diagnose(",
+            "            GetDirectiveLoc(context),"
+          ],
+          "context_after": [
+            "        SkipToEndOfLine(context);",
+            "        return;",
+            "    }",
+            "    AdvanceRawToken(context);",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15601,
+      "severity": "Warning",
+      "name": "unknownPragmaDirectiveIgnored",
+      "message": "ignoring unknown directive '#pragma $0'",
+      "line": 450,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 4173,
+          "statement": "Diagnostics::unknownPragmaDirectiveIgnored, subDirectiveToken.getName());",
+          "context_before": [
+            "",
+            "SLANG_PRAGMA_DIRECTIVE_CALLBACK(handleUnknownPragmaDirective)",
+            "{",
+            "    GetSink(context)->diagnose(",
+            "        subDirectiveToken,"
+          ],
+          "context_after": [
+            "        subDirectiveToken.getName());",
+            "    SkipToEndOfLine(context);",
+            "    return;",
+            "}",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15602,
+      "severity": "Warning",
+      "name": "pragmaOnceIgnored",
+      "message": "pragma once was ignored - this is typically because is not placed in an include",
+      "line": 451,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 4195,
+          "statement": "GetSink(context)->diagnose(subDirectiveToken, Diagnostics::pragmaOnceIgnored);",
+          "context_before": [
+            "        SourceLocType::Actual);",
+            "",
+            "    // Must have uniqueIdentity for a #pragma once to work",
+            "    if (!issuedFromPathInfo.hasUniqueIdentity())",
+            "    {"
+          ],
+          "context_after": [
+            "        return;",
+            "    }",
+            "",
+            "    context->m_preprocessor->pragmaOnceUniqueIdentities.add(issuedFromPathInfo.uniqueIdentity);",
+            "}"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15610,
+      "severity": "Error",
+      "name": "pragmaWarningGenericError",
+      "message": "Error in #pragma warning processing: $0",
+      "line": 456,
+      "param_count": 1,
+      "call_sites": []
+    },
+    {
+      "id": 15611,
+      "severity": "Warning",
+      "name": "pragmaWarningPopEmpty",
+      "message": "Detected #pragma warning(pop) with no corresponding #pragma warning(push)",
+      "line": 457,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 1260,
+          "statement": "sink->diagnose(location, Diagnostics::pragmaWarningPopEmpty);",
+          "context_before": [
+            "                }",
+            "            }",
+            "        }",
+            "        else if (sink)",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "    }",
+            "};",
+            "",
+            "/// State of the preprocessor"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15612,
+      "severity": "Warning",
+      "name": "pragmaWarningPushNotPopped",
+      "message": "Detected #pragma warning(push) with no corresponding #pragma warning(pop)",
+      "line": 462,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 4849,
+          "statement": "sink->diagnose(pushed, Diagnostics::pragmaWarningPushNotPopped);",
+          "context_before": [
+            "    if (tracker)",
+            "    {",
+            "        auto sink = GetSink(preprocessor);",
+            "        for (const auto& pushed : tracker->stack)",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "        tracker->stack.clearAndDeallocate();",
+            "    }",
+            "}",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15613,
+      "severity": "Warning",
+      "name": "pragmaWarningUnknownSpecifier",
+      "message": "Unknown #pragma warning specifier '$0'",
+      "line": 467,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 4283,
+          "statement": "Diagnostics::pragmaWarningUnknownSpecifier, id.getContent());",
+          "context_before": [
+            "                }",
+            "                else",
+            "                {",
+            "                    GetSink(context)->diagnose(",
+            "                        specifierLocation,"
+          ],
+          "context_after": [
+            "                        id.getContent());",
+            "                    return finish();",
+            "                }",
+            "                Expect(context, TokenType::Colon, Diagnostics::syntaxError);",
+            "                // Read the id list"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15614,
+      "severity": "Warning",
+      "name": "pragmaWarningSuppressCannotIdentifyNextLine",
+      "message": "Cannot identify the next line to suppress in #pragma warning suppress",
+      "line": 468,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 4275,
+          "statement": "Diagnostics::pragmaWarningSuppressCannotIdentifyNextLine);",
+          "context_before": [
+            "                    nextLineEnd = FindNextEndOfLine(context, specifierLocation, 2);",
+            "                    if (!nextLineEnd.isValid())",
+            "                    {",
+            "                        GetSink(context)->diagnose(",
+            "                            specifierLocation,"
+          ],
+          "context_after": [
+            "                        return finish();",
+            "                    }",
+            "                }",
+            "                else",
+            "                {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15615,
+      "severity": "Warning",
+      "name": "pragmaWarningCannotInsertHere",
+      "message": "Cannot insert #pragma warning here for id '$0'",
+      "line": 473,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 1155,
+          "statement": "sink->diagnose(debugLoc, Diagnostics::pragmaWarningCannotInsertHere, id);",
+          "context_before": [
+            "        }",
+            "        else",
+            "        {",
+            "            if (sink)",
+            "            {"
+          ],
+          "context_after": [
+            "                const Entry* prevEntry = findEntry(location);",
+            "                if (prevEntry && prevEntry->specifier == PragmaWarningSpecifier::Suppress)",
+            "                {",
+            "                    sink->diagnose(",
+            "                        SourceLoc::fromRaw(prevEntry->debugLocation),"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15900,
+      "severity": "Error",
+      "name": "userDefinedError",
+      "message": "#error: $0",
+      "line": 486,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 4075,
+          "statement": "GetSink(context)->diagnose(GetDirectiveLoc(context), Diagnostics::userDefinedError, message);",
+          "context_before": [
+            "    String message = _readDirectiveMessage(context);",
+            "",
+            "    _setLexerDiagnosticSuppression(getInputFile(context), false);",
+            "",
+            "    // Report the custom error."
+          ],
+          "context_after": [
+            "}",
+            "",
+            "static void _handleDefaultLineDirective(PreprocessorDirectiveContext* context)",
+            "{",
+            "    SourceLoc directiveLoc = GetDirectiveLoc(context);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 15901,
+      "severity": "Warning",
+      "name": "userDefinedWarning",
+      "message": "#warning: $0",
+      "line": 487,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 4058,
+          "statement": "GetSink(context)->diagnose(GetDirectiveLoc(context), Diagnostics::userDefinedWarning, message);",
+          "context_before": [
+            "    String message = _readDirectiveMessage(context);",
+            "",
+            "    _setLexerDiagnosticSuppression(getInputFile(context), false);",
+            "",
+            "    // Report the custom error."
+          ],
+          "context_after": [
+            "}",
+            "",
+            "// Handle a `#error` directive",
+            "static void HandleErrorDirective(PreprocessorDirectiveContext* context)",
+            "{"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 20003,
+      "severity": "Error",
+      "name": "unexpectedToken",
+      "message": "unexpected $0",
+      "line": 493,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-parser.cpp",
+          "line": 290,
+          "statement": "Diagnostics::unexpectedToken, parser->tokenReader.peekTokenType());",
+          "context_before": [
+            "    // Don't emit \"unexpected token\" errors if we are in recovering mode",
+            "    if (!parser->isRecovering)",
+            "    {",
+            "        parser->diagnose(",
+            "            parser->tokenReader.peekLoc(),"
+          ],
+          "context_after": [
+            "            parser->tokenReader.peekTokenType());",
+            "",
+            "        // Switch into recovery mode, to suppress additional errors",
+            "        parser->isRecovering = true;",
+            "    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-parser.cpp",
+          "line": 4303,
+          "statement": "Diagnostics::unexpectedToken, peekToken(parser));",
+          "context_before": [
+            "    }",
+            "    else",
+            "    {",
+            "        parser->sink->diagnose(",
+            "            parser->tokenReader.peekLoc(),"
+          ],
+          "context_after": [
+            "            peekToken(parser));",
+            "    }",
+            "}",
+            "",
+            "// Parse a semantic declaration: \"semantic <name> { [accessor]* }\""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-parser.cpp",
+          "line": 5227,
+          "statement": "Diagnostics::unexpectedToken, parser->tokenReader.peekToken());",
+          "context_before": [
+            "            // skip the whole `{}` block and return an empty decl.",
+            "            if (!parser->isRecovering)",
+            "            {",
+            "                parser->sink->diagnose(",
+            "                    loc,"
+          ],
+          "context_after": [
+            "                    parser->tokenReader.peekToken());",
+            "            }",
+            "            SkipBalancedToken(&parser->tokenReader);",
+            "            decl = parser->astBuilder->create<EmptyDecl>();",
+            "            decl->loc = loc;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-preprocessor.cpp",
+          "line": 4326,
+          "statement": "Diagnostics::unexpectedToken, end.getContent());",
+          "context_before": [
+            "                }",
+            "                else",
+            "                {",
+            "                    GetSink(context)->diagnose(",
+            "                        endLoc,"
+          ],
+          "context_after": [
+            "                        end.getContent());",
+            "                    return finish();",
+            "                }",
+            "            }",
+            "        }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 20001,
+      "severity": "Error",
+      "name": "unexpectedTokenExpectedTokenType",
+      "message": "unexpected $0, expected $1",
+      "line": 494,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-parser.cpp",
+          "line": 323,
+          "statement": "Diagnostics::unexpectedTokenExpectedTokenType, parser->tokenReader.peekTokenType(), expected);",
+          "context_before": [
+            "    {",
+            "        if (parser->lastErrorLoc != parser->tokenReader.peekLoc())",
+            "        {",
+            "            parser->sink->diagnose(",
+            "                parser->tokenReader.peekLoc(),"
+          ],
+          "context_after": [
+            "                parser->tokenReader.peekTokenType(),",
+            "                expected);",
+            "            parser->lastErrorLoc = parser->tokenReader.peekLoc();",
+            "        }",
+            "        // Switch into recovery mode, to suppress additional errors"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-parser.cpp",
+          "line": 5627,
+          "statement": "Diagnostics::unexpectedTokenExpectedTokenType, \"';'\");",
+          "context_before": [
+            "                PopScope();",
+            "                if (!LookAheadToken(TokenType::Semicolon))",
+            "                {",
+            "                    this->diagnose(",
+            "                        this->tokenReader.peekToken().loc,"
+          ],
+          "context_after": [
+            "                        \"';'\");",
+            "                }",
+            "                return rs;",
+            "            }",
+            "            if (LookAheadToken(TokenType::Semicolon))"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-parser.cpp",
+          "line": 5827,
+          "statement": "Diagnostics::unexpectedTokenExpectedTokenType, parser->tokenReader.peekToken(), \"'case' or 'default'\");",
+          "context_before": [
+            "        }",
+            "        if (caseNames.getCount() == 0)",
+            "        {",
+            "            parser->sink->diagnose(",
+            "                parser->tokenReader.peekLoc(),"
+          ],
+          "context_after": [
+            "                parser->tokenReader.peekToken(),",
+            "                \"'case' or 'default'\");",
+            "            parser->isRecovering = true;",
+            "            goto recover;",
+            "        }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-parser.cpp",
+          "line": 6614,
+          "statement": "Diagnostics::unexpectedTokenExpectedTokenType, \"expression\");",
+          "context_before": [
+            "        }",
+            "        else",
+            "        {",
+            "            sink->diagnose(",
+            "                stmt->initialStatement->loc,"
+          ],
+          "context_after": [
+            "                \"expression\");",
+            "        }",
+            "    }",
+            "    else",
+            "    {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    }
+  ],
+  "notes_reference": {}
+}

@@ -1,0 +1,3963 @@
+{
+  "chunk_index": 5,
+  "total_chunks": 6,
+  "diagnostics": [
+    {
+      "id": 41024,
+      "severity": "Error",
+      "name": "cannotDefaultInitializeResource",
+      "message": "cannot default-initialize $0 with '{}'. Resource types must be explicitly initialized",
+      "line": 2673,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-detect-uninitialized-resources.cpp",
+          "line": 206,
+          "statement": "Diagnostics::cannotDefaultInitializeResource, resourceName);",
+          "context_before": [
+            "                    {",
+            "                        // Direct resource initialization",
+            "                        String resourceName = getResourceTypeName(uninitializedType);",
+            "                        sink->diagnose(",
+            "                            sourceLoc,"
+          ],
+          "context_after": [
+            "                            resourceName);",
+            "                    }",
+            "                }",
+            "            }",
+            "        }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 41024,
+      "severity": "Error",
+      "name": "cannotDefaultInitializeStructWithUninitializedResource",
+      "message": "cannot default-initialize struct '$0' with '{}' because it contains an uninitialized $1 field",
+      "line": 2679,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-detect-uninitialized-resources.cpp",
+          "line": 178,
+          "statement": "Diagnostics::cannotDefaultInitializeStructWithUninitializedResource, structName, resourceName);",
+          "context_before": [
+            "                            String resourceName = getResourceTypeName(uninitializedType);",
+            "",
+            "                            // Main error",
+            "                            sink->diagnose(",
+            "                                sourceLoc,"
+          ],
+          "context_after": [
+            "                                structName,",
+            "                                resourceName);",
+            "",
+            "                            // Note pointing to struct definition",
+            "                            if (structType->sourceLoc.isValid())"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 41024,
+      "severity": "Error",
+      "name": "cannotDefaultInitializeStructContainingResources",
+      "message": "cannot default-initialize struct '$0' with '{}' because it contains resource fields",
+      "line": 2685,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-detect-uninitialized-resources.cpp",
+          "line": 196,
+          "statement": "Diagnostics::cannotDefaultInitializeStructContainingResources, structName);",
+          "context_before": [
+            "                        else",
+            "                        {",
+            "                            // Struct contains nested resources",
+            "                            sink->diagnose(",
+            "                                sourceLoc,"
+          ],
+          "context_after": [
+            "                                structName);",
+            "                        }",
+            "                    }",
+            "                    else",
+            "                    {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 41011,
+      "severity": "Error",
+      "name": "typeDoesNotFitAnyValueSize",
+      "message": "type '$0' does not fit in the size required by its conforming interface.",
+      "line": 2691,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-any-value-inference.cpp",
+          "line": 239,
+          "statement": "sink->diagnose(implType, Diagnostics::typeDoesNotFitAnyValueSize, implType);",
+          "context_before": [
+            "            maxAnyValueSize = Math::Max(maxAnyValueSize, sizeAndAlignment.size);",
+            "",
+            "            // Diagnose if the existing any-value-size is smaller than the inferred size.",
+            "            if (existingMaxSize < sizeAndAlignment.size)",
+            "            {"
+          ],
+          "context_after": [
+            "                sink->diagnoseWithoutSourceView(",
+            "                    implType,",
+            "                    Diagnostics::typeAndLimit,",
+            "                    implType,",
+            "                    sizeAndAlignment.size,"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": [
+            "typeAndLimit"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 41014,
+      "severity": "Error",
+      "name": "typeCannotBePackedIntoAnyValue",
+      "message": "type '$0' contains fields that cannot be packed into ordinary bytes for dynamic dispatch.",
+      "line": 2697,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-lower-reinterpret.cpp",
+          "line": 94,
+          "statement": "Slang::Diagnostics::typeCannotBePackedIntoAnyValue, fromType);",
+          "context_before": [
+            "        SlangInt fromTypeSize = getAnyValueSize(fromType, targetProgram->getTargetReq());",
+            "        if (fromTypeSize < 0)",
+            "        {",
+            "            sink->diagnose(",
+            "                inst->sourceLoc,"
+          ],
+          "context_after": [
+            "                fromType);",
+            "        }",
+            "        SlangInt toTypeSize = getAnyValueSize(toType, targetProgram->getTargetReq());",
+            "        if (toTypeSize < 0)",
+            "        {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-ir-lower-reinterpret.cpp",
+          "line": 102,
+          "statement": "Slang::Diagnostics::typeCannotBePackedIntoAnyValue, toType);",
+          "context_before": [
+            "        SlangInt toTypeSize = getAnyValueSize(toType, targetProgram->getTargetReq());",
+            "        if (toTypeSize < 0)",
+            "        {",
+            "            sink->diagnose(",
+            "                inst->sourceLoc,"
+          ],
+          "context_after": [
+            "                toType);",
+            "        }",
+            "        SlangInt anyValueSize = Math::Max(fromTypeSize, toTypeSize);",
+            "",
+            "        IRBuilder builder(module);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-ir-lower-dynamic-dispatch-insts.cpp",
+          "line": 871,
+          "statement": "Slang::Diagnostics::typeCannotBePackedIntoAnyValue, type);",
+          "context_before": [
+            "            //",
+            "            if (sink && !canTypeBeStored(type))",
+            "            {",
+            "                sink->diagnose(",
+            "                    type->sourceLoc,"
+          ],
+          "context_after": [
+            "                    type);",
+            "            }",
+            "        }",
+            "",
+            "        // Defaults to 0 if any type could not be sized."
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 41020,
+      "severity": "Error",
+      "name": "lossOfDerivativeDueToCallOfNonDifferentiableFunction",
+      "message": "derivative cannot be propagated through call to non-$1-differentiable function `$0`, use 'no_diff' to clarify intention.",
+      "line": 2702,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-check-differentiability.cpp",
+          "line": 548,
+          "statement": "Diagnostics::lossOfDerivativeDueToCallOfNonDifferentiableFunction, getResolvedInstForDecorations(call->getCallee()), requiredDiffLevel == DifferentiableLevel::Forward ? \"forward\" : \"backward\");",
+          "context_before": [
+            "                        if (!isNeverDiffFuncType(cast<IRFuncType>(callee->getDataType())) &&",
+            "                            !shouldCallImpliesNoDiff(diffTypeContext, call))",
+            "                        {",
+            "                            sink->diagnose(",
+            "                                inst,"
+          ],
+          "context_after": [
+            "                                getResolvedInstForDecorations(call->getCallee()),",
+            "                                requiredDiffLevel == DifferentiableLevel::Forward ? \"forward\"",
+            "                                                                                  : \"backward\");",
+            "                        }",
+            "                    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 41024,
+      "severity": "Error",
+      "name": "lossOfDerivativeAssigningToNonDifferentiableLocation",
+      "message": "derivative is lost during assignment to non-differentiable location, use 'detach()' to clarify intention.",
+      "line": 2708,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-check-differentiability.cpp",
+          "line": 660,
+          "statement": "Diagnostics::lossOfDerivativeAssigningToNonDifferentiableLocation);",
+          "context_before": [
+            "                    if (carryNonTrivialDiffSet.contains(storeInst->getVal()) &&",
+            "                        !canAddressHoldDerivative(diffTypeContext, storeInst->getPtr()))",
+            "                    {",
+            "                        sink->diagnose(",
+            "                            storeInst->sourceLoc,"
+          ],
+          "context_after": [
+            "                    }",
+            "                }",
+            "                else if (auto callInst = as<IRCall>(inst))",
+            "                {",
+            "                    if (!isDifferentiableFunc(callInst->getCallee(), DifferentiableLevel::Forward))"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 41025,
+      "severity": "Error",
+      "name": "lossOfDerivativeUsingNonDifferentiableLocationAsOutArg",
+      "message": "derivative is lost when passing a non-differentiable location to an `out` or `inout` parameter, consider passing a temporary variable instead.",
+      "line": 2714,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 41021,
+      "severity": "Error",
+      "name": "differentiableFuncMustHaveOutput",
+      "message": "a differentiable function must have at least one differentiable output.",
+      "line": 2720,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 41022,
+      "severity": "Error",
+      "name": "differentiableFuncMustHaveInput",
+      "message": "a differentiable function must have at least one differentiable input.",
+      "line": 2725,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 41023,
+      "severity": "Error",
+      "name": "getStringHashMustBeOnStringLiteral",
+      "message": "getStringHash can only be called when argument is statically resolvable to a string literal",
+      "line": 2730,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-string-hash.cpp",
+          "line": 90,
+          "statement": "sink->diagnose(inst, Diagnostics::getStringHashMustBeOnStringLiteral);",
+          "context_before": [
+            "    {",
+            "        if (inst->getStringLit() == nullptr)",
+            "        {",
+            "            if (sink)",
+            "            {"
+          ],
+          "context_after": [
+            "            }",
+            "",
+            "            // Doesn't access a string literal",
+            "            return SLANG_FAIL;",
+            "        }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 41030,
+      "severity": "Warning",
+      "name": "operatorShiftLeftOverflow",
+      "message": "left shift amount exceeds the number of bits and the result will be always zero, (`$0` << `$1`).",
+      "line": 2736,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-operator-shift-overflow.cpp",
+          "line": 47,
+          "statement": "Diagnostics::operatorShiftLeftOverflow, lhsType, shiftAmount);",
+          "context_before": [
+            "                        IRIntegerValue shiftAmount = rhsLit->getValue();",
+            "                        if (sizeAlignment.size * 8 <= shiftAmount)",
+            "                        {",
+            "                            sink->diagnose(",
+            "                                opInst,"
+          ],
+          "context_after": [
+            "                                lhsType,",
+            "                                shiftAmount);",
+            "                        }",
+            "                        break;",
+            "                    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 41901,
+      "severity": "Error",
+      "name": "unsupportedUseOfLValueForAutoDiff",
+      "message": "unsupported use of L-value for auto differentiation.",
+      "line": 2743,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-addr-inst-elimination.cpp",
+          "line": 182,
+          "statement": "Diagnostics::unsupportedUseOfLValueForAutoDiff);",
+          "context_before": [
+            "                case kIROp_GetOffsetPtr:",
+            "                    break;",
+            "                default:",
+            "                    sink->diagnose(",
+            "                        use->getUser()->sourceLoc,"
+          ],
+          "context_after": [
+            "                    break;",
+            "                }",
+            "                use = nextUse;",
+            "            }",
+            "        }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 41902,
+      "severity": "Error",
+      "name": "cannotDifferentiateDynamicallyIndexedData",
+      "message": "cannot auto-differentiate mixed read/write access to dynamically indexed data in '$0'.",
+      "line": 2748,
+      "param_count": 1,
+      "call_sites": []
+    },
+    {
+      "id": 41903,
+      "severity": "Error",
+      "name": "unableToSizeOf",
+      "message": "sizeof could not be performed for type '$0'.",
+      "line": 2754,
+      "param_count": 1,
+      "call_sites": []
+    },
+    {
+      "id": 41904,
+      "severity": "Error",
+      "name": "unableToAlignOf",
+      "message": "alignof could not be performed for type '$0'.",
+      "line": 2755,
+      "param_count": 1,
+      "call_sites": []
+    },
+    {
+      "id": 42001,
+      "severity": "Error",
+      "name": "invalidUseOfTorchTensorTypeInDeviceFunc",
+      "message": "invalid use of TorchTensor type in device/kernel functions. use `TensorView` instead.",
+      "line": 2757,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-check-differentiability.cpp",
+          "line": 317,
+          "statement": "sink->diagnose(loc, Diagnostics::invalidUseOfTorchTensorTypeInDeviceFunc);",
+          "context_before": [
+            "                    }",
+            "",
+            "                    auto loc = inst->sourceLoc;",
+            "                    if (!loc.isValid())",
+            "                        loc = funcInst->sourceLoc;"
+          ],
+          "context_after": [
+            "                    return;",
+            "                }",
+            "            }",
+            "        }",
+            "    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 42050,
+      "severity": "Warning",
+      "name": "potentialIssuesWithPreferRecomputeOnSideEffectMethod",
+      "message": "$0 has [PreferRecompute] and may have side effects. side effects may execute multiple times. use [PreferRecompute(SideEffectBehavior.Allow)], or mark function with [__NoSideEffect]",
+      "line": 2763,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-autodiff.cpp",
+          "line": 3805,
+          "statement": "Diagnostics::potentialIssuesWithPreferRecomputeOnSideEffectMethod, nameHint->getName());",
+          "context_before": [
+            "                // Find function name. (don't diagnose on nameless functions)",
+            "                if (auto nameHint = func->findDecoration<IRNameHintDecoration>())",
+            "                {",
+            "                    sink->diagnose(",
+            "                        func,"
+          ],
+          "context_after": [
+            "                        nameHint->getName());",
+            "                }",
+            "            }",
+            "        }",
+            "    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 45001,
+      "severity": "Error",
+      "name": "unresolvedSymbol",
+      "message": "unresolved external symbol '$0'.",
+      "line": 2770,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-link.cpp",
+          "line": 1568,
+          "statement": "sink->diagnose(bestVal->sourceLoc, Diagnostics::unresolvedSymbol, bestVal);",
+          "context_before": [
+            "    // which are not valid (extensions cannot define new requirements).",
+            "    if (!isFunctionDefinedOrImported(bestVal))",
+            "    {",
+            "        if (auto sink = context->shared->sink)",
+            "        {"
+          ],
+          "context_after": [
+            "",
+            "            // Emit notes for all available declarations of this symbol",
+            "            for (IRSpecSymbol* ss = sym; ss; ss = ss->nextWithSameName)",
+            "            {",
+            "                sink->diagnose("
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-ir-link.cpp",
+          "line": 1846,
+          "statement": "Diagnostics::unresolvedSymbol, globalSym);",
+          "context_before": [
+            "                if (auto constant = as<IRGlobalConstant>(globalSym))",
+            "                {",
+            "                    if (constant->getOperandCount() == 0)",
+            "                        sink->diagnose(",
+            "                            globalSym->sourceLoc,"
+          ],
+          "context_after": [
+            "                            globalSym);",
+            "                }",
+            "                else if (auto genericSym = as<IRGeneric>(globalSym))",
+            "                {",
+            "                    globalSym = findGenericReturnVal(genericSym);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-ir-link.cpp",
+          "line": 1860,
+          "statement": "Diagnostics::unresolvedSymbol, globalSym);",
+          "context_before": [
+            "                {",
+            "                    if (!doesFuncHaveDefinition(funcSym) &&",
+            "                        !doesTargetAllowUnresolvedFuncSymbol(req))",
+            "                        sink->diagnose(",
+            "                            globalSym->sourceLoc,"
+          ],
+          "context_after": [
+            "                            globalSym);",
+            "                }",
+            "                else if (auto witnessSym = as<IRWitnessTable>(globalSym))",
+            "                {",
+            "                    if (!doesWitnessTableHaveDefinition(witnessSym))"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-ir-link.cpp",
+          "line": 1869,
+          "statement": "Diagnostics::unresolvedSymbol, witnessSym);",
+          "context_before": [
+            "                {",
+            "                    if (!doesWitnessTableHaveDefinition(witnessSym))",
+            "                    {",
+            "                        sink->diagnose(",
+            "                            globalSym->sourceLoc,"
+          ],
+          "context_after": [
+            "                            witnessSym);",
+            "                        if (auto concreteType = witnessSym->getConcreteType())",
+            "                            sink->diagnose(",
+            "                                concreteType->sourceLoc,",
+            "                                Diagnostics::seeDeclarationOf,"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 41201,
+      "severity": "Warning",
+      "name": "expectDynamicUniformArgument",
+      "message": "argument for '$0' might not be a dynamic uniform, use `asDynamicUniform()` to silence this warning.",
+      "line": 2772,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-uniformity.cpp",
+          "line": 363,
+          "statement": "Diagnostics::expectDynamicUniformArgument, param);",
+          "context_before": [
+            "                                            auto param = getParamAt(func->getFirstBlock(), argi);",
+            "                                            if (param->findDecoration<IRDynamicUniformDecoration>())",
+            "                                            {",
+            "                                                sink->diagnose(",
+            "                                                    callInst->sourceLoc,"
+          ],
+          "context_after": [
+            "                                                    param);",
+            "                                            }",
+            "                                            else",
+            "                                            {",
+            "                                                key.nonUniformParams.add(i);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 41201,
+      "severity": "Warning",
+      "name": "expectDynamicUniformValue",
+      "message": "value stored at this location must be dynamic uniform, use `asDynamicUniform()` to silence this warning.",
+      "line": 2778,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-uniformity.cpp",
+          "line": 308,
+          "statement": "Diagnostics::expectDynamicUniformValue, ptr);",
+          "context_before": [
+            "                                addToWorkList(ptr);",
+            "                                if (isDynamicUniformLocation(ptr))",
+            "                                {",
+            "                                    sink->diagnose(",
+            "                                        user->sourceLoc,"
+          ],
+          "context_after": [
+            "                                        ptr);",
+            "                                }",
+            "                                else",
+            "                                {",
+            "                                    // Conservatively treat the entire composite at root addr as"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 41202,
+      "severity": "Error",
+      "name": "notEqualBitCastSize",
+      "message": "invalid to bit_cast differently sized types: '$0' with size '$1' casted into '$2' with size '$3'",
+      "line": 2786,
+      "param_count": 4,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-lower-bit-cast.cpp",
+          "line": 265,
+          "statement": "Diagnostics::notEqualBitCastSize, fromType, fromTypeSize.size, toType, toTypeSize.size);",
+          "context_before": [
+            "        if (fromBasicType && toBasicType)",
+            "        {",
+            "            if (fromTypeSize.size != toTypeSize.size)",
+            "                sink->diagnose(",
+            "                    inst->sourceLoc,"
+          ],
+          "context_after": [
+            "                    fromType,",
+            "                    fromTypeSize.size,",
+            "                    toType,",
+            "                    toTypeSize.size);",
+            "            // Both fromType and toType are basic types, no processing needed."
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-ir-lower-bit-cast.cpp",
+          "line": 373,
+          "statement": "Diagnostics::notEqualBitCastSize, fromType, fromTypeSize.size, toType, toTypeSize.size);",
+          "context_before": [
+            "        }",
+            "",
+            "        if (fromTypeSize.size != toTypeSize.size)",
+            "            sink->diagnose(",
+            "                inst->sourceLoc,"
+          ],
+          "context_after": [
+            "                fromType,",
+            "                fromTypeSize.size,",
+            "                toType,",
+            "                toTypeSize.size);",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 41300,
+      "severity": "Error",
+      "name": "byteAddressBufferUnaligned",
+      "message": "invalid alignment `$0` specified for the byte address buffer resource with the element size of `$1`",
+      "line": 2793,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-byte-address-legalize.cpp",
+          "line": 270,
+          "statement": "Slang::Diagnostics::byteAddressBufferUnaligned, alignInst->getValue(), alignmentVal);",
+          "context_before": [
+            "            {",
+            "                return true;",
+            "            }",
+            "            m_sink->diagnose(",
+            "                offset->sourceLoc,"
+          ],
+          "context_after": [
+            "                alignInst->getValue(),",
+            "                alignmentVal);",
+            "        }",
+            "        return false;",
+            "    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 41400,
+      "severity": "Error",
+      "name": "staticAssertionFailure",
+      "message": "static assertion failed, $0",
+      "line": 2800,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-emit.cpp",
+          "line": 502,
+          "statement": "Diagnostics::staticAssertionFailure, msgLit->getStringSlice());",
+          "context_before": [
+            "                    IRInst* msg = inst->getOperand(1);",
+            "                    if (auto msgLit = as<IRStringLit>(msg))",
+            "                    {",
+            "                        sink->diagnose(",
+            "                            inst,"
+          ],
+          "context_after": [
+            "                            msgLit->getStringSlice());",
+            "                    }",
+            "                    else",
+            "                    {",
+            "                        sink->diagnose(inst, Diagnostics::staticAssertionFailureWithoutMessage);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 41401,
+      "severity": "Error",
+      "name": "staticAssertionFailureWithoutMessage",
+      "message": "static assertion failed.",
+      "line": 2801,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-emit.cpp",
+          "line": 507,
+          "statement": "sink->diagnose(inst, Diagnostics::staticAssertionFailureWithoutMessage);",
+          "context_before": [
+            "                            Diagnostics::staticAssertionFailure,",
+            "                            msgLit->getStringSlice());",
+            "                    }",
+            "                    else",
+            "                    {"
+          ],
+          "context_after": [
+            "                    }",
+            "                    diagnoseCallStack(inst, sink);",
+            "                }",
+            "            }",
+            "            else"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 41402,
+      "severity": "Error",
+      "name": "staticAssertionConditionNotConstant",
+      "message": "condition for static assertion cannot be evaluated at compile time.",
+      "line": 2802,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-emit.cpp",
+          "line": 514,
+          "statement": "sink->diagnose(condi, Diagnostics::staticAssertionConditionNotConstant);",
+          "context_before": [
+            "                    diagnoseCallStack(inst, sink);",
+            "                }",
+            "            }",
+            "            else",
+            "            {"
+          ],
+          "context_after": [
+            "            }",
+            "",
+            "            return true;",
+            "        }",
+            "    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 41402,
+      "severity": "Error",
+      "name": "multiSampledTextureDoesNotAllowWrites",
+      "message": "cannot write to a multisampled texture with target '$0'.",
+      "line": 2808,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-legalize-image-subscript.cpp",
+          "line": 41,
+          "statement": "Diagnostics::multiSampledTextureDoesNotAllowWrites, target->getTarget());",
+          "context_before": [
+            "    bool seperateSampleCoord = (textureType->isMultisample()); // seperate sample param",
+            "",
+            "    if (seperateSampleCoord && isMetalTarget(target))",
+            "        sink->diagnose(",
+            "            imageSubscript->getImage(),"
+          ],
+          "context_after": [
+            "            target->getTarget());",
+            "",
+            "    IRType* indexingType = builder.getIntType();",
+            "    if (isMetalTarget(target))",
+            "        indexingType = builder.getUIntType();"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 41403,
+      "severity": "Error",
+      "name": "invalidAtomicDestinationPointer",
+      "message": "cannot perform atomic operation because destination is neither groupshared nor from a device buffer.",
+      "line": 2814,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-validate.cpp",
+          "line": 535,
+          "statement": "sink->diagnose(inst->sourceLoc, Diagnostics::invalidAtomicDestinationPointer);",
+          "context_before": [
+            "    case kIROp_AtomicInc:",
+            "    case kIROp_AtomicDec:",
+            "        {",
+            "            IRInst* destinationPtr = inst->getOperand(0);",
+            "            if (!isValidAtomicDest(skipFuncParamValidation, destinationPtr))"
+          ],
+          "context_after": [
+            "        }",
+            "        break;",
+            "",
+            "    default:",
+            "        break;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 41404,
+      "severity": "Error",
+      "name": "cannotWriteToReadOnlyPointer",
+      "message": "cannot write to a read-only pointer",
+      "line": 2821,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 50010,
+      "severity": "Internal",
+      "name": "missingExistentialBindingsForParameter",
+      "message": "missing argument for existential parameter slot",
+      "line": 2827,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-bind-existentials.cpp",
+          "line": 231,
+          "statement": "sink->diagnose(param->sourceLoc, Diagnostics::missingExistentialBindingsForParameter);",
+          "context_before": [
+            "        {",
+            "            // Note: This error is considered an internal error because",
+            "            // we should be detecting and diagnosing this problem before",
+            "            // we make it to back-end code generation.",
+            "            //"
+          ],
+          "context_after": [
+            "            return;",
+            "        }",
+            "",
+            "        // Each existential slot corresponds to *two* arguments",
+            "        // on the binding instruction: one for the type, and"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-ir-bind-existentials.cpp",
+          "line": 246,
+          "statement": "sink->diagnose(param->sourceLoc, Diagnostics::missingExistentialBindingsForParameter);",
+          "context_before": [
+            "        //",
+            "        UInt bindOperandCount = bindSlotsInst->getOperandCount();",
+            "        UInt slotOperandCount = 2 * slotCount;",
+            "        if ((ioSlotOperandOffset + slotOperandCount) > bindOperandCount)",
+            "        {"
+          ],
+          "context_after": [
+            "            return;",
+            "        }",
+            "        //",
+            "        // If there are enough operands, then we will offset to",
+            "        // get to the starting point for the current parameter,"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 50011,
+      "severity": "Warning",
+      "name": "spirvVersionNotSupported",
+      "message": "Slang's SPIR-V backend only supports SPIR-V version 1.3 and later. Use `-emit-spirv-via-glsl` option to produce SPIR-V 1.0 through 1.2.",
+      "line": 2832,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-spirv-legalize.cpp",
+          "line": 2014,
+          "statement": "m_sharedContext->m_sink->diagnose(SourceLoc(), Diagnostics::spirvVersionNotSupported);",
+          "context_before": [
+            "",
+            "        if (m_sharedContext->m_spvVersion < 0x10300)",
+            "        {",
+            "            // Direct SPIRV backend does not support generating SPIRV before 1.3,",
+            "            // we will issue an error message here."
+          ],
+          "context_after": [
+            "        }",
+            "    }",
+            "",
+            "    struct SpirvAddressSpaceAssigner : InitialAddressSpaceAssigner",
+            "    {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 50020,
+      "severity": "Error",
+      "name": "invalidTessCoordType",
+      "message": "TessCoord must have vec2 or vec3 type.",
+      "line": 2838,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 50020,
+      "severity": "Error",
+      "name": "invalidFragCoordType",
+      "message": "FragCoord must be a vec4.",
+      "line": 2839,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 50020,
+      "severity": "Error",
+      "name": "invalidInvocationIdType",
+      "message": "InvocationId must have int type.",
+      "line": 2840,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 50020,
+      "severity": "Error",
+      "name": "invalidThreadIdType",
+      "message": "ThreadId must have int type.",
+      "line": 2841,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 50020,
+      "severity": "Error",
+      "name": "invalidPrimitiveIdType",
+      "message": "PrimitiveId must have int type.",
+      "line": 2842,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 50020,
+      "severity": "Error",
+      "name": "invalidPatchVertexCountType",
+      "message": "PatchVertexCount must have int type.",
+      "line": 2843,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 50022,
+      "severity": "Error",
+      "name": "worldIsNotDefined",
+      "message": "world '$0' is not defined.",
+      "line": 2844,
+      "param_count": 1,
+      "call_sites": []
+    },
+    {
+      "id": 50023,
+      "severity": "Error",
+      "name": "stageShouldProvideWorldAttribute",
+      "message": "'$0' should provide 'World' attribute.",
+      "line": 2845,
+      "param_count": 1,
+      "call_sites": []
+    },
+    {
+      "id": 50040,
+      "severity": "Error",
+      "name": "componentHasInvalidTypeForPositionOutput",
+      "message": "'$0': component used as 'loc' output must be of vec4 type.",
+      "line": 2846,
+      "param_count": 1,
+      "call_sites": []
+    },
+    {
+      "id": 50041,
+      "severity": "Error",
+      "name": "componentNotDefined",
+      "message": "'$0': component not defined.",
+      "line": 2851,
+      "param_count": 1,
+      "call_sites": []
+    },
+    {
+      "id": 50052,
+      "severity": "Error",
+      "name": "domainShaderRequiresControlPointCount",
+      "message": "'DomainShader' requires attribute 'ControlPointCount'.",
+      "line": 2853,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 50052,
+      "severity": "Error",
+      "name": "hullShaderRequiresControlPointCount",
+      "message": "'HullShader' requires attribute 'ControlPointCount'.",
+      "line": 2858,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 50052,
+      "severity": "Error",
+      "name": "hullShaderRequiresControlPointWorld",
+      "message": "'HullShader' requires attribute 'ControlPointWorld'.",
+      "line": 2863,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 50052,
+      "severity": "Error",
+      "name": "hullShaderRequiresCornerPointWorld",
+      "message": "'HullShader' requires attribute 'CornerPointWorld'.",
+      "line": 2868,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 50052,
+      "severity": "Error",
+      "name": "hullShaderRequiresDomain",
+      "message": "'HullShader' requires attribute 'Domain'.",
+      "line": 2873,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 50052,
+      "severity": "Error",
+      "name": "hullShaderRequiresInputControlPointCount",
+      "message": "'HullShader' requires attribute 'InputControlPointCount'.",
+      "line": 2874,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 50052,
+      "severity": "Error",
+      "name": "hullShaderRequiresOutputTopology",
+      "message": "'HullShader' requires attribute 'OutputTopology'.",
+      "line": 2879,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 50052,
+      "severity": "Error",
+      "name": "hullShaderRequiresPartitioning",
+      "message": "'HullShader' requires attribute 'Partitioning'.",
+      "line": 2884,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 50052,
+      "severity": "Error",
+      "name": "hullShaderRequiresPatchWorld",
+      "message": "'HullShader' requires attribute 'PatchWorld'.",
+      "line": 2889,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 50052,
+      "severity": "Error",
+      "name": "hullShaderRequiresTessLevelInner",
+      "message": "'HullShader' requires attribute 'TessLevelInner'.",
+      "line": 2894,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 50052,
+      "severity": "Error",
+      "name": "hullShaderRequiresTessLevelOuter",
+      "message": "'HullShader' requires attribute 'TessLevelOuter'.",
+      "line": 2899,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 50053,
+      "severity": "Error",
+      "name": "invalidTessellationDomian",
+      "message": "'Domain' should be either 'triangles' or 'quads'.",
+      "line": 2905,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 50053,
+      "severity": "Error",
+      "name": "invalidTessellationOutputTopology",
+      "message": "'OutputTopology' must be one of: 'point', 'line', 'triangle_cw', or 'triangle_ccw'.",
+      "line": 2910,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 50053,
+      "severity": "Error",
+      "name": "invalidTessellationPartitioning",
+      "message": "'Partitioning' must be one of: 'integer', 'pow2', 'fractional_even', or 'fractional_odd'.",
+      "line": 2915,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 50053,
+      "severity": "Error",
+      "name": "invalidTessellationDomain",
+      "message": "'Domain' should be either 'triangles' or 'quads'.",
+      "line": 2920,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 50060,
+      "severity": "Error",
+      "name": "invalidMeshStageOutputTopology",
+      "message": "Invalid mesh stage output topology '$0' for target '$1', must be one of: $2",
+      "line": 2926,
+      "param_count": 3,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-entry-point-decorations.cpp",
+          "line": 87,
+          "statement": "Diagnostics::invalidMeshStageOutputTopology, decoration->getTopology()->getStringSlice(), TypeTextUtil::getCompileTargetName(SlangCompileTarget(m_target)), validTopologies);",
+          "context_before": [
+            "        IROutputTopologyDecoration* decoration,",
+            "        String validTopologies)",
+            "    {",
+            "        m_sink->diagnose(",
+            "            decoration,"
+          ],
+          "context_after": [
+            "            decoration->getTopology()->getStringSlice(),",
+            "            TypeTextUtil::getCompileTargetName(SlangCompileTarget(m_target)),",
+            "            validTopologies);",
+            "    }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 50082,
+      "severity": "Error",
+      "name": "importingFromPackedBufferUnsupported",
+      "message": "importing type '$0' from PackedBuffer is not supported by the GLSL backend.",
+      "line": 2932,
+      "param_count": 1,
+      "call_sites": []
+    },
+    {
+      "id": 51090,
+      "severity": "Error",
+      "name": "cannotGenerateCodeForExternComponentType",
+      "message": "cannot generate code for extern component type '$0'.",
+      "line": 2937,
+      "param_count": 1,
+      "call_sites": []
+    },
+    {
+      "id": 51091,
+      "severity": "Error",
+      "name": "typeCannotBePlacedInATexture",
+      "message": "type '$0' cannot be placed in a texture.",
+      "line": 2942,
+      "param_count": 1,
+      "call_sites": []
+    },
+    {
+      "id": 51092,
+      "severity": "Error",
+      "name": "stageDoesntHaveInputWorld",
+      "message": "'$0' doesn't appear to have any input world",
+      "line": 2943,
+      "param_count": 1,
+      "call_sites": []
+    },
+    {
+      "id": 50100,
+      "severity": "Error",
+      "name": "noTypeConformancesFoundForInterface",
+      "message": "No type conformances are found for interface '$0'. Code generation for current target requires at least one implementation type present in the linkage.",
+      "line": 2945,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-typeflow-specialize.cpp",
+          "line": 1521,
+          "statement": "Diagnostics::noTypeConformancesFoundForInterface, interfaceType);",
+          "context_before": [
+            "            }",
+            "            else",
+            "            {",
+            "                sink->diagnose(",
+            "                    inst,"
+          ],
+          "context_after": [
+            "                    interfaceType);",
+            "                module->getContainerPool().free(&tables);",
+            "                return none();",
+            "            }",
+            "        }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-ir-typeflow-specialize.cpp",
+          "line": 1767,
+          "statement": "Diagnostics::noTypeConformancesFoundForInterface, interfaceType);",
+          "context_before": [
+            "                        }",
+            "                        else",
+            "                        {",
+            "                            sink->diagnose(",
+            "                                loadInst,"
+          ],
+          "context_after": [
+            "                                interfaceType);",
+            "                            module->getContainerPool().free(&tables);",
+            "                            return none();",
+            "                        }",
+            "                    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 50101,
+      "severity": "Error",
+      "name": "dynamicDispatchOnPotentiallyUninitializedExistential",
+      "message": "Cannot dynamically dispatch on potentially uninitialized interface object '$0'.",
+      "line": 2951,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-typeflow-specialize.cpp",
+          "line": 2526,
+          "statement": "Diagnostics::dynamicDispatchOnPotentiallyUninitializedExistential, uninitElement->getOperand(0));",
+          "context_before": [
+            "            auto tableSet = taggedUnion->getWitnessTableSet();",
+            "            if (auto uninitElement = tableSet->tryGetUninitializedElement())",
+            "            {",
+            "                sink->diagnose(",
+            "                    inst->sourceLoc,"
+          ],
+          "context_after": [
+            "                    uninitElement->getOperand(0));",
+            "",
+            "                return none(); // We'll return none so that the analysis doesn't",
+            "                               // crash early, before we can detect the error count",
+            "                               // and exit gracefully."
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 52000,
+      "severity": "Error",
+      "name": "multiLevelBreakUnsupported",
+      "message": "control flow appears to require multi-level `break`, which Slang does not yet support",
+      "line": 2968,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-restructure.cpp",
+          "line": 267,
+          "statement": "ctx->getSink()->diagnose(block, Diagnostics::multiLevelBreakUnsupported);",
+          "context_before": [
+            "            // because if it *isn't* we currently can't generate code.",
+            "            //",
+            "            if (block != registeredBlock[(int)ll->op])",
+            "            {",
+            "                if (ctx->getSink())"
+          ],
+          "context_after": [
+            "            }",
+            "",
+            "            // Now we need to create a structured `break` or `continue` operation",
+            "            // to match the operation associated with the target.",
+            "            //"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 52001,
+      "severity": "Warning",
+      "name": "dxilNotFound",
+      "message": "dxil shared library not found, so 'dxc' output cannot be signed! Shader code will not be runnable in non-development environments.",
+      "line": 2974,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check.cpp",
+          "line": 32,
+          "statement": "m_sink->diagnose(SourceLoc(), Diagnostics::dxilNotFound);",
+          "context_before": [
+            "        if (SLANG_FAILED(res) && m_sink)",
+            "        {",
+            "            String filename = Path::getFileNameWithoutExt(path);",
+            "            if (filename == \"dxil\")",
+            "            {"
+          ],
+          "context_after": [
+            "            }",
+            "            else",
+            "            {",
+            "                m_sink->diagnose(SourceLoc(), Diagnostics::noteFailedToLoadDynamicLibrary, path);",
+            "            }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 52002,
+      "severity": "Error",
+      "name": "passThroughCompilerNotFound",
+      "message": "could not find a suitable pass-through compiler for '$0'.",
+      "line": 2981,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-artifact-output-util.cpp",
+          "line": 65,
+          "statement": "sink->diagnose(SourceLoc(), Diagnostics::passThroughCompilerNotFound, compilerName);",
+          "context_before": [
+            "    {",
+            "        if (sink)",
+            "        {",
+            "            auto compilerName =",
+            "                TypeTextUtil::getPassThroughAsHumanText((SlangPassThrough)downstreamCompiler);"
+          ],
+          "context_after": [
+            "        }",
+            "        return SLANG_FAIL;",
+            "    }",
+            "    auto downstreamStartTime = std::chrono::high_resolution_clock::now();",
+            "    SLANG_RETURN_ON_FAIL(compiler->convert(artifact, assemblyDesc, outArtifact));"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-code-gen.cpp",
+          "line": 403,
+          "statement": "sink->diagnose(SourceLoc(), Diagnostics::passThroughCompilerNotFound, compilerName);",
+          "context_before": [
+            "    // Get the required downstream compiler",
+            "    IDownstreamCompiler* compiler = session->getOrLoadDownstreamCompiler(compilerType, sink);",
+            "    if (!compiler)",
+            "    {",
+            "        auto compilerName = TypeTextUtil::getPassThroughAsHumanText((SlangPassThrough)compilerType);"
+          ],
+          "context_after": [
+            "        return SLANG_FAIL;",
+            "    }",
+            "",
+            "    Dictionary<String, String> preprocessorDefinitions;",
+            "    List<String> includePaths;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 52003,
+      "severity": "Error",
+      "name": "cannotDisassemble",
+      "message": "cannot disassemble '$0'.",
+      "line": 2986,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 3261,
+          "statement": "m_sink->diagnose(arg.loc, Diagnostics::cannotDisassemble, fileName.value);",
+          "context_before": [
+            "                if (module)",
+            "                {",
+            "                    ComPtr<slang::IBlob> disassemblyBlob;",
+            "                    if (SLANG_FAILED(module->disassemble(disassemblyBlob.writeRef())))",
+            "                    {"
+          ],
+          "context_after": [
+            "                        return SLANG_FAIL;",
+            "                    }",
+            "                    else",
+            "                    {",
+            "                        // success, print out the disassembly in a way that slang-test can read"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-artifact-output-util.cpp",
+          "line": 37,
+          "statement": "Diagnostics::cannotDisassemble, ArtifactDescUtil::getText(desc));",
+          "context_before": [
+            "    {",
+            "        if (sink)",
+            "        {",
+            "            sink->diagnose(",
+            "                SourceLoc(),"
+          ],
+          "context_after": [
+            "                ArtifactDescUtil::getText(desc));",
+            "        }",
+            "        return SLANG_FAIL;",
+            "    }",
+            "    // Get the downstream disassembler that can be used for this target"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 52004,
+      "severity": "Error",
+      "name": "unableToWriteFile",
+      "message": "unable to write file '$0'",
+      "line": 2988,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-end-to-end-request.cpp",
+          "line": 1594,
+          "statement": "getSink()->diagnose(SourceLoc(), Diagnostics::unableToWriteFile, reflectionPath);",
+          "context_before": [
+            "            auto builder = bufferWriter.getBuilder();",
+            "            StdWriters::getOut().write(builder.getBuffer(), builder.getLength());",
+            "        }",
+            "        else if (SLANG_FAILED(File::writeAllText(reflectionPath, bufferWriter.getBuilder())))",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "    }",
+            "",
+            "    return res;",
+            "}"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 52005,
+      "severity": "Error",
+      "name": "unableToReadFile",
+      "message": "unable to read file '$0'",
+      "line": 2989,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-global-session.cpp",
+          "line": 856,
+          "statement": "sink.diagnose(SourceLoc{}, Diagnostics::unableToReadFile, path.stringValue);",
+          "context_before": [
+            "                SourceLoc{},",
+            "                &sink,",
+            "                artifact.writeRef());",
+            "            if (SLANG_FAILED(result))",
+            "            {"
+          ],
+          "context_after": [
+            "                return result;",
+            "            }",
+            "            linkage->m_libModules.add(artifact);",
+            "        }",
+            "    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-global-session.cpp",
+          "line": 1073,
+          "statement": "sink.diagnose(SourceLoc{}, Diagnostics::unableToReadFile, jsonPath);",
+          "context_before": [
+            "",
+            "        String contents;",
+            "        const auto readRes = File::readAllText(jsonPath, contents);",
+            "        if (SLANG_FAILED(readRes))",
+            "        {"
+          ],
+          "context_after": [
+            "            return readRes;",
+            "        }",
+            "        const auto pathInfo = PathInfo::makeFromString(jsonPath);",
+            "        const auto sourceFile = sourceManager->createSourceFileWithString(pathInfo, contents);",
+            "        const auto sourceView = sourceManager->createSourceView(sourceFile, nullptr, SourceLoc());"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 2033,
+          "statement": "m_sink->diagnose(reproName.loc, Diagnostics::unableToReadFile, reproName.value);",
+          "context_before": [
+            "    List<uint8_t> buffer;",
+            "    {",
+            "        const Result res = ReproUtil::loadState(reproName.value, m_sink, buffer);",
+            "        if (SLANG_FAILED(res))",
+            "        {"
+          ],
+          "context_after": [
+            "            return res;",
+            "        }",
+            "    }",
+            "",
+            "    auto requestState = ReproUtil::getRequest(buffer);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-options.cpp",
+          "line": 2151,
+          "statement": "m_sink->diagnose(reproName.loc, Diagnostics::unableToReadFile, reproName.value);",
+          "context_before": [
+            "    CommandLineArg reproName;",
+            "    SLANG_RETURN_ON_FAIL(m_reader.expectArg(reproName));",
+            "",
+            "    if (SLANG_FAILED(_loadRepro(reproName.value, m_sink, m_requestImpl)))",
+            "    {"
+          ],
+          "context_after": [
+            "        return SLANG_FAIL;",
+            "    }",
+            "",
+            "    m_hasLoadedRepro = true;",
+            "    return SLANG_OK;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 52006,
+      "severity": "Error",
+      "name": "compilerNotDefinedForTransition",
+      "message": "compiler not defined for transition '$0' to '$1'.",
+      "line": 2991,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-code-gen.cpp",
+          "line": 389,
+          "statement": "Diagnostics::compilerNotDefinedForTransition, sourceName, targetName);",
+          "context_before": [
+            "            auto sourceName = TypeTextUtil::getCompileTargetName(SlangCompileTarget(sourceTarget));",
+            "            auto targetName = TypeTextUtil::getCompileTargetName(SlangCompileTarget(target));",
+            "",
+            "            sink->diagnose(",
+            "                SourceLoc(),"
+          ],
+          "context_after": [
+            "                sourceName,",
+            "                targetName);",
+            "            return SLANG_FAIL;",
+            "        }",
+            "    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 52007,
+      "severity": "Error",
+      "name": "typeCannotBeUsedInDynamicDispatch",
+      "message": "failed to generate dynamic dispatch code for type '$0'.",
+      "line": 2997,
+      "param_count": 1,
+      "call_sites": []
+    },
+    {
+      "id": 52008,
+      "severity": "Error",
+      "name": "dynamicDispatchOnSpecializeOnlyInterface",
+      "message": "type '$0' is marked for specialization only, but dynamic dispatch is needed for the call.",
+      "line": 3002,
+      "param_count": 1,
+      "call_sites": []
+    },
+    {
+      "id": 52009,
+      "severity": "Error",
+      "name": "cannotEmitReflectionWithoutTarget",
+      "message": "cannot emit reflection JSON; no compilation target available",
+      "line": 3007,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-end-to-end-request.cpp",
+          "line": 1582,
+          "statement": "getSink()->diagnose(SourceLoc(), Diagnostics::cannotEmitReflectionWithoutTarget);",
+          "context_before": [
+            "    if (reflectionPath.getLength() != 0)",
+            "    {",
+            "        auto reflection = this->getReflection();",
+            "        if (!reflection)",
+            "        {"
+          ],
+          "context_after": [
+            "            return SLANG_FAIL;",
+            "        }",
+            "        auto bufferWriter = PrettyWriter();",
+            "        emitReflectionJSON(this, reflection, bufferWriter);",
+            "        if (reflectionPath == \"-\")"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 53001,
+      "severity": "Error",
+      "name": "invalidTypeMarshallingForImportedDLLSymbol",
+      "message": "invalid type marshalling in imported func $0.",
+      "line": 3012,
+      "param_count": 1,
+      "call_sites": []
+    },
+    {
+      "id": 54001,
+      "severity": "Warning",
+      "name": "meshOutputMustBeOut",
+      "message": "Mesh shader outputs must be declared with 'out'.",
+      "line": 3018,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 9696,
+          "statement": "getSink()->diagnose(varDecl, Diagnostics::meshOutputMustBeOut);",
+          "context_before": [
+            "    }",
+            "    // HLSL requires an 'out' modifier here, but since we don't operate",
+            "    // under such strict compatability we can just not warn here.",
+            "    if (!varDecl->findModifier<OutModifier>() && modifier)",
+            "    {"
+          ],
+          "context_after": [
+            "    }",
+            "",
+            "    //",
+            "    // If necessary, convert to our typed representation",
+            "    //"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 54002,
+      "severity": "Error",
+      "name": "meshOutputMustBeArray",
+      "message": "HLSL style mesh shader outputs must be arrays",
+      "line": 3019,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 9715,
+          "statement": "getSink()->diagnose(varDecl, Diagnostics::meshOutputMustBeArray);",
+          "context_before": [
+            "        return;",
+            "    }",
+            "    auto indexExpr = as<IndexExpr>(varDecl->type.exp);",
+            "    if (!indexExpr)",
+            "    {"
+          ],
+          "context_after": [
+            "        varDecl->type.type = m_astBuilder->getErrorType();",
+            "        return;",
+            "    }",
+            "    if (indexExpr->indexExprs.getCount() != 1)",
+            "    {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 54003,
+      "severity": "Error",
+      "name": "meshOutputArrayMustHaveSize",
+      "message": "HLSL style mesh shader output arrays must have a length specified",
+      "line": 3020,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 9721,
+          "statement": "getSink()->diagnose(varDecl, Diagnostics::meshOutputArrayMustHaveSize);",
+          "context_before": [
+            "        varDecl->type.type = m_astBuilder->getErrorType();",
+            "        return;",
+            "    }",
+            "    if (indexExpr->indexExprs.getCount() != 1)",
+            "    {"
+          ],
+          "context_after": [
+            "        varDecl->type.type = m_astBuilder->getErrorType();",
+            "        return;",
+            "    }",
+            "    auto base = ExpectAType(indexExpr->baseExpression);",
+            "    auto index = CheckIntegerConstantExpression("
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 54004,
+      "severity": "Warning",
+      "name": "unnecessaryHLSLMeshOutputModifier",
+      "message": "Unnecessary HLSL style mesh shader output modifier",
+      "line": 3025,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-decl.cpp",
+          "line": 9708,
+          "statement": "getSink()->diagnose(modifier, Diagnostics::unnecessaryHLSLMeshOutputModifier);",
+          "context_before": [
+            "    {",
+            "        return;",
+            "    }",
+            "    if (meshOutputType)",
+            "    {"
+          ],
+          "context_after": [
+            "        varDecl->type.type = m_astBuilder->getErrorType();",
+            "        return;",
+            "    }",
+            "    auto indexExpr = as<IndexExpr>(varDecl->type.exp);",
+            "    if (!indexExpr)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 55101,
+      "severity": "Error",
+      "name": "invalidTorchKernelReturnType",
+      "message": "'$0' is not a valid return type for a pytorch kernel function.",
+      "line": 3031,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-pytorch-cpp-binding.cpp",
+          "line": 381,
+          "statement": "Diagnostics::invalidTorchKernelReturnType, func->getResultType());",
+          "context_before": [
+            "    auto hostReturnType = translateToTupleType(builder, func->getResultType());",
+            "    if (!hostReturnType)",
+            "    {",
+            "        sink->diagnose(",
+            "            func->sourceLoc,"
+          ],
+          "context_after": [
+            "            func->getResultType());",
+            "        return;",
+            "    }",
+            "    List<IRType*> hostParamTypes;",
+            "    auto funcType = as<IRFuncType>(func->getDataType());"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 55102,
+      "severity": "Error",
+      "name": "invalidTorchKernelParamType",
+      "message": "'$0' is not a valid parameter type for a pytorch kernel function.",
+      "line": 3036,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-pytorch-cpp-binding.cpp",
+          "line": 410,
+          "statement": "sink->diagnose(param->sourceLoc, Diagnostics::invalidTorchKernelParamType, paramType);",
+          "context_before": [
+            "    {",
+            "        auto paramType = param->getFullType();",
+            "        auto newParamType = translateToTupleType(builder, paramType);",
+            "        if (!newParamType)",
+            "        {"
+          ],
+          "context_after": [
+            "            return;",
+            "        }",
+            "        auto newParam = builder.emitParam(newParamType);",
+            "        param->transferDecorationsTo(newParam);",
+            "        newParams.add(newParam);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 55200,
+      "severity": "Error",
+      "name": "unsupportedBuiltinType",
+      "message": "'$0' is not a supported builtin type for the target.",
+      "line": 3042,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-check-unsupported-inst.cpp",
+          "line": 40,
+          "statement": "Diagnostics::unsupportedBuiltinType, globalInst);",
+          "context_before": [
+            "                if (!as<IRBasicType>(globalInst->getOperand(0)) &&",
+            "                    !as<IRPackedFloatType>(globalInst->getOperand(0)))",
+            "                {",
+            "                    sink->diagnose(",
+            "                        findFirstUseLoc(globalInst),"
+          ],
+          "context_after": [
+            "                        globalInst);",
+            "                }",
+            "                break;",
+            "            }",
+            "        case kIROp_Func:"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 55201,
+      "severity": "Error",
+      "name": "unsupportedRecursion",
+      "message": "recursion detected in call to '$0', but the current code generation target does not allow recursion.",
+      "line": 3047,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-check-recursion.cpp",
+          "line": 85,
+          "statement": "sink->diagnose(callInst, Diagnostics::unsupportedRecursion, callee);",
+          "context_before": [
+            "            auto callee = as<IRFunc>(callInst->getCallee());",
+            "            if (!callee)",
+            "                continue;",
+            "            if (!callStack.add(callee))",
+            "            {"
+          ],
+          "context_after": [
+            "                return false;",
+            "            }",
+            "            if (checkedFuncs.add(callee))",
+            "                checkFunctionRecursionImpl(checkedFuncs, callStack, callee, sink);",
+            "            callStack.remove(callee);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 55202,
+      "severity": "Error",
+      "name": "systemValueAttributeNotSupported",
+      "message": "system value semantic '$0' is not supported for the current target.",
+      "line": 3053,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-legalize-varying-params.cpp",
+          "line": 2969,
+          "statement": "Diagnostics::systemValueAttributeNotSupported, semanticName);",
+          "context_before": [
+            "",
+            "    void reportUnsupportedSystemAttribute(IRInst* param, String semanticName)",
+            "    {",
+            "        m_sink->diagnose(",
+            "            param->sourceLoc,"
+          ],
+          "context_after": [
+            "            semanticName);",
+            "    }",
+            "",
+            "    template<LayoutResourceKind K>",
+            "    void ensureStructHasUserSemantic(IRStructType* structType, IRVarLayout* varLayout)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 55203,
+      "severity": "Error",
+      "name": "systemValueTypeIncompatible",
+      "message": "system value semantic '$0' should have type '$1' or be convertible to type '$1'.",
+      "line": 3058,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-legalize-varying-params.cpp",
+          "line": 2544,
+          "statement": "Diagnostics::systemValueTypeIncompatible, semanticName, typeNameSB.produceString());",
+          "context_before": [
+            "                {",
+            "                    StringBuilder typeNameSB;",
+            "                    getTypeNameHint(typeNameSB, permittedType);",
+            "                    m_sink->diagnose(",
+            "                        var->sourceLoc,"
+          ],
+          "context_after": [
+            "                        semanticName,",
+            "                        typeNameSB.produceString());",
+            "                }",
+            "            }",
+            "        }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 55204,
+      "severity": "Error",
+      "name": "unsupportedTargetIntrinsic",
+      "message": "intrinsic operation '$0' is not supported for the current target.",
+      "line": 3063,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-emit-hlsl.cpp",
+          "line": 601,
+          "statement": "Diagnostics::unsupportedTargetIntrinsic, \"floating point atomic operation\");",
+          "context_before": [
+            "{",
+            "    auto diagnoseFloatAtommic = [&]()",
+            "    {",
+            "        getSink()->diagnose(",
+            "            inst,"
+          ],
+          "context_after": [
+            "            \"floating point atomic operation\");",
+            "    };",
+            "    switch (inst->getOp())",
+            "    {",
+            "    case kIROp_AtomicLoad:"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-emit-metal.cpp",
+          "line": 340,
+          "statement": "Diagnostics::unsupportedTargetIntrinsic, \"atomic operation on non-scalar texture\");",
+          "context_before": [
+            "    {",
+            "        if (as<IRVectorType>(textureType->getElementType()))",
+            "        {",
+            "            getSink()->diagnose(",
+            "                inst,"
+          ],
+          "context_after": [
+            "                \"atomic operation on non-scalar texture\");",
+            "        }",
+            "    }",
+            "    bool isArray = resourceType && getIntVal(resourceType->getIsArrayInst()) != 0;",
+            "    if (isArray)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-emit-metal.cpp",
+          "line": 364,
+          "statement": "Diagnostics::unsupportedTargetIntrinsic, \"invalid image coordinate for atomic operation\");",
+          "context_before": [
+            "        }",
+            "        else",
+            "        {",
+            "            getSink()->diagnose(",
+            "                inst,"
+          ],
+          "context_after": [
+            "                \"invalid image coordinate for atomic operation\");",
+            "        }",
+            "    }",
+            "    else",
+            "    {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-emit-metal.cpp",
+          "line": 444,
+          "statement": "Diagnostics::unsupportedTargetIntrinsic, \"Unsupported floating point atomic operation\");",
+          "context_before": [
+            "    };",
+            "    auto diagnoseFloatAtomic = [&]()",
+            "    {",
+            "        getSink()->diagnose(",
+            "            inst,"
+          ],
+          "context_after": [
+            "            \"Unsupported floating point atomic operation\");",
+            "    };",
+            "    switch (inst->getOp())",
+            "    {",
+            "    case kIROp_Discard:"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 55205,
+      "severity": "Error",
+      "name": "unsupportedSpecializationConstantForNumThreads",
+      "message": "Specialization constants are not supported in the 'numthreads' attribute for the current target.",
+      "line": 3068,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-legalize-varying-params.cpp",
+          "line": 2231,
+          "statement": "Diagnostics::unsupportedSpecializationConstantForNumThreads);",
+          "context_before": [
+            "",
+            "        if (!groupExtents)",
+            "        {",
+            "            m_sink->diagnose(",
+            "                m_entryPointFunc,"
+          ],
+          "context_after": [
+            "",
+            "            // Fill in placeholder values.",
+            "            static const int kAxisCount = 3;",
+            "            IRInst* groupExtentAlongAxis[kAxisCount] = {};",
+            "            for (int axis = 0; axis < kAxisCount; axis++)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-ir-legalize-varying-params.cpp",
+          "line": 4210,
+          "statement": "Diagnostics::unsupportedSpecializationConstantForNumThreads);",
+          "context_before": [
+            "                emitCalcGroupExtents(svBuilder, entryPoint.entryPointFunc, uint3Type);",
+            "            if (!computeExtent)",
+            "            {",
+            "                m_sink->diagnose(",
+            "                    entryPoint.entryPointFunc,"
+          ],
+          "context_after": [
+            "",
+            "                // Fill in placeholder values.",
+            "                static const int kAxisCount = 3;",
+            "                IRInst* groupExtentAlongAxis[kAxisCount] = {};",
+            "                for (int axis = 0; axis < kAxisCount; axis++)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-emit-c-like.cpp",
+          "line": 306,
+          "statement": "getSink()->diagnose(decor, Diagnostics::unsupportedSpecializationConstantForNumThreads);",
+          "context_before": [
+            "",
+            "    for (auto id : specializationConstantIds)",
+            "    {",
+            "        if (id >= 0)",
+            "        {"
+          ],
+          "context_after": [
+            "            break;",
+            "        }",
+            "    }",
+            "    return decor;",
+            "}"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 56001,
+      "severity": "Error",
+      "name": "unableToAutoMapCUDATypeToHostType",
+      "message": "Could not automatically map '$0' to a host type. Automatic binding generation failed for '$1'",
+      "line": 3074,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-pytorch-cpp-binding.cpp",
+          "line": 536,
+          "statement": "sink->diagnose(type->sourceLoc, Diagnostics::unableToAutoMapCUDATypeToHostType, type, func);",
+          "context_before": [
+            "    default:",
+            "        break;",
+            "    }",
+            "",
+            "    if (sink)"
+          ],
+          "context_after": [
+            "    return nullptr;",
+            "}",
+            "",
+            "// Propagates name hints through field extracts.",
+            "IRInst* propagateNameHint(IRBuilder* builder, IRFieldExtract* inst)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 56002,
+      "severity": "Error",
+      "name": "attemptToQuerySizeOfUnsizedArray",
+      "message": "cannot obtain the size of an unsized array.",
+      "line": 3079,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-check-unsupported-inst.cpp",
+          "line": 19,
+          "statement": "sink->diagnose(inst, Diagnostics::attemptToQuerySizeOfUnsizedArray);",
+          "context_before": [
+            "        for (auto inst : block->getChildren())",
+            "        {",
+            "            switch (inst->getOp())",
+            "            {",
+            "            case kIROp_GetArrayLength:"
+          ],
+          "context_after": [
+            "                break;",
+            "            }",
+            "        }",
+            "    }",
+            "}"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 56003,
+      "severity": "Fatal",
+      "name": "useOfUninitializedOpaqueHandle",
+      "message": "use of uninitialized opaque handle '$0'.",
+      "line": 3085,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-legalize-types.cpp",
+          "line": 1978,
+          "statement": "context->m_sink->diagnose(loc, Diagnostics::useOfUninitializedOpaqueHandle, opaqueType);",
+          "context_before": [
+            "        SourceLoc loc = findBestSourceLocFromUses(inst);",
+            "",
+            "        if (!loc.isValid())",
+            "            loc = getDiagnosticPos(opaqueType);",
+            ""
+          ],
+          "context_after": [
+            "    }",
+            "",
+            "    // It is not ideal, but this pass legalizes an undefined value to... nothing.",
+            "    //",
+            "    // As a result, in any context that tries to consume a `LegalVal` based on its type,"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 56100,
+      "severity": "Error",
+      "name": "constantBufferInParameterBlockNotAllowedOnMetal",
+      "message": "nested 'ConstantBuffer' inside a 'ParameterBlock' is not supported on Metal, use 'ParameterBlock' instead.",
+      "line": 3088,
+      "param_count": 0,
+      "call_sites": []
+    },
+    {
+      "id": 56101,
+      "severity": "Error",
+      "name": "resourceTypesInConstantBufferInParameterBlockNotAllowedOnMetal",
+      "message": "nesting a 'ConstantBuffer' containing resource types inside a 'ParameterBlock' is not supported on Metal, please use 'ParameterBlock' instead.",
+      "line": 3094,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-check-shader-parameter-type.cpp",
+          "line": 90,
+          "statement": "Diagnostics::resourceTypesInConstantBufferInParameterBlockNotAllowedOnMetal);",
+          "context_before": [
+            "            }",
+            "",
+            "            if (!foundUseSite)",
+            "                sink->diagnose(",
+            "                    inst,"
+          ],
+          "context_after": [
+            "        }",
+            "    }",
+            "}",
+            "void checkForInvalidShaderParameterType(",
+            "    IRModule* module,"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 56102,
+      "severity": "Error",
+      "name": "divisionByMatrixNotSupported",
+      "message": "division by matrix is not supported for Metal and WGSL targets.",
+      "line": 3100,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-legalize-binary-operator.cpp",
+          "line": 99,
+          "statement": "sink->diagnose(inst, Diagnostics::divisionByMatrixNotSupported);",
+          "context_before": [
+            "    builder.setInsertBefore(inst);",
+            "",
+            "    // Division by matrix is not supported on Metal and WGSL.",
+            "    if (isDivisionByMatrix(inst))",
+            "    {"
+          ],
+          "context_after": [
+            "        return;",
+            "    }",
+            "",
+            "    // For shifts, ensure that the shift amount is unsigned, as required by",
+            "    // https://www.w3.org/TR/WGSL/#bit-expr."
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 56103,
+      "severity": "Error",
+      "name": "int16NotSupportedInWGSL",
+      "message": "16-bit integer type '$0' is not supported by the WGSL backend.",
+      "line": 3105,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-emit-wgsl.cpp",
+          "line": 525,
+          "statement": "diagnoseOnce(SourceLoc(), Diagnostics::int16NotSupportedInWGSL, \"int16_t\");",
+          "context_before": [
+            "        {",
+            "            m_writer->emit(getDefaultBuiltinTypeName(type->getOp()));",
+            "            return;",
+            "        }",
+            "    case kIROp_Int16Type:"
+          ],
+          "context_after": [
+            "        return;",
+            "    case kIROp_UInt16Type:",
+            "        diagnoseOnce(SourceLoc(), Diagnostics::int16NotSupportedInWGSL, \"uint16_t\");",
+            "        return;",
+            "    case kIROp_Int64Type:"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-emit-wgsl.cpp",
+          "line": 528,
+          "statement": "diagnoseOnce(SourceLoc(), Diagnostics::int16NotSupportedInWGSL, \"uint16_t\");",
+          "context_before": [
+            "        }",
+            "    case kIROp_Int16Type:",
+            "        diagnoseOnce(SourceLoc(), Diagnostics::int16NotSupportedInWGSL, \"int16_t\");",
+            "        return;",
+            "    case kIROp_UInt16Type:"
+          ],
+          "context_after": [
+            "        return;",
+            "    case kIROp_Int64Type:",
+            "    case kIROp_IntPtrType:",
+            "        m_writer->emit(\"i64\");",
+            "        return;"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-emit-wgsl.cpp",
+          "line": 989,
+          "statement": "diagnoseOnce(SourceLoc(), Diagnostics::int16NotSupportedInWGSL, \"int16_t\");",
+          "context_before": [
+            "                        SLANG_UNEXPECTED(\"8 bit integer value emitted\");",
+            "                        break;",
+            "                    }",
+            "                case BaseType::Int16:",
+            "                    {"
+          ],
+          "context_after": [
+            "                        break;",
+            "                    }",
+            "                case BaseType::UInt16:",
+            "                    {",
+            "                        diagnoseOnce(SourceLoc(), Diagnostics::int16NotSupportedInWGSL, \"uint16_t\");"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-emit-wgsl.cpp",
+          "line": 994,
+          "statement": "diagnoseOnce(SourceLoc(), Diagnostics::int16NotSupportedInWGSL, \"uint16_t\");",
+          "context_before": [
+            "                        diagnoseOnce(SourceLoc(), Diagnostics::int16NotSupportedInWGSL, \"int16_t\");",
+            "                        break;",
+            "                    }",
+            "                case BaseType::UInt16:",
+            "                    {"
+          ],
+          "context_after": [
+            "                        break;",
+            "                    }",
+            "                case BaseType::Int:",
+            "                    {",
+            "                        m_writer->emit(\"i32(\");"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 56104,
+      "severity": "Error",
+      "name": "assignToRefNotSupported",
+      "message": "whole struct must be assiged to mesh output at once for Metal target.",
+      "line": 3110,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-metal-legalize.cpp",
+          "line": 228,
+          "statement": "sink->diagnose(getDiagnosticPos(inst), Diagnostics::assignToRefNotSupported);",
+          "context_before": [
+            "    case kIROp_Geq:",
+            "    case kIROp_Leq:",
+            "        legalizeBinaryOp(inst, sink, targetProgram);",
+            "        break;",
+            "    case kIROp_MeshOutputRef:"
+          ],
+          "context_after": [
+            "        break;",
+            "    case kIROp_MetalCastToDepthTexture:",
+            "        {",
+            "            // If the operand is already a depth texture, don't do anything.",
+            "            auto textureType = as<IRTextureTypeBase>(inst->getOperand(0)->getDataType());"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 57001,
+      "severity": "Warning",
+      "name": "spirvOptFailed",
+      "message": "spirv-opt failed. $0",
+      "line": 3116,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-emit.cpp",
+          "line": 2634,
+          "statement": "codeGenContext->getSink()->diagnose(SourceLoc(), Diagnostics::spirvOptFailed, optErr);",
+          "context_before": [
+            "",
+            "#if 0",
+            "    String optErr;",
+            "    if (SLANG_FAILED(optimizeSPIRV(spirv, optErr, outSpirv)))",
+            "    {"
+          ],
+          "context_after": [
+            "        spirv = _Move(outSpirv);",
+            "    }",
+            "#endif",
+            "",
+            "    artifact->addRepresentationUnknown(ListBlob::moveCreate(spirv));"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 57002,
+      "severity": "Error",
+      "name": "unknownPatchConstantParameter",
+      "message": "unknown patch constant parameter '$0'.",
+      "line": 3117,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-glsl-legalize.cpp",
+          "line": 1231,
+          "statement": "Diagnostics::unknownPatchConstantParameter, param);",
+          "context_before": [
+            "        {",
+            "            if (!outputPatchArg)",
+            "            {",
+            "                context->getSink()->diagnose(",
+            "                    param->sourceLoc,"
+          ],
+          "context_after": [
+            "                    param);",
+            "                return;",
+            "            }",
+            "            param->setFullType(outputPatchArg->getDataType());",
+            "            args.add(outputPatchArg);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-ir-glsl-legalize.cpp",
+          "line": 1244,
+          "statement": "Diagnostics::unknownPatchConstantParameter, param);",
+          "context_before": [
+            "        {",
+            "            if (!inputPatchArg)",
+            "            {",
+            "                context->getSink()->diagnose(",
+            "                    param->sourceLoc,"
+          ],
+          "context_after": [
+            "                    param);",
+            "                return;",
+            "            }",
+            "            auto arrayType = builder.getArrayType(",
+            "                inputPatchType->getElementType(),"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-ir-glsl-legalize.cpp",
+          "line": 1261,
+          "statement": "Diagnostics::unknownPatchConstantParameter, param);",
+          "context_before": [
+            "            auto layout = findVarLayout(param);",
+            "            if (!layout)",
+            "            {",
+            "                context->getSink()->diagnose(",
+            "                    param->sourceLoc,"
+          ],
+          "context_after": [
+            "                    param);",
+            "                return;",
+            "            }",
+            "            auto sysAttr = layout->findSystemValueSemanticAttr();",
+            "            if (!sysAttr)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-ir-glsl-legalize.cpp",
+          "line": 1270,
+          "statement": "Diagnostics::unknownPatchConstantParameter, param);",
+          "context_before": [
+            "            auto sysAttr = layout->findSystemValueSemanticAttr();",
+            "            if (!sysAttr)",
+            "            {",
+            "                context->getSink()->diagnose(",
+            "                    param->sourceLoc,"
+          ],
+          "context_after": [
+            "                    param);",
+            "                return;",
+            "            }",
+            "            if (sysAttr->getName().caseInsensitiveEquals(toSlice(\"SV_OutputControlPointID\")))",
+            "            {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-ir-glsl-legalize.cpp",
+          "line": 1288,
+          "statement": "Diagnostics::unknownPatchConstantParameter, param);",
+          "context_before": [
+            "            }",
+            "            else",
+            "            {",
+            "                context->getSink()->diagnose(",
+            "                    param->sourceLoc,"
+          ],
+          "context_after": [
+            "                    param);",
+            "                return;",
+            "            }",
+            "        }",
+            "    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 57003,
+      "severity": "Error",
+      "name": "unknownTessPartitioning",
+      "message": "unknown tessellation partitioning '$0'.",
+      "line": 3118,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-emit-spirv.cpp",
+          "line": 5637,
+          "statement": "Diagnostics::unknownTessPartitioning, arg);",
+          "context_before": [
+            "                            else if (arg.caseInsensitiveEquals(toSlice(\"fractional_odd\")))",
+            "                                mode = SpvExecutionModeSpacingFractionalOdd;",
+            "                            else",
+            "                                m_sink->diagnose(",
+            "                                    partitioningDecor,"
+          ],
+          "context_after": [
+            "                                    arg);",
+            "                        }",
+            "                        requireSPIRVExecutionMode(nullptr, getIRInstSpvID(entryPoint), mode);",
+            "                    }",
+            "                    break;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 57004,
+      "severity": "Error",
+      "name": "outputSpvIsEmpty",
+      "message": "output SPIR-V contains no exported symbols. Please make sure to specify at least one entrypoint.",
+      "line": 3119,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-emit-spirv.cpp",
+          "line": 10435,
+          "statement": "sink->diagnose(irModule->getModuleInst(), Diagnostics::outputSpvIsEmpty);",
+          "context_before": [
+            "        symbolsEmitted = true;",
+            "    }",
+            "",
+            "    if (!symbolsEmitted)",
+            "    {"
+          ],
+          "context_after": [
+            "        return SLANG_FAIL;",
+            "    }",
+            "",
+            "    // Move forward delcared pointers to the end.",
+            "    do"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 58001,
+      "severity": "Error",
+      "name": "entryPointMustReturnVoidWhenGlobalOutputPresent",
+      "message": "entry point must return 'void' when global output variables are present.",
+      "line": 3127,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-translate-global-varying-var.cpp",
+          "line": 281,
+          "statement": "Diagnostics::entryPointMustReturnVoidWhenGlobalOutputPresent);",
+          "context_before": [
+            "                if (as<IRFuncType>(entryPoint->getDataType())->getResultType()->getOp() !=",
+            "                    kIROp_VoidType)",
+            "                {",
+            "                    context->getSink()->diagnose(",
+            "                        entryPointFunc,"
+          ],
+          "context_after": [
+            "                    continue;",
+            "                }",
+            "                builder.setInsertBefore(entryPointFunc);",
+            "                resultType = builder.createStructType();",
+            "                IRStructTypeLayout::Builder typeLayoutBuilder(&builder);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 58002,
+      "severity": "Error",
+      "name": "unhandledGLSLSSBOType",
+      "message": "Unhandled GLSL Shader Storage Buffer Object contents, unsized arrays as a final parameter must be the only parameter",
+      "line": 3132,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-lower-glsl-ssbo-types.cpp",
+          "line": 230,
+          "statement": "sink->diagnose(ssbo, Diagnostics::unhandledGLSLSSBOType);",
+          "context_before": [
+            "        module,",
+            "        [&](IRInst* inst)",
+            "        {",
+            "            if (const auto ssbo = as<IRGLSLShaderStorageBufferType>(inst))",
+            "            {"
+          ],
+          "context_after": [
+            "            }",
+            "        });",
+            "}",
+            "",
+            "void lowerGLSLShaderStorageBufferObjectsToStructuredBuffers(IRModule* module, DiagnosticSink* sink)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 58003,
+      "severity": "Error",
+      "name": "inconsistentPointerAddressSpace",
+      "message": "'$0': use of pointer with inconsistent address space.",
+      "line": 3139,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-spirv-legalize.cpp",
+          "line": 751,
+          "statement": "Diagnostics::inconsistentPointerAddressSpace, inst);",
+          "context_before": [
+            "                        if (addressSpace == AddressSpace::Generic)",
+            "                            addressSpace = argPtrType->getAddressSpace();",
+            "                        else if (addressSpace != argPtrType->getAddressSpace())",
+            "                            m_sharedContext->m_sink->diagnose(",
+            "                                inst,"
+          ],
+          "context_after": [
+            "                                inst);",
+            "                    }",
+            "                }",
+            "            }",
+            "            if (addressSpace != AddressSpace::Generic)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 90001,
+      "severity": "Warning",
+      "name": "ignoredDocumentationOnOverloadCandidate",
+      "message": "documentation comment on overload candidate '$0' is ignored",
+      "line": 3160,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-doc-markdown-writer.cpp",
+          "line": 1524,
+          "statement": "Diagnostics::ignoredDocumentationOnOverloadCandidate, decl);",
+          "context_before": [
+            "            if (!descriptionSB.toString().startsWith(markup))",
+            "            {",
+            "                auto decl = as<Decl>(entry->m_node);",
+            "                m_sink->diagnose(",
+            "                    decl->loc,"
+          ],
+          "context_after": [
+            "                    decl);",
+            "            }",
+            "        }",
+            "        else",
+            "        {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 81110,
+      "severity": "Error",
+      "name": "nvapiMacroMismatch",
+      "message": "conflicting definitions for NVAPI macro '$0': '$1' and '$2'",
+      "line": 3172,
+      "param_count": 3,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-compile-request.h",
+          "line": 354,
+          "statement": "Diagnostics::nvapiMacroMismatch, macroName, existingValue, newValue);",
+          "context_before": [
+            "    {",
+            "        if (existingValue != newValue)",
+            "        {",
+            "            m_sink->diagnose(",
+            "                loc,"
+          ],
+          "context_after": [
+            "                macroName,",
+            "                existingValue,",
+            "                newValue);",
+            "        }",
+            "    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 81111,
+      "severity": "Error",
+      "name": "opaqueReferenceMustResolveToGlobal",
+      "message": "could not determine register/space for a resource or sampler used with NVAPI",
+      "line": 3178,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-lower-binding-query.cpp",
+          "line": 201,
+          "statement": "sink->diagnose(inst, Diagnostics::opaqueReferenceMustResolveToGlobal);",
+          "context_before": [
+            "            // If we cannot find or compute a replacement value,",
+            "            // then we need to treat it as an error, since the",
+            "            // binding query intrinsics don't admit any reasonable",
+            "            // runtime implementation.",
+            "            //"
+          ],
+          "context_after": [
+            "            return;",
+            "        }",
+            "",
+            "        inst->replaceUsesWith(replacementValue);",
+            "        inst->removeAndDeallocate();"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 99999,
+      "severity": "Internal",
+      "name": "unimplemented",
+      "message": "unimplemented feature in Slang compiler: $0\\nFor assistance, file an issue on GitHub (https://github.com/shader-slang/slang/issues) or join the Slang Discord (https://khr.io/slangdiscord)",
+      "line": 3186,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-marshal-native-call.cpp",
+          "line": 173,
+          "statement": "Diagnostics::unimplemented, \"marshal string to native return value\");",
+          "context_before": [
+            "        break;",
+            "    case kIROp_StringType:",
+            "        {",
+            "            diagnosticSink->diagnose(",
+            "                originalArg,"
+          ],
+          "context_after": [
+            "                \"marshal string to native return value\");",
+            "        }",
+            "        break;",
+            "    case kIROp_ClassType:",
+            "        {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-ir-marshal-native-call.cpp",
+          "line": 181,
+          "statement": "Diagnostics::unimplemented, \"marshal class to native return value\");",
+          "context_before": [
+            "        break;",
+            "    case kIROp_ClassType:",
+            "        {",
+            "            diagnosticSink->diagnose(",
+            "                originalArg,"
+          ],
+          "context_after": [
+            "                \"marshal class to native return value\");",
+            "        }",
+            "        break;",
+            "    case kIROp_InterfaceType:",
+            "        {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-type.cpp",
+          "line": 338,
+          "statement": "Diagnostics::unimplemented, \"can't fill in default for generic type parameter\");",
+          "context_before": [
+            "                {",
+            "                    if (diagSink)",
+            "                    {",
+            "                        diagSink->diagnose(",
+            "                            typeExp.exp,"
+          ],
+          "context_after": [
+            "                            \"can't fill in default for generic type parameter\");",
+            "                        *outProperType = m_astBuilder->getErrorType();",
+            "                    }",
+            "                    return false;",
+            "                }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-overload.cpp",
+          "line": 3311,
+          "statement": "Diagnostics::unimplemented, \"no applicable generic\");",
+          "context_before": [
+            "",
+            "            // TODO(tfoley): print a reasonable message here...",
+            "",
+            "            getSink()->diagnose(",
+            "                genericAppExpr,"
+          ],
+          "context_after": [
+            "                \"no applicable generic\");",
+            "",
+            "            return CreateErrorExpr(genericAppExpr);",
+            "        }",
+            "        else"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-parser.cpp",
+          "line": 5319,
+          "statement": "Diagnostics::unimplemented, \"didn't expect multiple declarations here\");",
+          "context_before": [
+            "        }",
+            "    }",
+            "",
+            "    parser->sink->diagnose(",
+            "        declBase->loc,"
+          ],
+          "context_after": [
+            "        \"didn't expect multiple declarations here\");",
+            "    return nullptr;",
+            "}",
+            "",
+            "static bool parseGLSLGlobalDecl(Parser* parser, ContainerDecl* containerDecl)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-parser.cpp",
+          "line": 9091,
+          "statement": "parser->sink->diagnose(outToken, Diagnostics::unimplemented, \"unknown intrinsic op\");",
+          "context_before": [
+            "        ;",
+            "        auto op = findIROp(outToken.getContent());",
+            "",
+            "        if (op == kIROp_Invalid)",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "        return op;",
+            "    }",
+            "}",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-emit-llvm.cpp",
+          "line": 2409,
+          "statement": "Diagnostics::unimplemented, \"unexpected string hash for non-literal string\");",
+          "context_before": [
+            "                    // slang-rt or in core module. Ideally, if built-in hashing",
+            "                    // support in the core module becomes a thing, that can be",
+            "                    // used for this too.",
+            "                    getSink()->diagnose(",
+            "                        inst,"
+          ],
+          "context_after": [
+            "                        \"unexpected string hash for non-literal string\");",
+            "                }",
+            "            }",
+            "            break;",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-ir-legalize-varying-params.cpp",
+          "line": 1047,
+          "statement": "Diagnostics::unimplemented, \"this target doesn't support this system-defined varying parameter\");",
+          "context_before": [
+            "    {",
+            "        SLANG_UNUSED(info);",
+            "",
+            "        m_sink->diagnose(",
+            "            m_param,"
+          ],
+          "context_after": [
+            "            \"this target doesn't support this system-defined varying parameter\");",
+            "",
+            "        return LegalizedVaryingVal();",
+            "    }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-ir-legalize-varying-params.cpp",
+          "line": 1059,
+          "statement": "Diagnostics::unimplemented, \"this target doesn't support this user-defined varying parameter\");",
+          "context_before": [
+            "    {",
+            "        SLANG_UNUSED(info);",
+            "",
+            "        m_sink->diagnose(",
+            "            m_param,"
+          ],
+          "context_after": [
+            "            \"this target doesn't support this user-defined varying parameter\");",
+            "",
+            "        return LegalizedVaryingVal();",
+            "    }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-lower-to-ir.cpp",
+          "line": 10232,
+          "statement": "Diagnostics::unimplemented, \"lower unknown AggType to IR\");",
+          "context_before": [
+            "        }",
+            "        else",
+            "        {",
+            "            getSink()->diagnose(",
+            "                decl->loc,"
+          ],
+          "context_after": [
+            "                \"lower unknown AggType to IR\");",
+            "            return LoweredValInfo::simple(subBuilder->getVoidType());",
+            "        }",
+            "",
+            "        maybeAddDebugLocationDecoration(context, irAggType);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-emit-c-like.cpp",
+          "line": 2339,
+          "statement": "getSink()->diagnose(inst, Diagnostics::unimplemented, \"unexpected IR opcode during code emit\");",
+          "context_before": [
+            "    defaultEmitInstStmt(inst);",
+            "}",
+            "",
+            "void CLikeSourceEmitter::diagnoseUnhandledInst(IRInst* inst)",
+            "{"
+          ],
+          "context_after": [
+            "}",
+            "",
+            "bool CLikeSourceEmitter::hasExplicitConstantBufferOffset(IRInst* cbufferType)",
+            "{",
+            "    auto type = as<IRUniformParameterGroupType>(cbufferType);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-emit-c-like.cpp",
+          "line": 2796,
+          "statement": "Diagnostics::unimplemented, \"kIROp_ImageSubscript is unimplemented for Metal, expected legalization \" \"beforehand\");",
+          "context_before": [
+            "    case kIROp_ImageSubscript:",
+            "        // We should have legalized ImageSubscript before emit for metal targets",
+            "        if (isMetalTarget(this->getTargetReq()))",
+            "            getSink()->diagnose(",
+            "                inst,"
+          ],
+          "context_after": [
+            "                \"kIROp_ImageSubscript is unimplemented for Metal, expected legalization \"",
+            "                \"beforehand\");",
+            "        [[fallthrough]];",
+            "    case kIROp_GetElement:",
+            "    case kIROp_MeshOutputRef:"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-ir-autodiff-transcriber-base.cpp",
+          "line": 1230,
+          "statement": "Diagnostics::unimplemented, \"this instruction cannot be differentiated\");",
+          "context_before": [
+            "    if (result.primal == nullptr && result.differential == nullptr)",
+            "    {",
+            "        // If we reach this statement, the instruction type is likely unhandled.",
+            "        getSink()->diagnose(",
+            "            origInst->sourceLoc,"
+          ],
+          "context_after": [
+            "            \"this instruction cannot be differentiated\");",
+            "    }",
+            "",
+            "    return result;",
+            "}"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-ir-autodiff-fwd.cpp",
+          "line": 322,
+          "statement": "Diagnostics::unimplemented, \"this arithmetic instruction cannot be differentiated\");",
+          "context_before": [
+            "                }",
+            "            }",
+            "        default:",
+            "            getSink()->diagnose(",
+            "                origArith->sourceLoc,"
+          ],
+          "context_after": [
+            "                \"this arithmetic instruction cannot be differentiated\");",
+            "        }",
+            "    }",
+            "",
+            "    return InstPair(primalArith, nullptr);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-ir-autodiff-fwd.cpp",
+          "line": 1088,
+          "statement": "Diagnostics::unimplemented, \"attempting to differentiate unhandled control flow\");",
+          "context_before": [
+            "        return InstPair(diffBranch, diffBranch);",
+            "    }",
+            "",
+            "    getSink()->diagnose(",
+            "        origInst->sourceLoc,"
+          ],
+          "context_after": [
+            "        \"attempting to differentiate unhandled control flow\");",
+            "",
+            "    return InstPair(nullptr, nullptr);",
+            "}",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-ir-autodiff-fwd.cpp",
+          "line": 1107,
+          "statement": "Diagnostics::unimplemented, \"attempting to differentiate unhandled const type\");",
+          "context_before": [
+            "        return InstPair(origInst, origInst);",
+            "    }",
+            "",
+            "    getSink()->diagnose(",
+            "        origInst->sourceLoc,"
+          ],
+          "context_after": [
+            "        \"attempting to differentiate unhandled const type\");",
+            "",
+            "    return InstPair(nullptr, nullptr);",
+            "}",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-diagnostics.h",
+          "line": 43,
+          "statement": "Slang::Diagnostics::unimplemented,          \\ what)  #else #define SLANG_INTERNAL_ERROR(sink, pos) \\ (sink)->diagnose(pos, Slang::Diagnostics::internalCompilerError) #define SLANG_UNIMPLEMENTED(sink, pos, what) \\ (sink)->diagnose(pos, Slang::Diagnostics::unimplemented, what)  #endif  #define SLANG_DIAGNOSE_UNEXPECTED(sink, pos, message) \\",
+          "context_before": [
+            "        Slang::SourceLoc(__LINE__, 0, 0, __FILE__), \\",
+            "        Slang::Diagnostics::internalCompilerError)",
+            "#define SLANG_UNIMPLEMENTED(sink, pos, what)        \\",
+            "    (sink)->diagnose(                               \\",
+            "        Slang::SourceLoc(__LINE__, 0, 0, __FILE__), \\"
+          ],
+          "context_after": [
+            "        what)",
+            "",
+            "#else",
+            "#define SLANG_INTERNAL_ERROR(sink, pos) \\",
+            "    (sink)->diagnose(pos, Slang::Diagnostics::internalCompilerError)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-diagnostics.h",
+          "line": 50,
+          "statement": "(sink)->diagnose(pos, Slang::Diagnostics::unimplemented, what)  #endif  #define SLANG_DIAGNOSE_UNEXPECTED(sink, pos, message) \\ (sink)->diagnose(pos, Slang::Diagnostics::unexpected, message)  #endif ",
+          "context_before": [
+            "",
+            "#else",
+            "#define SLANG_INTERNAL_ERROR(sink, pos) \\",
+            "    (sink)->diagnose(pos, Slang::Diagnostics::internalCompilerError)",
+            "#define SLANG_UNIMPLEMENTED(sink, pos, what) \\"
+          ],
+          "context_after": [
+            "",
+            "#endif",
+            "",
+            "#define SLANG_DIAGNOSE_UNEXPECTED(sink, pos, message) \\",
+            "    (sink)->diagnose(pos, Slang::Diagnostics::unexpected, message)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 99999,
+      "severity": "Internal",
+      "name": "unexpected",
+      "message": "unexpected condition encountered in Slang compiler: $0\\nFor assistance, file an issue on GitHub (https://github.com/shader-slang/slang/issues) or join the Slang Discord (https://khr.io/slangdiscord)",
+      "line": 3193,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-legalize-varying-params.cpp",
+          "line": 2111,
+          "statement": "Diagnostics::unexpected, \"the supplied hit attribute exceeds the maximum hit attribute structure \" \"size (32 bytes)\");",
+          "context_before": [
+            "                    /*the builder in use*/ &builder);",
+            "                if (ioBaseAttributeIndex > 8)",
+            "                {",
+            "                    m_sink->diagnose(",
+            "                        m_param,"
+          ],
+          "context_after": [
+            "                        \"the supplied hit attribute exceeds the maximum hit attribute structure \"",
+            "                        \"size (32 bytes)\");",
+            "                    return LegalizedVaryingVal();",
+            "                }",
+            "                return LegalizedVaryingVal::makeValue(getHitAttributes);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-expr.cpp",
+          "line": 6281,
+          "statement": "Diagnostics::unexpected, \"unknown type modifier in semantic checking\");",
+          "context_before": [
+            "    else",
+            "    {",
+            "        // TODO: more complete error message here",
+            "        getSink()->diagnose(",
+            "            modifier,"
+          ],
+          "context_after": [
+            "            \"unknown type modifier in semantic checking\");",
+            "        return nullptr;",
+            "    }",
+            "}",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-diagnostics.h",
+          "line": 55,
+          "statement": "(sink)->diagnose(pos, Slang::Diagnostics::unexpected, message)  #endif ",
+          "context_before": [
+            "    (sink)->diagnose(pos, Slang::Diagnostics::unimplemented, what)",
+            "",
+            "#endif",
+            "",
+            "#define SLANG_DIAGNOSE_UNEXPECTED(sink, pos, message) \\"
+          ],
+          "context_after": [
+            "",
+            "#endif",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 99999,
+      "severity": "Internal",
+      "name": "internalCompilerError",
+      "message": "Slang internal compiler error\\nFor assistance, file an issue on GitHub (https://github.com/shader-slang/slang/issues) or join the Slang Discord (https://khr.io/slangdiscord)",
+      "line": 3201,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-shader.cpp",
+          "line": 2235,
+          "statement": "Diagnostics::internalCompilerError, \"couldn't parse specialization argument\");",
+          "context_before": [
+            "",
+            "        if (!argExpr)",
+            "        {",
+            "            sink->diagnose(",
+            "                SourceLoc(),"
+          ],
+          "context_after": [
+            "                \"couldn't parse specialization argument\");",
+            "            return;",
+            "        }",
+            "",
+            "        outGenericArgs.add(argExpr);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-ir-autodiff-transcriber-base.cpp",
+          "line": 41,
+          "statement": "Diagnostics::internalCompilerError, \"inconsistent primal instruction for original\");",
+          "context_before": [
+            "    if (cloneEnv.mapOldValToNew.containsKey(origInst) &&",
+            "        cloneEnv.mapOldValToNew[origInst] != primalInst)",
+            "    {",
+            "        getSink()->diagnose(",
+            "            origInst->sourceLoc,"
+          ],
+          "context_after": [
+            "            \"inconsistent primal instruction for original\");",
+            "    }",
+            "    else",
+            "    {",
+            "        cloneEnv.mapOldValToNew[origInst] = primalInst;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-ir-autodiff-transcriber-base.cpp",
+          "line": 819,
+          "statement": "Diagnostics::internalCompilerError, \"could not generate zero value for given type\");",
+          "context_before": [
+            "            return builder->getIntValue(primalType, 0);",
+            "        }",
+            "",
+            "        getSink()->diagnose(",
+            "            primalType->sourceLoc,"
+          ],
+          "context_after": [
+            "            \"could not generate zero value for given type\");",
+            "        return nullptr;",
+            "    }",
+            "}",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-ir-autodiff-transcriber-base.cpp",
+          "line": 1168,
+          "statement": "Diagnostics::internalCompilerError, \"failed to transcibe instruction\");",
+          "context_before": [
+            "        }",
+            "        return pair.differential;",
+            "    }",
+            "    getSink()->diagnose(",
+            "        origInst->sourceLoc,"
+          ],
+          "context_after": [
+            "        \"failed to transcibe instruction\");",
+            "    return nullptr;",
+            "}",
+            "",
+            "InstPair AutoDiffTranscriberBase::transcribeInst(IRBuilder* builder, IRInst* origInst)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-ir-autodiff-fwd.cpp",
+          "line": 696,
+          "statement": "Diagnostics::internalCompilerError, \"attempting to differentiate unresolved callee\");",
+          "context_before": [
+            "        // differentiate such calls safely.",
+            "        // TODO(sai): Should probably get checked in the front-end.",
+            "        //",
+            "        getSink()->diagnose(",
+            "            origCall->sourceLoc,"
+          ],
+          "context_after": [
+            "            \"attempting to differentiate unresolved callee\");",
+            "",
+            "        return InstPair(nullptr, nullptr);",
+            "    }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-emit-spirv.cpp",
+          "line": 8163,
+          "statement": "m_sink->diagnose(inst, Diagnostics::internalCompilerError);",
+          "context_before": [
+            "",
+            "        // We'd better give some diagnostics to at least point out which line in the shader is",
+            "        // wrong, so it can help the user or developers to locate the issue easier.",
+            "        if (!isFloatOrPackedFloatType(fromType))",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "",
+            "        if (!isFloatOrPackedFloatType(toType))",
+            "        {",
+            "            m_sink->diagnose(inst, Diagnostics::internalCompilerError);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-emit-spirv.cpp",
+          "line": 8168,
+          "statement": "m_sink->diagnose(inst, Diagnostics::internalCompilerError);",
+          "context_before": [
+            "            m_sink->diagnose(inst, Diagnostics::internalCompilerError);",
+            "        }",
+            "",
+            "        if (!isFloatOrPackedFloatType(toType))",
+            "        {"
+          ],
+          "context_after": [
+            "        }",
+            "",
+            "        if (isTypeEqual(fromType, toType))",
+            "        {",
+            "            auto inner = ensureInst(inst->getOperand(0));"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-diagnostics.h",
+          "line": 39,
+          "statement": "Slang::Diagnostics::internalCompilerError) #define SLANG_UNIMPLEMENTED(sink, pos, what)        \\ (sink)->diagnose(                               \\ Slang::SourceLoc(__LINE__, 0, 0, __FILE__), \\ Slang::Diagnostics::unimplemented,          \\ what)  #else #define SLANG_INTERNAL_ERROR(sink, pos) \\ (sink)->diagnose(pos, Slang::Diagnostics::internalCompilerError) #define SLANG_UNIMPLEMENTED(sink, pos, what) \\ (sink)->diagnose(pos, Slang::Diagnostics::unimplemented, what)",
+          "context_before": [
+            "",
+            "#ifdef _DEBUG",
+            "#define SLANG_INTERNAL_ERROR(sink, pos)             \\",
+            "    (sink)->diagnose(                               \\",
+            "        Slang::SourceLoc(__LINE__, 0, 0, __FILE__), \\"
+          ],
+          "context_after": [
+            "#define SLANG_UNIMPLEMENTED(sink, pos, what)        \\",
+            "    (sink)->diagnose(                               \\",
+            "        Slang::SourceLoc(__LINE__, 0, 0, __FILE__), \\",
+            "        Slang::Diagnostics::unimplemented,          \\",
+            "        what)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-diagnostics.h",
+          "line": 48,
+          "statement": "(sink)->diagnose(pos, Slang::Diagnostics::internalCompilerError) #define SLANG_UNIMPLEMENTED(sink, pos, what) \\ (sink)->diagnose(pos, Slang::Diagnostics::unimplemented, what)  #endif  #define SLANG_DIAGNOSE_UNEXPECTED(sink, pos, message) \\ (sink)->diagnose(pos, Slang::Diagnostics::unexpected, message)  #endif ",
+          "context_before": [
+            "        Slang::Diagnostics::unimplemented,          \\",
+            "        what)",
+            "",
+            "#else",
+            "#define SLANG_INTERNAL_ERROR(sink, pos) \\"
+          ],
+          "context_after": [
+            "#define SLANG_UNIMPLEMENTED(sink, pos, what) \\",
+            "    (sink)->diagnose(pos, Slang::Diagnostics::unimplemented, what)",
+            "",
+            "#endif",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": [
+            "unimplemented"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 99999,
+      "severity": "Error",
+      "name": "compilationAborted",
+      "message": "Slang compilation aborted due to internal error\\nFor assistance, file an issue on GitHub (https://github.com/shader-slang/slang/issues) or join the Slang Discord (https://khr.io/slangdiscord)",
+      "line": 3208,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-end-to-end-request.cpp",
+          "line": 1509,
+          "statement": "getSink()->diagnose(SourceLoc(), Diagnostics::compilationAborted);",
+          "context_before": [
+            "    {",
+            "        // The compiler failed due to some exception that wasn't a sublass of",
+            "        // `Exception`, so something really fishy is going on. We want to",
+            "        // let the user know that we messed up, so they know to blame Slang",
+            "        // and not some other component in their system."
+          ],
+          "context_after": [
+            "    }",
+            "    m_diagnosticOutput = getSink()->outputBuffer.produceString();",
+            "",
+            "#else",
+            "    // When debugging, we probably don't want to filter out any errors, since"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 99999,
+      "severity": "Error",
+      "name": "compilationAbortedDueToException",
+      "message": "Slang compilation aborted due to an exception of $0: $1\\nFor assistance, file an issue on GitHub (https://github.com/shader-slang/slang/issues) or join the Slang Discord (https://khr.io/slangdiscord)",
+      "line": 3215,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-end-to-end-request.cpp",
+          "line": 1486,
+          "statement": "Diagnostics::compilationAbortedDueToException, typeid(e).name(), e.Message);",
+          "context_before": [
+            "        {",
+            "            // If for some reason we didn't output any diagnostic, something is",
+            "            // going wrong, but we want to make sure we at least output something.",
+            "            getSink()->diagnose(",
+            "                SourceLoc(),"
+          ],
+          "context_after": [
+            "                typeid(e).name(),",
+            "                e.Message);",
+            "        }",
+            "    }",
+            "    catch (const Exception& e)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-end-to-end-request.cpp",
+          "line": 1499,
+          "statement": "Diagnostics::compilationAbortedDueToException, typeid(e).name(), e.Message);",
+          "context_before": [
+            "        // We will print out information on the exception to help out the user",
+            "        // in either filing a bug, or locating what in their code created",
+            "        // a problem.",
+            "        getSink()->diagnose(",
+            "            SourceLoc(),"
+          ],
+          "context_after": [
+            "            typeid(e).name(),",
+            "            e.Message);",
+            "    }",
+            "    catch (...)",
+            "    {"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-linkable.cpp",
+          "line": 750,
+          "statement": "Diagnostics::compilationAbortedDueToException, typeid(e).name(), e.Message);",
+          "context_before": [
+            "            DiagnosticSink sink(linkage->getSourceManager(), Lexer::sourceLocationLexer);",
+            "            applySettingsToDiagnosticSink(&sink, &sink, linkage->m_optionSet);",
+            "            applySettingsToDiagnosticSink(&sink, &sink, m_optionSet);",
+            "            sink.diagnose(",
+            "                SourceLoc(),"
+          ],
+          "context_after": [
+            "                typeid(e).name(),",
+            "                e.Message);",
+            "            sink.getBlobIfNeeded(outDiagnostics);",
+            "        }",
+            "        return nullptr;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-target-program.cpp",
+          "line": 118,
+          "statement": "Diagnostics::compilationAbortedDueToException, typeid(e).name(), e.Message);",
+          "context_before": [
+            "    }",
+            "    catch (const Exception& e)",
+            "    {",
+            "        sink->diagnose(",
+            "            SourceLoc(),"
+          ],
+          "context_after": [
+            "            typeid(e).name(),",
+            "            e.Message);",
+            "        return nullptr;",
+            "    }",
+            "}"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 99999,
+      "severity": "Internal",
+      "name": "serialDebugVerificationFailed",
+      "message": "Verification of serial debug information failed.",
+      "line": 3223,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-compile-request.cpp",
+          "line": 483,
+          "statement": "Diagnostics::serialDebugVerificationFailed);",
+          "context_before": [
+            "            if (SLANG_FAILED(",
+            "                    SerialContainerUtil::verifyIRSerialize(irModule, getSession(), options)))",
+            "            {",
+            "                getSink()->diagnose(",
+            "                    irModule->getModuleInst()->sourceLoc,"
+          ],
+          "context_after": [
+            "            }",
+            "        }",
+            "",
+            "        // Set the module on the translation unit",
+            "        translationUnit->getModule()->setIRModule(irModule);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 99999,
+      "severity": "Internal",
+      "name": "spirvValidationFailed",
+      "message": "Validation of generated SPIR-V failed.",
+      "line": 3228,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-emit.cpp",
+          "line": 2720,
+          "statement": "Diagnostics::spirvValidationFailed);",
+          "context_before": [
+            "                    compiler->validate((uint32_t*)spirv.getBuffer(), int(spirv.getCount() / 4))))",
+            "            {",
+            "                compiler->disassemble((uint32_t*)spirv.getBuffer(), int(spirv.getCount() / 4));",
+            "                codeGenContext->getSink()->diagnoseWithoutSourceView(",
+            "                    SourceLoc{},"
+          ],
+          "context_after": [
+            "            }",
+            "        }",
+            "",
+            "        ComPtr<IArtifact> optimizedArtifact;",
+            "        DownstreamCompileOptions downstreamOptions;"
+          ],
+          "call_pattern": "unknown",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 99999,
+      "severity": "Internal",
+      "name": "noBlocksOrIntrinsic",
+      "message": "no blocks found for function definition, is there a '$0' intrinsic missing?",
+      "line": 3230,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-emit-spirv.cpp",
+          "line": 3709,
+          "statement": "m_sink->diagnose(irFunc, Diagnostics::noBlocksOrIntrinsic, \"spirv\");",
+          "context_before": [
+            "",
+            "    /// Emit a SPIR-V function definition for the Slang IR function `irFunc`.",
+            "    SpvInst* emitFuncDefinition(IRFunc* irFunc)",
+            "    {",
+            "        if (!irFunc->getFirstBlock())"
+          ],
+          "context_after": [
+            "",
+            "        // [2.4: Logical Layout of a Module]",
+            "        //",
+            "        // > All function definitions (functions with a body).",
+            "        //"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 40100,
+      "severity": "Warning",
+      "name": "mainEntryPointRenamed",
+      "message": "entry point '$0' is not allowed, and has been renamed to '$1'",
+      "line": 3236,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-emit-c-like.cpp",
+          "line": 1130,
+          "statement": "sink->diagnose(SourceLoc(), Diagnostics::mainEntryPointRenamed, name, newName);",
+          "context_before": [
+            "        isMetalTarget(getTargetReq()))",
+            "    {",
+            "        if (name == \"main\")",
+            "        {",
+            "            String newName = _generateUniqueName(name.getUnownedSlice());"
+          ],
+          "context_after": [
+            "            return newName;",
+            "        }",
+            "    }",
+            "    return name;",
+            "}"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 40000,
+      "severity": "Error",
+      "name": "rayPayloadFieldMissingAccessQualifiers",
+      "message": "field '$0' in ray payload struct must have either 'read' OR 'write' access qualifiers",
+      "line": 3246,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 2294,
+          "statement": "Diagnostics::rayPayloadFieldMissingAccessQualifiers, fieldVarDecl->getName());",
+          "context_before": [
+            "        if (!hasReadModifier && !hasWriteModifier)",
+            "        {",
+            "            // Emit the diagnostic error",
+            "            getSink()->diagnose(",
+            "                fieldVarDecl,"
+          ],
+          "context_after": [
+            "                fieldVarDecl->getName());",
+            "        }",
+            "",
+            "        // Check stage names in read qualifier",
+            "        if (readModifier)"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 40001,
+      "severity": "Error",
+      "name": "rayPayloadInvalidStageInAccessQualifier",
+      "message": "invalid stage name '$0' in ray payload access qualifier; valid stages are 'anyhit', 'closesthit', 'miss', and 'caller'",
+      "line": 3251,
+      "param_count": 1,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 2308,
+          "statement": "Diagnostics::rayPayloadInvalidStageInAccessQualifier, stageName);",
+          "context_before": [
+            "                String stageName = stageToken.getContent();",
+            "                if (!validStages.contains(stageName))",
+            "                {",
+            "                    getSink()->diagnose(",
+            "                        stageToken,"
+          ],
+          "context_after": [
+            "                        stageName);",
+            "                }",
+            "            }",
+            "        }",
+            ""
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        },
+        {
+          "file": "source/slang/slang-check-modifier.cpp",
+          "line": 2324,
+          "statement": "Diagnostics::rayPayloadInvalidStageInAccessQualifier, stageName);",
+          "context_before": [
+            "                String stageName = stageToken.getContent();",
+            "                if (!validStages.contains(stageName))",
+            "                {",
+            "                    getSink()->diagnose(",
+            "                        stageToken,"
+          ],
+          "context_after": [
+            "                        stageName);",
+            "                }",
+            "            }",
+            "        }",
+            "    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 50000,
+      "severity": "Error",
+      "name": "cooperativeMatrixUnsupportedElementType",
+      "message": "Element type '$0' is not supported for matrix'$1'.",
+      "line": 3261,
+      "param_count": 2,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-emit-cuda.cpp",
+          "line": 1282,
+          "statement": "Diagnostics::cooperativeMatrixUnsupportedElementType, typeName, matrixUse == 0 ? \"A\" : (matrixUse == 1 ? \"B\" : \"C\"));",
+          "context_before": [
+            "    if (!typeCheck(elementType->getOp(), matrixUse))",
+            "    {",
+            "        StringBuilder msg;",
+            "        getSink()->diagnose(",
+            "            SourceLoc(),"
+          ],
+          "context_after": [
+            "            typeName,",
+            "            matrixUse == 0 ? \"A\" : (matrixUse == 1 ? \"B\" : \"C\"));",
+            "        SLANG_RELEASE_ASSERT(false);",
+            "        return SLANG_FAIL;",
+            "    }"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 50000,
+      "severity": "Error",
+      "name": "cooperativeMatrixInvalidShape",
+      "message": "Invalid shape ['$0', '$1'] for cooperative matrix'$2'.",
+      "line": 3267,
+      "param_count": 3,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-emit-cuda.cpp",
+          "line": 1296,
+          "statement": "Diagnostics::cooperativeMatrixInvalidShape, rowCount, colCount, matrixUse == 0 ? \"A\" : (matrixUse == 1 ? \"B\" : \"C\"));",
+          "context_before": [
+            "    FragmentShape shape = computeShapeCombination(matrixUse, rowCount, colCount);",
+            "    if (!shape.isValid())",
+            "    {",
+            "        getSink()->diagnose(",
+            "            SourceLoc(),"
+          ],
+          "context_after": [
+            "            rowCount,",
+            "            colCount,",
+            "            matrixUse == 0 ? \"A\" : (matrixUse == 1 ? \"B\" : \"C\"));",
+            "        SLANG_RELEASE_ASSERT(false);",
+            "        return SLANG_FAIL;"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    },
+    {
+      "id": 51701,
+      "severity": "Fatal",
+      "name": "cooperativeMatrixUnsupportedCapture",
+      "message": "'CoopMat.MapElement' per-element function cannot capture buffers, resources or any opaque type values. Consider pre-loading the content of any referenced buffers into a local variable before calling 'CoopMat.MapElement', or moving any referenced resources to global scope.",
+      "line": 3273,
+      "param_count": 0,
+      "call_sites": [
+        {
+          "file": "source/slang/slang-ir-legalize-types.cpp",
+          "line": 2268,
+          "statement": "Diagnostics::cooperativeMatrixUnsupportedCapture);",
+          "context_before": [
+            "                // If functor legalizes to one or many special (resource) values, we",
+            "                // can't handle this case very easily at the moment, so diagnose an error",
+            "                // instead of crashing.",
+            "                context->m_sink->diagnose(",
+            "                    inst->getIFuncCall(),"
+          ],
+          "context_after": [
+            "                return LegalVal();",
+            "            }",
+            "        }",
+            "    }",
+            "    return LegalVal::simple(inst);"
+          ],
+          "call_pattern": "diagnose",
+          "uses_notes": []
+        }
+      ]
+    }
+  ],
+  "notes_reference": {}
+}
