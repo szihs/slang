@@ -56,10 +56,9 @@ Convert PascalCase/camelCase to space-separated lowercase:
 Replace positional `$0`, `$1`, `$2` with named typed parameters:
 
 To determine the names and types:
-1. **Find the call site** in C++ using `Grep` for `Diagnostics::diagnosticName`
-2. **Read the arguments** passed after the diagnostic enum value
-3. **Name each parameter** based on what the argument represents
-4. **Type each parameter** based on its C++ type
+1. **Read the call site** from the pre-extracted JSON data (each diagnostic has `call_sites` with `statement`, `file`, `line`)
+2. **Name each parameter** based on what the argument represents
+3. **Type each parameter** based on its C++ type
 
 Common type mappings:
 - `Type*`, `QualifiedType` → `:Type`
@@ -71,6 +70,35 @@ Common type mappings:
 - `CapabilitySet` → `:CapabilitySet`
 - Any other type → use whatever type name is correct, don't worry about whether it's supported yet
 
+### 3a. IMPORTANT: Resolving Types by Reading Source Files
+
+**DO NOT GUESS TYPES FROM VARIABLE NAMES ALONE.** The JSON call-site data includes the `statement` and a few lines of context, but this is often **not enough** to determine the actual C++ type of an argument. You MUST use the `Read` tool to look at the actual source file and find the real type declaration.
+
+**Example of why this matters:**
+
+```cpp
+// Call site JSON shows:
+getSink()->diagnose(argExpr, Diagnostics::argumentExpectedLValue, pp);
+// You might guess pp is a "parameter" (String) — WRONG!
+
+// Reading the source file reveals:
+for (Index pp = 0; pp < paramCount; ++pp)
+// pp is actually an Index (integer) → ~param:Int
+```
+
+**How to resolve types at runtime:**
+1. The JSON provides `file` (e.g., `"source/slang/slang-check-expr.cpp"`) and `line` (e.g., `1234`)
+2. Use `Read` with that file path, reading ~50-80 lines before the call site line to find variable declarations
+3. Look for patterns like `Type* varName`, `auto varName = ...`, `const QualifiedType& varName`
+4. Use the actual declared type, not a guess
+
+**IMPORTANT: You MUST use Read for EVERY diagnostic that has call sites with interpolant arguments.** Only skip Read when:
+- The diagnostic has zero call sites (use best guess from message context)
+- The diagnostic has zero interpolants (no `$0`, `$1` etc.)
+- The argument is an obvious literal like `String("...")` or `SourceLoc()`
+
+For everything else, **READ THE SOURCE FILE** to confirm the types. This is the most important step in the conversion — incorrect types will cause C++ compilation errors in the generated code.
+
 ### 4. Location Determination
 The first argument to `getSink()->diagnose(LOCATION, Diagnostics::name, ...)` is the location.
 
@@ -81,14 +109,29 @@ The first argument to `getSink()->diagnose(LOCATION, Diagnostics::name, ...)` is
 
 ### 5. Diagnostic Message vs Span Message
 
-**Diagnostic message** (2nd string argument to `err()`/`warning()`):
-- Short, standalone summary of the problem
-- Should make sense even without seeing the code
-- Examples: "invalid subscript expression", "type mismatch in assignment", "undefined identifier"
+**Diagnostic message** (3rd argument to `err()`/`warning()`):
+- The most concise standalone description of the problem that doesn't become inaccurate
+- MUST be meaningfully different from the name — it adds specificity
+- CAN and SHOULD include `~interpolants` when they help the message stand alone
+- Should make sense even in isolation, without seeing any source code
+- Think of it as the one-line summary a developer would read in a CI log
 
 **Span message** (in `span()`):
-- The detailed message, essentially the old `$0`/`$1` message converted to use `~name:Type` interpolants
-- This is what gets displayed at the source location
+- The detailed message — this should be EXACTLY the original message from the DIAGNOSTIC() macro
+- Just replace `$0`, `$1` etc with named `~interpolant:Type` syntax
+- This is what gets displayed at the source location in the editor
+
+**CRITICAL: The diagnostic message must NOT just repeat the name.** Here are examples showing the contrast:
+
+| Name | BAD diagnostic message | GOOD diagnostic message |
+|------|----------------------|------------------------|
+| `"cannot open file"` | `"cannot open file"` ❌ | `"cannot open file '~path'"` ✓ |
+| `"too many output paths specified"` | `"too many output paths specified"` ❌ | `"~count:int output paths for ~entryPointCount:int entry points"` ✓ |
+| `"subscript non array"` | `"subscript non array"` ❌ | `"no subscript operation for type '~type:Type'"` ✓ |
+| `"function return type mismatch"` | `"function return type mismatch"` ❌ | `"type '~exprType:Type' does not match return type '~returnType:Type'"` ✓ |
+| `"unsupported compiler mode"` | `"unsupported compiler mode"` ❌ | `"unsupported compiler mode"` ✓ (when there are no interpolants, repeating is OK) |
+
+The rule: if the diagnostic HAS interpolants, the diagnostic message should use them to be more specific than the name. If it has NO interpolants, repeating the name is acceptable.
 
 ### 6. Notes Handling
 
@@ -122,36 +165,95 @@ When asked to convert a diagnostic:
 4. **Generate the Lua definition**
 5. **Append to `source/slang/slang-diagnostics.lua`** (before the `process_diagnostics` call)
 
-## FULL EXAMPLE
+## FULL EXAMPLES
 
-### Input: Old diagnostic
+### Example 1: Simple diagnostic with one interpolant
 
 ```cpp
-// In slang-diagnostic-defs.h:
+// Old:
 DIAGNOSTIC(30013, Error, subscriptNonArray, "no subscript operation found for type '$0'")
-
-// Call site in slang-check-expr.cpp:
+// Call site:
 getSink()->diagnose(subscriptExpr, Diagnostics::subscriptNonArray, baseType);
 ```
 
-### Output: New diagnostic
-
 ```lua
+-- New:
 err(
   "subscript non array",
   30013,
-  "invalid subscript expression",
-  span("expr:Expr", "no subscript declarations found for type '~type:Type'")
+  "no subscript operation for type '~type:Type'",
+  span("expr:Expr", "no subscript operation found for type '~type:Type'")
 )
 ```
 
-### Why:
 - Name: `subscriptNonArray` → `"subscript non array"`
-- Code: `30013` (unchanged)
-- Severity: `Error` → `err()`
-- Diagnostic message: `"invalid subscript expression"` — concise standalone description
-- Span location: `"expr:Expr"` — from call site, first arg is `subscriptExpr` (an Expr)
-- Span message: The old message with `$0` replaced by `~type:Type` — from call site, the argument is `baseType` (a Type)
+- Diagnostic message: `"no subscript operation for type '~type:Type'"` — concise, includes the interpolant, stands alone
+- Span message: the original message verbatim, just `$0` → `~type:Type`
+- Span location: `"expr:Expr"` — from call site, `subscriptExpr` is an Expr
+
+### Example 2: Diagnostic with multiple interpolants
+
+```cpp
+// Old:
+DIAGNOSTIC(30007, Error, functionReturnTypeMismatch, "expression of type '$0' cannot be used to initialize a return value of type '$1'")
+// Call site:
+getSink()->diagnose(stmt->expression, Diagnostics::functionReturnTypeMismatch, exprType, returnType);
+```
+
+```lua
+-- New:
+err(
+  "function return type mismatch",
+  30007,
+  "type '~exprType:Type' does not match return type '~returnType:Type'",
+  span("expression:Expr", "expression of type '~exprType:Type' cannot be used to initialize a return value of type '~returnType:Type'")
+)
+```
+
+- Diagnostic message: short but uses both interpolants — more useful than just "function return type mismatch"
+- Span message: the original, with `$0` → `~exprType:Type`, `$1` → `~returnType:Type`
+
+### Example 3: Diagnostic with no interpolants
+
+```cpp
+// Old:
+DIAGNOSTIC(30065, Error, newCanOnlyBeUsedToInitializeAClass, "`new` can only be used to initialize a class")
+// Call site:
+getSink()->diagnose(expr, Diagnostics::newCanOnlyBeUsedToInitializeAClass);
+```
+
+```lua
+-- New:
+err(
+  "new can only be used to initialize a class",
+  30065,
+  "`new` can only be used to initialize a class",
+  span("expr:Expr", "`new` can only be used to initialize a class")
+)
+```
+
+- No interpolants → diagnostic message can match the original message (repeating is OK here)
+
+### Example 4: Diagnostic with notes
+
+```cpp
+// Old:
+DIAGNOSTIC(30201, Error, functionRedefinition, "function '$0' already has a body")
+// Call site:
+getSink()->diagnose(funcDecl->loc, Diagnostics::functionRedefinition, funcDecl->getName());
+getSink()->diagnose(prevDecl->loc, Diagnostics::seePreviousDefinitionOf, prevDecl->getName());
+```
+
+```lua
+-- New:
+-- uses notes: seePreviousDefinitionOf
+err(
+  "function redefinition",
+  30201,
+  "function '~func' already has a body",
+  span("loc", "function '~func' already has a body")
+)
+```
 
 ## IMPORTANT NOTES
 
