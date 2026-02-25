@@ -343,6 +343,24 @@ runs:
           rm -f "$TOKEN_FILE"
         fi
 
+    # Security: Clear raw credentials from the environment after auth is done.
+    # The derived token (AWS_BEARER_TOKEN_BEDROCK or ANTHROPIC_API_KEY) is still
+    # needed by Claude, but the raw secrets (LLMGW_ID/SECRET, NV_INFERENCE_TOKEN)
+    # are only used by the auth step above and should not be accessible to Claude.
+    # This mitigates prompt-injection attacks on pull_request_target workflows
+    # where Claude processes attacker-controlled PR diffs.
+    - name: Clear raw credentials from environment
+      shell: bash
+      run: |
+        # Unset raw secrets — these were only needed for token generation above.
+        # Note: 'unset' in a step only affects that step's shell. To clear them
+        # for ALL subsequent steps, we override them with empty values via GITHUB_ENV.
+        echo "LLMGW_ID=" >> $GITHUB_ENV
+        echo "LLMGW_SECRET=" >> $GITHUB_ENV
+        echo "LLMGW_TOKEN_URL=" >> $GITHUB_ENV
+        echo "NV_INFERENCE_TOKEN=" >> $GITHUB_ENV
+        echo "✅ Raw credentials cleared from environment"
+
     # Run setup commands if provided
     - name: Run setup commands
       id: setup-commands
