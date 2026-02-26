@@ -838,6 +838,10 @@ SLANG_API SlangResourceShape spReflectionType_GetResourceShape(SlangReflectionTy
 
     if (auto subpassInputType = as<SubpassInputType>(type))
     {
+        // Also check for multisampled subpass via the element type
+        auto elementType = as<TextureType>(subpassInputType->getElementType());
+        if (elementType->isMultisample())
+            return SLANG_TEXTURE_SUBPASS_MULTISAMPLE;
         return subpassInputType->isMultisample() ? SLANG_TEXTURE_SUBPASS_MULTISAMPLE
                                                  : SLANG_TEXTURE_SUBPASS;
     }

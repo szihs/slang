@@ -5,6 +5,11 @@
 // because SLANG_PARAMETER_CATEGORY_SUBPASS fell into the default switch
 // case in emitReflectionVarBindingInfoJSON, and SubpassInputType was not
 // handled in the reflection API (GetKind, GetResourceShape, GetResourceResultType).
+//
+// Verifies that SubpassInput parameters correctly report:
+//   - parameterCategory as "inputAttachmentIndex"
+//   - baseShape as "subpassInput"
+//   - resultType for the inner element type
 
 //TEST:REFLECTION(filecheck=CHECK):-target spirv -no-codegen
 
