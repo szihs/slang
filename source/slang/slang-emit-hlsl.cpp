@@ -1721,10 +1721,32 @@ void HLSLSourceEmitter::emitSemanticsImpl(IRInst* inst, bool allowOffsets)
         }
     }
 
-    if (auto readAccessSemantic = inst->findDecoration<IRStageReadAccessDecoration>())
+    auto readAccessSemantic = inst->findDecoration<IRStageReadAccessDecoration>();
+    auto writeAccessSemantic = inst->findDecoration<IRStageWriteAccessDecoration>();
+
+    // Emit explicit access qualifiers if present
+    if (readAccessSemantic)
         _emitStageAccessSemantic(readAccessSemantic, "read");
-    if (auto writeAccessSemantic = inst->findDecoration<IRStageWriteAccessDecoration>())
+    if (writeAccessSemantic)
         _emitStageAccessSemantic(writeAccessSemantic, "write");
+
+    // If this is a ray payload struct field without explicit qualifiers, emit defaults
+    if (m_currentRayPayloadStruct && m_currentStructField)
+    {
+        // Check if this inst corresponds to the current field's key
+        if (inst == m_currentStructField->getKey())
+        {
+            // If no explicit qualifiers, emit default ones
+            if (!readAccessSemantic && !writeAccessSemantic)
+            {
+                m_writer->emit(" : read(caller) : write(caller)");
+            }
+
+            // Clear the tracking variables after use
+            m_currentRayPayloadStruct = nullptr;
+            m_currentStructField = nullptr;
+        }
+    }
 
     if (auto layoutDecoration = inst->findDecoration<IRLayoutDecoration>())
     {
@@ -1761,6 +1783,36 @@ void HLSLSourceEmitter::_emitStageAccessSemantic(
         m_writer->emit(decoration->getStageName(i));
     }
     m_writer->emit(")");
+}
+
+void HLSLSourceEmitter::emitStructFieldAttributes(
+    IRStructType* structType,
+    IRStructField* field,
+    bool allowOffsetLayout)
+{
+    // Store the current struct field info for use in emitSemanticsImpl
+    // This helps emit default payload access qualifiers if needed
+    bool enablePAQs = false;
+    auto profile = getTargetProgram()->getOptionSet().getProfile();
+    if (profile.getFamily() == ProfileFamily::DX)
+    {
+        auto version = profile.getVersion();
+        enablePAQs = version >= ProfileVersion::DX_6_7;
+    }
+
+    if (enablePAQs && structType->findDecoration<IRRayPayloadDecoration>())
+    {
+        m_currentRayPayloadStruct = structType;
+        m_currentStructField = field;
+    }
+    else
+    {
+        m_currentRayPayloadStruct = nullptr;
+        m_currentStructField = nullptr;
+    }
+
+    // Call base implementation (currently empty, but good practice)
+    Super::emitStructFieldAttributes(structType, field, allowOffsetLayout);
 }
 
 void HLSLSourceEmitter::emitPostKeywordTypeAttributesImpl(IRInst* inst)

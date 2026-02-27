@@ -41,6 +41,10 @@ protected:
     // Allow caching of capability results for easier lookup.
     Dictionary<CapabilityAtom, bool> m_capabilityCache{};
 
+    // Track the current struct field being emitted for payload access qualifiers
+    IRStructType* m_currentRayPayloadStruct = nullptr;
+    IRStructField* m_currentStructField = nullptr;
+
     virtual void emitLayoutSemanticsImpl(
         IRInst* inst,
         char const* uniformSemanticSpelling,
@@ -137,6 +141,11 @@ protected:
     void _emitHLSLDecorationSingleFloat(const char* name, IRFunc* entryPoint, IRFloatLit* val);
 
     void _emitStageAccessSemantic(IRStageAccessDecoration* decoration, const char* name);
+
+    virtual void emitStructFieldAttributes(
+        IRStructType* structType,
+        IRStructField* field,
+        bool allowOffsetLayout) SLANG_OVERRIDE;
 };
 
 } // namespace Slang
