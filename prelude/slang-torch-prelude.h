@@ -158,7 +158,9 @@ TensorView make_tensor_view(
                                      .append(")")
                                      .c_str());
 
-    bool isEmpty = true;
+    // A tensor can have zero elements even if some dimensions are non-zero
+    // (e.g. shape (10, 0)). Emptiness must be based on numel().
+    bool isEmpty = (val.numel() == 0);
     for (int i = 0; i < val.dim(); ++i)
     {
         res.strides[i] = val.stride(i) * elementSize;
@@ -170,8 +172,6 @@ TensorView make_tensor_view(
                     .c_str());
 
         res.sizes[i] = val.size(i);
-        if (res.sizes[i] > 0)
-            isEmpty = false;
     }
 
     if (!res.data && !isEmpty)
