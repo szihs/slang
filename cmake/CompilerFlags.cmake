@@ -219,6 +219,8 @@ function(set_default_compile_options target)
             PRIVATE
             /fsanitize=address
             -fsanitize=address
+            -fsanitize=undefined
+            -fno-sanitize-recover=undefined
         )
         add_supported_cxx_linker_flags(
             ${target}
@@ -226,6 +228,7 @@ function(set_default_compile_options target)
             PUBLIC
             /INCREMENTAL:NO
             -fsanitize=address
+            -fsanitize=undefined
         )
     endif()
 
@@ -242,6 +245,13 @@ function(set_default_compile_options target)
                 BEFORE
                 PUBLIC -fprofile-instr-generate
             )
+        endif()
+    endif()
+
+    if(SLANG_ENABLE_TIME_TRACE)
+        # Time trace profiling for Clang (use with ClangBuildAnalyzer)
+        if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+            target_compile_options(${target} PRIVATE -ftime-trace)
         endif()
     endif()
 endfunction()

@@ -38,6 +38,7 @@
 #include "slang-ir-validate.h"
 #include "slang-ir.h"
 #include "slang-mangle.h"
+#include "slang-rich-diagnostics.h"
 #include "slang-type-layout.h"
 #include "slang-visitor.h"
 #include "slang.h"
@@ -1756,6 +1757,67 @@ struct ValLoweringVisitor : ValVisitor<ValLoweringVisitor, LoweredValInfo, Lower
             getBuilder(),
             specConstRateType,
             as<IRFuncType>(funcType)->getResultType());
+
+        // Check for operators and emit constexpr ops instead of calls.
+        // This ensures that compile-time integer expressions get hoistable,
+        // deduplicatable IR instructions.
+        auto funcName = val->getFuncDeclRef().getName();
+        if (funcName)
+        {
+            auto nameSlice = funcName->text.getUnownedSlice();
+            auto builder = getBuilder();
+
+            // Binary operators (2 args)
+#define CONSTEXPR_BINARY_OP(opStr, emitMethod)                                             \
+    if (nameSlice == toSlice(opStr) && args.getCount() == 2)                               \
+    {                                                                                      \
+        return LoweredValInfo::simple(builder->emitMethod(funcResType, args[0], args[1])); \
+    }                                                                                      \
+    else
+
+            // Arithmetic (+,*,- are handled by PolynomialIntVal)
+            CONSTEXPR_BINARY_OP("/", emitConstexprDiv)
+            CONSTEXPR_BINARY_OP("%", emitConstexprIRem)
+            // Shifts
+            CONSTEXPR_BINARY_OP("<<", emitConstexprShl)
+            CONSTEXPR_BINARY_OP(">>", emitConstexprShr)
+            // Bitwise
+            CONSTEXPR_BINARY_OP("&", emitConstexprBitAnd)
+            CONSTEXPR_BINARY_OP("|", emitConstexprBitOr)
+            CONSTEXPR_BINARY_OP("^", emitConstexprBitXor)
+            // Comparisons
+            CONSTEXPR_BINARY_OP("==", emitConstexprEql)
+            CONSTEXPR_BINARY_OP("!=", emitConstexprNeq)
+            CONSTEXPR_BINARY_OP(">", emitConstexprGreater)
+            CONSTEXPR_BINARY_OP("<", emitConstexprLess)
+            CONSTEXPR_BINARY_OP(">=", emitConstexprGeq)
+            CONSTEXPR_BINARY_OP("<=", emitConstexprLeq)
+            // Logical
+            CONSTEXPR_BINARY_OP("&&", emitConstexprAnd)
+            CONSTEXPR_BINARY_OP("||", emitConstexprOr)
+
+#undef CONSTEXPR_BINARY_OP
+
+            // Unary operators (1 arg)
+            if (nameSlice == toSlice("!") && args.getCount() == 1)
+            {
+                return LoweredValInfo::simple(builder->emitConstexprNot(funcResType, args[0]));
+            }
+            else if (nameSlice == toSlice("~") && args.getCount() == 1)
+            {
+                return LoweredValInfo::simple(builder->emitConstexprBitNot(funcResType, args[0]));
+            }
+            // Ternary select (?:) operator (3 args)
+            else if (nameSlice == toSlice("?:") && args.getCount() == 3)
+            {
+                return LoweredValInfo::simple(
+                    builder->emitConstexprSelect(funcResType, args[0], args[1], args[2]));
+            }
+        }
+
+        // TODO: Eventually, we might want to have a hoistable "Call" instruction to emit const-expr
+        // calls.
+        //
         auto resVal =
             emitCallToDeclRef(context, funcResType, val->getFuncDeclRef(), funcType, args, tryEnv);
         return resVal;
@@ -1768,7 +1830,7 @@ struct ValLoweringVisitor : ValVisitor<ValLoweringVisitor, LoweredValInfo, Lower
         SLANG_ASSERT(baseVal.flavor == LoweredValInfo::Flavor::Simple);
         auto type = lowerType(context, val->getType());
         type = maybeAddRateType(getBuilder(), baseVal.val->getFullType(), type);
-        auto resVal = LoweredValInfo::simple(getBuilder()->emitCast(type, baseVal.val));
+        auto resVal = LoweredValInfo::simple(getBuilder()->emitConstexprCast(type, baseVal.val));
         return resVal;
     }
 
@@ -1795,10 +1857,11 @@ struct ValLoweringVisitor : ValVisitor<ValLoweringVisitor, LoweredValInfo, Lower
                 auto factorVal = lowerVal(context, factor->getParam()).val;
                 for (IntegerLiteralValue i = 0; i < factor->getPower(); i++)
                 {
-                    termVal = irBuilder->emitMul(factorVal->getFullType(), termVal, factorVal);
+                    termVal =
+                        irBuilder->emitConstexprMul(factorVal->getFullType(), termVal, factorVal);
                 }
             }
-            resultVal = irBuilder->emitAdd(termVal->getFullType(), resultVal, termVal);
+            resultVal = irBuilder->emitConstexprAdd(termVal->getFullType(), resultVal, termVal);
         }
         return LoweredValInfo::simple(resultVal);
     }
@@ -1937,11 +2000,34 @@ struct ValLoweringVisitor : ValVisitor<ValLoweringVisitor, LoweredValInfo, Lower
             context->irBuilder->getTypeEqualityWitness(witnessType, subType, supType));
     }
 
-    LoweredValInfo visitTypeCoercionWitness(TypeCoercionWitness*)
+    LoweredValInfo visitBuiltinTypeCoercionWitness(BuiltinTypeCoercionWitness* witness)
     {
-        // When we fully support type coercion constraints, we should lower the witness into a
-        // function that does the conversion.
-        return LoweredValInfo();
+        auto irBuilder = getBuilder();
+        auto fromType = lowerType(context, witness->getFromType());
+        auto toType = lowerType(context, witness->getToType());
+        auto funcType = getBuilder()->getFuncType(1, &fromType, toType);
+        IRFunc* irFunc = irBuilder->createFunc();
+        irFunc->setFullType(funcType);
+        getBuilder()->addForceInlineDecoration(irFunc);
+
+        IRBuilderInsertLocScope insertScope(irBuilder);
+        irBuilder->setInsertInto(irFunc);
+        irBuilder->emitBlock();
+        auto param = irBuilder->emitParam(fromType);
+        auto cast = irBuilder->emitCast(toType, param);
+        irBuilder->emitReturn(cast);
+        return LoweredValInfo::simple(irFunc);
+    }
+
+    LoweredValInfo visitDeclRefTypeCoercionWitness(DeclRefTypeCoercionWitness* witness)
+    {
+        if (!witness->getDeclRef())
+            return LoweredValInfo();
+
+        auto fromType = lowerType(context, witness->getFromType());
+        auto toType = lowerType(context, witness->getToType());
+        auto funcType = getBuilder()->getFuncType(1, &fromType, toType);
+        return emitDeclRef(context, witness->getDeclRef(), funcType);
     }
 
     LoweredValInfo visitTransitiveSubtypeWitness(TransitiveSubtypeWitness* val)
@@ -2188,6 +2274,7 @@ struct ValLoweringVisitor : ValVisitor<ValLoweringVisitor, LoweredValInfo, Lower
         IRType* irValueType = lowerType(context, astValueType);
         IRInst* accessQualifier = nullptr;
         IRInst* addrSpace = nullptr;
+        IRType* dataLayout = nullptr;
 
         if (auto astAccessQualifier = type->getAccessQualifier())
         {
@@ -2207,7 +2294,13 @@ struct ValLoweringVisitor : ValVisitor<ValLoweringVisitor, LoweredValInfo, Lower
                 (IRIntegerValue)AddressSpace::Generic);
         }
 
-        return getBuilder()->getPtrType(kIROp_PtrType, irValueType, accessQualifier, addrSpace);
+        if (auto dataLayoutType = type->getDataLayout())
+        {
+            dataLayout = lowerType(context, dataLayoutType);
+        }
+
+        return getBuilder()
+            ->getPtrType(kIROp_PtrType, irValueType, accessQualifier, addrSpace, dataLayout);
     }
 
     IRType* visitDeclRefType(DeclRefType* type)
@@ -4331,10 +4424,10 @@ struct ExprLoweringContext
                      ->findDecoration<IRGlobalInputDecoration>())
             {
                 this->context->getSink()->diagnose(
-                    expr,
-                    Diagnostics::requireInputDecoratedVarForParameter,
-                    decl,
-                    glslRequireShaderInputParameter->parameterNumber);
+                    Diagnostics::RequireInputDecoratedVarForParameter{
+                        .func = decl,
+                        .paramNumber = glslRequireShaderInputParameter->parameterNumber,
+                        .expr = expr});
             }
             return;
         }
@@ -4931,7 +5024,8 @@ struct ExprLoweringVisitorBase : public ExprVisitor<Derived, LoweredValInfo>
                             i = addr.val;
                         else
                         {
-                            context->getSink()->diagnose(operand.expr, Diagnostics::noSuchAddress);
+                            context->getSink()->diagnose(
+                                Diagnostics::NoSuchAddress{.location = operand.expr->loc});
                             return nullptr;
                         }
                     }
@@ -5471,7 +5565,8 @@ struct ExprLoweringVisitorBase : public ExprVisitor<Derived, LoweredValInfo>
             {
                 if (auto interfaceDeclRef = declRefType->getDeclRef().as<InterfaceDecl>())
                 {
-                    context->getSink()->diagnose(expr, Diagnostics::interfaceDefaultInitializer);
+                    context->getSink()->diagnose(
+                        Diagnostics::InterfaceDefaultInitializer{.expr = expr});
                 }
             }
 
@@ -6693,7 +6788,7 @@ struct StmtLoweringVisitor : StmtVisitor<StmtLoweringVisitor>
         // for unreachable code based on IR analysis instead,
         // at which point we'd probably disable this check.
         //
-        context->getSink()->diagnose(stmt, Diagnostics::unreachableCode);
+        context->getSink()->diagnose(Diagnostics::UnreachableCode{.stmt = stmt});
 
         startBlock();
     }
@@ -6917,9 +7012,9 @@ struct StmtLoweringVisitor : StmtVisitor<StmtLoweringVisitor>
                     if (inferredMaxIters->value < constIntVal->getValue())
                     {
                         context->getSink()->diagnose(
-                            maxIters,
-                            Diagnostics::forLoopTerminatesInFewerIterationsThanMaxIters,
-                            inferredMaxIters->value);
+                            Diagnostics::ForLoopTerminatesInFewerIterationsThanMaxIters{
+                                .iterations = (int64_t)inferredMaxIters->value,
+                                .attr = maxIters});
                     }
                 }
             }
@@ -8262,7 +8357,8 @@ IRInst* getAddress(IRGenContext* context, LoweredValInfo const& inVal, SourceLoc
         return val.val;
     }
 
-    context->getSink()->diagnose(diagnosticLocation, Diagnostics::invalidLValueForRefParameter);
+    context->getSink()->diagnose(
+        Diagnostics::InvalidLValueForRefParameter{.location = diagnosticLocation});
     return nullptr;
 }
 
@@ -10235,10 +10331,9 @@ struct DeclLoweringVisitor : DeclVisitor<DeclLoweringVisitor, LoweredValInfo>
         }
         else
         {
-            getSink()->diagnose(
-                decl->loc,
-                Diagnostics::unimplemented,
-                "lower unknown AggType to IR");
+            getSink()->diagnose(Diagnostics::Unimplemented{
+                .feature = "lower unknown AggType to IR",
+                .location = decl->loc});
             return LoweredValInfo::simple(subBuilder->getVoidType());
         }
 
@@ -13004,8 +13099,7 @@ RefPtr<IRModule> generateIRForTranslationUnit(
     constructSSA(module);
     applySparseConditionalConstantPropagation(module, nullptr, compileRequest->getSink());
 
-    bool minimumOptimizations =
-        linkage->m_optionSet.getBoolOption(CompilerOptionName::MinimumSlangOptimization);
+    bool minimumOptimizations = linkage->m_optionSet.shouldPerformMinimumOptimizations();
     if (!minimumOptimizations)
     {
         simplifyCFG(module, CFGSimplificationOptions::getDefault());
