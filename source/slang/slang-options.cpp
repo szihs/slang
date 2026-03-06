@@ -3,7 +3,7 @@
 // Implementation of options parsing for `slangc` command line,
 // and also for API interface that takes command-line argument strings.
 
-#include "slang-optionss.h"
+#include "slang-options.h"
 
 #include "../compiler-core/slang-artifact-desc-util.h"
 #include "../compiler-core/slang-artifact-impl.h"
