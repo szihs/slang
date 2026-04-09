@@ -2399,6 +2399,45 @@ protected:
         bool isSpecial = false;
     };
 
+    // Check if a type is zero-sized and will be eliminated during type legalization.
+    // This is used to suppress errors for unsupported system value semantics on fields
+    // that are wrapped in Conditional<T, false>, which resolves to a struct containing
+    // vector<T, 0> after generic specialization.
+    static bool isZeroSizedType(IRType* type)
+    {
+        if (!type)
+            return false;
+
+        if (type->getOp() == kIROp_VoidType)
+            return true;
+
+        if (auto vectorType = as<IRVectorType>(type))
+        {
+            if (auto intLit = as<IRIntLit>(vectorType->getElementCount()))
+                return intLit->getValue() == 0;
+            return false;
+        }
+
+        if (auto arrayType = as<IRArrayType>(type))
+        {
+            if (auto intLit = as<IRIntLit>(arrayType->getElementCount()))
+                return intLit->getValue() == 0;
+            return false;
+        }
+
+        if (auto structType = as<IRStructType>(type))
+        {
+            for (auto field : structType->getFields())
+            {
+                if (!isZeroSizedType(field->getFieldType()))
+                    return false;
+            }
+            return true;
+        }
+
+        return false;
+    }
+
     struct SystemValLegalizationWorkItem
     {
         IRInst* var;
@@ -2503,7 +2542,10 @@ protected:
 
         if (info.isUnsupported)
         {
-            reportUnsupportedSystemAttribute(var, semanticName);
+            // Skip the error for zero-sized types (e.g., Conditional<T, false>),
+            // as the field will be eliminated during type legalization.
+            if (!isZeroSizedType(varType))
+                reportUnsupportedSystemAttribute(var, semanticName);
             return;
         }
         if (!info.permittedTypes.getCount())
@@ -3001,7 +3043,10 @@ private:
                         getSystemValueInfo(semanticDecor->getSemanticName(), &indexAsString, field);
                     if (sysValInfo.isUnsupported)
                     {
-                        reportUnsupportedSystemAttribute(field, semanticDecor->getSemanticName());
+                        if (!isZeroSizedType(field->getFieldType()))
+                            reportUnsupportedSystemAttribute(
+                                field,
+                                semanticDecor->getSemanticName());
                     }
                     else
                     {
