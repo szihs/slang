@@ -108,6 +108,7 @@ Rules (applied in order, before any posting):
      "path": "tests/.../foo.slang",
      "line": 99,
      "outdated": false,
+     "truncated": false,
      "finding": "<the bot's earlier comment text>",
      "humanReplies": [
        { "user": "<maintainer>", "body": "<maintainer's reply>" }
@@ -115,12 +116,14 @@ Rules (applied in order, before any posting):
    }
    ```
 
-   `outdated` is `true` when newer commits changed those lines since the reply (GitHub re-anchored the thread). DROP a candidate finding when **ALL** of these hold:
-   - a prior entry made the same point on the same code (same `path`, within ±8 lines), **and**
-   - its `humanReplies` is non-empty and a maintainer dismissed or explained it ("won't fix", "by design", "no such target", "the diagnostic test is exhaustive", …), **and**
-   - that entry has **`"outdated": false`**. If `"outdated": true`, the verdict is stale (the code changed since the reply) — re-review the finding normally instead.
+   `outdated` is `true` when GitHub re-anchored the thread because its line moved or changed. Treat it as a staleness signal, not proof that the maintainer verdict no longer applies: line-number churn or merges can make an already-addressed finding look stale. `truncated` is `true` when the workflow could not fetch the full thread; do not suppress from truncated data.
 
-   Always KEEP a 🔴 Bug whose evidence shows a concrete wrong result the reply did not address. If `humanReplies` is empty, nobody responded — you may post the finding once. When you drop a finding here, mark the row **Drop** with `Suppressed: prior verdict by @<user>` and list it in the folded **Suppressed** section of the review body (see Review Body Format).
+   DROP a candidate finding when **ALL** of these hold:
+   - the prior entry is not truncated, **and**
+   - its `humanReplies` is non-empty and a maintainer dismissed or explained it ("won't fix", "by design", "no such target", "the diagnostic test is exhaustive", …), **and**
+   - the candidate makes the same point on the same underlying code: same `path`, a strongly similar finding title/body, and either nearby line context (within ±8 lines) or a near-exact finding match that survives line-number drift.
+
+   Always KEEP a 🔴 Bug whose evidence shows a concrete wrong result the reply did not address. If `humanReplies` is empty, nobody responded — you may post the finding once. If the prior data is truncated or the match is weak, KEEP/re-review rather than guessing. When you drop a finding here, mark the row **Drop** with `Suppressed: prior verdict by @<user>` and list it in the folded **Suppressed** section of the review body (see Review Body Format).
 
 A finding that fails any rule above is marked Drop in the table. Do not post Drop rows. Do not post findings that were not in the table.
 

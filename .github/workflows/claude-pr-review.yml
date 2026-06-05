@@ -105,12 +105,17 @@ jobs:
                       isOutdated
                       path
                       line
-                      comments(first: 30) {
+                      # Fetch from the start: comments.nodes[0] must remain
+                      # the original Claude finding. If there are more than
+                      # 100 comments, hasNextPage makes the thread unsafe for
+                      # automatic resolve/suppression below.
+                      comments(first: 100) {
                         nodes {
                           author { login }
                           body
                           createdAt
                         }
+                        pageInfo { hasNextPage }
                       }
                     }
                   }
@@ -168,6 +173,7 @@ jobs:
             );
             for (const thread of claudeThreads) {
               const finding = thread.comments.nodes[0];
+              const commentsTruncated = thread.comments.pageInfo?.hasNextPage === true;
               const humanReplies = thread.comments.nodes
                 .slice(1)
                 .filter(c => !CLAUDE_LOGINS.includes(c.author?.login));
@@ -177,9 +183,10 @@ jobs:
                 line: thread.line,
                 resolved: thread.isResolved,
                 // outdated == GitHub re-anchored the thread because its line
-                // changed. Rule 7 treats an outdated verdict as STALE and
-                // re-evaluates the finding instead of suppressing it.
+                // changed. It is a staleness signal, but not by itself proof
+                // that the underlying finding changed.
                 outdated: thread.isOutdated,
+                truncated: commentsTruncated,
                 finding: finding.body,
                 humanReplies: humanReplies.map(c => ({
                   user: c.author?.login,
@@ -191,6 +198,11 @@ jobs:
               // human-replied threads alone keeps the maintainer's response
               // visible and breaks the "re-posts the same finding every push"
               // busywork loop.
+              if (commentsTruncated) {
+                core.info(`Skip resolving ${thread.id}: thread comment list truncated`);
+                continue;
+              }
+
               if (humanReplies.length === 0 && !thread.isResolved) {
                 try {
                   await github.graphql(`mutation($threadId: ID!) {
@@ -320,8 +332,9 @@ jobs:
 
       # Safety net: enforce REVIEW.md Rule 7 mechanically. The review step is *asked*
       # (not forced) to suppress findings a maintainer already adjudicated. This step
-      # minimizes any freshly-posted Gap/Question comment that recurs a still-valid
-      # (non-outdated) human-engaged prior thread at the same location.
+      # minimizes any freshly-posted Gap/Question comment that recurs an adjudicated
+      # prior thread with a strong same-finding match. Line drift alone must not make
+      # an already-addressed finding reappear, but weak matches are left visible.
       # 🔴 Bugs are NEVER auto-minimized — a real bug must stay visible even if it recurs.
       - name: Suppress re-posted adjudicated findings
         if: always()
@@ -342,19 +355,25 @@ jobs:
               core.info('No prior-review-threads.json; nothing to enforce.');
               return;
             }
-            // Only act on threads a human engaged with, on code that has NOT changed
-            // since (outdated === false). A stale verdict must not suppress a fresh finding.
+            const CLAUDE_LOGINS = ['claude', 'github-actions'];
+            const hasAdjudication = replies => replies.some(r =>
+              /\b(won't fix|wont fix|by design|intentional|intended|expected|not a bug|false positive|no such target|doesn't apply|does not apply|already covered|covered by|duplicate|exhaustive|should not have|not supported|unfixable|defer|deferred)\b/i
+                .test(r.body || '')
+            );
+            // Only act on complete prior threads where a maintainer actually
+            // adjudicated the finding. Incomplete thread data is never safe to use
+            // for automatic suppression.
             const declined = priors.filter(p =>
-              Array.isArray(p.humanReplies) && p.humanReplies.length > 0 && !p.outdated
+              !p.truncated && Array.isArray(p.humanReplies) && hasAdjudication(p.humanReplies)
             );
             if (declined.length === 0) {
-              core.info('No still-valid human-engaged prior verdicts; nothing to enforce.');
+              core.info('No complete adjudicated prior verdicts; nothing to enforce.');
               return;
             }
 
-            const CLAUDE_LOGINS = ['claude', 'github-actions'];
-            // Compare the first line of two findings, stripped of markdown/emoji.
-            const norm = s => (s || '').split('\n')[0]
+            // Compare finding bodies, stripped of markdown/emoji. A far-line
+            // match must be near-identical, not just a repeated generic title.
+            const norm = s => (s || '')
               .replace(/[*_`#>:\-]/g, ' ')
               .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, ' ')
               .toLowerCase().replace(/\s+/g, ' ').trim();
@@ -370,7 +389,12 @@ jobs:
               repository(owner:$owner,name:$repo){ pullRequest(number:$pr){
                 reviewThreads(last:100){ nodes {
                   id isResolved path line
-                  comments(first:5){ nodes { id author{login} body isMinimized } }
+                  # Fetch from the start so nodes[0] is the thread's original
+                  # finding; if the thread is longer than this page, skip it.
+                  comments(first:100){
+                    nodes { id author{login} body isMinimized }
+                    pageInfo { hasNextPage }
+                  }
                 }}}}}`;
             const res = await github.graphql(query, {
               owner: context.repo.owner, repo: context.repo.repo, pr: prNumber
@@ -385,6 +409,10 @@ jobs:
               if (!CLAUDE_LOGINS.includes(c.author?.login)) continue;
               // Never auto-minimize a real bug — highest-value signal stays visible.
               if (/🔴/.test(c.body || '')) continue;
+              if (t.comments.pageInfo?.hasNextPage) {
+                core.info(`Skip suppression for ${t.id}: thread comment list truncated`);
+                continue;
+              }
               // Skip threads a human already replied to (the prior, kept-visible one).
               const hasHuman = t.comments.nodes.some(
                 x => !CLAUDE_LOGINS.includes(x.author?.login)
@@ -394,9 +422,10 @@ jobs:
               const match = declined.find(p => {
                 if (p.path !== t.path) return false;
                 const lineClose = p.line != null && t.line != null
-                  && Math.abs(p.line - t.line) <= 10;
+                  && Math.abs(p.line - t.line) <= 8;
                 const titleClose = jaccard(p.finding, c.body) >= 0.6;
-                return lineClose || titleClose;
+                const titleVeryClose = jaccard(p.finding, c.body) >= 0.82;
+                return (lineClose && titleClose) || titleVeryClose;
               });
               if (!match) continue;
 
