@@ -3049,6 +3049,10 @@ bool isPointerToImmutableLocation(IRInst* loc)
 {
     switch (loc->getOp())
     {
+    case kIROp_GetOptiXSbtDataPtr:
+        // OptiX SBT data is read-only from shader code, but host code may update it between
+        // launches without invalidating CUDA's read-only cache.
+        return false;
     case kIROp_GetStructuredBufferPtr:
     case kIROp_RWStructuredBufferGetElementPtr:
     case kIROp_ImageSubscript:
