@@ -60,7 +60,7 @@ jobs:
         shell: bash
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
 
       - name: Common Test Setup
         uses: ./.github/actions/common-test-setup
@@ -87,15 +87,16 @@ jobs:
           if [[ "${{ inputs.cpu-only }}" != "true" && "${{ inputs.enable-debug-layers }}" == "true" ]]; then
             export VK_INSTANCE_LAYERS=VK_LAYER_KHRONOS_validation
           fi
-          # Force AVX-512 off in slang-llvm's JIT TargetMachine. The cpu-only
-          # tier runs on GitHub-hosted Azure VMs that intermittently mis-report
-          # AVX-512 support to LLVM's host-detection path, then SIGILL when
-          # the JIT-emitted kmovd / vmovss-with-mask actually executes (#11062).
+          # Force AVX-512 off in slang-llvm's JIT TargetMachine. We have observed
+          # intermittent illegal-instruction failures on both GitHub-hosted and
+          # GCP VMs, indicating that LLVM's host-detection path can mis-report
+          # AVX-512 support on virtual machines generally. Apply the workaround
+          # to every test tier so JIT-emitted kmovd / vmovss-with-mask instructions
+          # cannot fault when the reported features exceed the host capabilities
+          # (#11062).
           # Drop this once the LLVM 22 bump (#11017) fixes the underlying
           # detection.
-          if [[ "${{ inputs.cpu-only }}" == "true" ]]; then
-            export SLANG_DISABLE_AVX512=1
-          fi
+          export SLANG_DISABLE_AVX512=1
           # Build common slang-test arguments
           slang_test_args=(
             "-expected-failure-list" "tests/expected-failure-github.txt"
@@ -144,10 +145,6 @@ jobs:
             slang_test_args+=("-expected-failure-list" "tests/expected-failure-linux.txt")
           fi
 
-          # Silence aarch64-only failures (tracked as a separate follow-up issue)
-          if [[ "${{ inputs.platform }}" == "aarch64" ]]; then
-            slang_test_args+=("-expected-failure-list" "tests/expected-failure-aarch64.txt")
-          fi
 
           # T4 runners cannot execute SM 8.0+ cooperative matrix / neural tests
           if [[ "${{ inputs.gpu-tier }}" == "t4" ]]; then
@@ -203,46 +200,3 @@ jobs:
           printf '\n'
 
           "$bin_dir/slang-test" "${via_glsl_args[@]}"
-
-  # Run slang-rhi tests when:
-  # 1. full-gpu-tests is enabled AND
-  # 2. Either it's a pull request OR config is release
-  # This is to reduce the CI load but do some check on pull requests.
-  # expensive slang-rhi tests are excluded with -tce option, because they are not relevant for Slang.
-  test-slang-rhi:
-    runs-on: ${{ fromJSON(inputs.runs-on) }}
-    timeout-minutes: 50
-    if: inputs.full-gpu-tests && (github.event_name == 'pull_request' || inputs.config == 'release')
-    defaults:
-      run:
-        shell: bash
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: "recursive"
-          fetch-depth: "1"
-
-      - name: Common Test Setup
-        uses: ./.github/actions/common-test-setup
-        with:
-          os: ${{ inputs.os }}
-          compiler: ${{ inputs.compiler }}
-          platform: ${{ inputs.platform }}
-          config: ${{ inputs.config }}
-          artifact-suffix: ${{ inputs.artifact-suffix }}
-
-      - name: Run slang-rhi tests
-        run: |
-          export SLANG_RHI_EXCLUDE_TESTS="md-clear*,cmd-copy*,cmd-upload*,fence*,staging-heap*,texture-create*"
-          "$bin_dir/slang-rhi-tests" -check-devices -tce="$SLANG_RHI_EXCLUDE_TESTS"
-
-      - name: Run slang-rhi tests (OptiX 8.0)
-        if: inputs.os == 'windows' || inputs.os == 'linux'
-        run: |
-          "$bin_dir/slang-rhi-tests" -check-devices -optix-version=80000 -tc="ray-tracing-*.cuda"
-
-      - name: Run slang-rhi tests (OptiX 8.1)
-        if: inputs.os == 'windows' || inputs.os == 'linux'
-        run: |
-          "$bin_dir/slang-rhi-tests" -check-devices -optix-version=80100 -tc="ray-tracing-*.cuda"

@@ -511,6 +511,8 @@ def geometry : stage;
 /// [Stage]
 def dispatch : stage;
 
+def _node : stage;
+
 def _raygen : stage;
 alias _raygeneration = _raygen;
 def _intersection : stage;
@@ -574,6 +576,10 @@ def SPV_KHR_fragment_shader_barycentric : _spirv_1_0;
 /// Represents the SPIR-V extension for non-semantic information.
 /// [EXT]
 def SPV_KHR_non_semantic_info : _spirv_1_0;
+
+/// Represents the SPIR-V extension for shader abort (SPV_KHR_abort).
+/// [EXT]
+def SPV_KHR_abort : _spirv_1_0;
 
 /// Represents the SPIR-V extension for device-group information.
 /// [EXT]
@@ -690,7 +696,15 @@ def SPV_KHR_untyped_pointers : _spirv_1_0;
 /// [EXT]
 def SPV_KHR_bfloat16: _spirv_1_0;
 
+/// Represents the SPIR-V extension for 64-bit integer indexing of resources and arrays.
+/// [EXT]
+def SPV_EXT_shader_64bit_indexing : _spirv_1_0;
+
 // SPIRV Capabilities.
+
+/// Represents the SPIR-V AbortKHR capability for OpAbortKHR.
+/// [EXT]
+def spvAbort : SPV_KHR_abort;
 
 /// Represents the SPIR-V capability for DeviceGroup.
 /// [EXT]
@@ -948,6 +962,10 @@ def spvBindlessTextureNV : SPV_NV_bindless_texture;
 /// [EXT]
 def spvDescriptorHeapEXT : SPV_EXT_descriptor_heap + SPV_KHR_untyped_pointers;
 
+/// Represents the SPIR-V capability for 64-bit integer indexing of resources and arrays.
+/// [EXT]
+def spvShader64BitIndexingEXT : SPV_EXT_shader_64bit_indexing;
+
 // The following capabilities all pertain to how ray tracing shaders are translated
 // to GLSL, where there are two different extensions that can provide the core
 // functionality of `TraceRay` and the related operations.
@@ -1046,6 +1064,14 @@ alias GL_EXT_buffer_reference_uvec2 = _GL_EXT_buffer_reference_uvec2 | _spirv_1_
 /// Represents the GL_EXT_debug_printf extension.
 /// [EXT]
 alias GL_EXT_debug_printf = _GL_EXT_debug_printf | SPV_KHR_non_semantic_info;
+
+/// Represents the GL_EXT_shader_abort extension (VK_KHR_shader_abort).
+/// [EXT]
+def _GL_EXT_shader_abort : glsl;
+/// Represents the GL_EXT_shader_abort extension for GLSL targets, or the
+/// corresponding spvAbort capability for SPIR-V targets.
+/// [EXT]
+alias GL_EXT_shader_abort = _GL_EXT_shader_abort | spvAbort;
 
 /// Represents the GL_EXT_demote_to_helper_invocation extension.
 /// [EXT]
@@ -1487,12 +1513,16 @@ alias task = _amplification + _meshshading;
 /// [Stage]
 alias amplification = _amplification + _meshshading;
 
+/// Work-graph node stage (requires SM 6.8 or later)
+/// [Stage]
+alias node = _node + _sm_6_8;
+
 // shader stage groups
 /// Collection of all shader stages
 /// [Compound]
 alias any_stage = vertex | fragment | compute | hull | domain | geometry
                  | raygen | intersection | anyhit | closesthit | miss | mesh
-                 | amplification | callable
+                 | amplification | callable | node
                  ;
 
 /// Collection of shader stages
@@ -2411,6 +2441,9 @@ alias nonuniformqualifier = sm_5_1;
 /// Capabilities required to use 'printf'
 /// [Compound]
 alias printf = GL_EXT_debug_printf | _sm_4_0 | _cuda_sm_2_0 | cpp | llvm;
+/// Capabilities required to use 'abort'
+/// [Compound]
+alias abort = GL_EXT_shader_abort;
 /// Capabilities required to use basic TextureFootprint operations
 /// [Compound]
 alias texturefootprint = GL_NV_shader_texture_footprint + GLSL_450 | hlsl_nvapi + _sm_4_0;
@@ -2444,6 +2477,23 @@ alias subgroup_basic = GL_KHR_shader_subgroup_basic
                      | wgsl
                      | metal
                      ;
+/// Capabilities required to use the subgroup-within-workgroup queries
+/// 'WaveGetWaveIndex' / 'WaveGetNumWaves'. These lower to GLSL
+/// gl_SubgroupID / gl_NumSubgroups and SPIR-V BuiltIn SubgroupId /
+/// NumSubgroups, which the GLSL and Vulkan SPIR-V environment specs
+/// restrict to compute-class execution models (compute, mesh,
+/// amplification/task); the restriction is encoded here so misuse is
+/// caught by the capability system rather than producing invalid
+/// GLSL / SPIR-V.
+/// [Compound]
+alias subgroup_workgroup_index = GL_KHR_shader_subgroup_basic + compute
+                               | GL_KHR_shader_subgroup_basic + mesh
+                               | GL_KHR_shader_subgroup_basic + amplification
+                               | _sm_6_0
+                               | _cuda_sm_7_0
+                               | wgsl
+                               | metal
+                               ;
 /// Capabilities required to use GLSL-style subgroup operations 'subgroup_ballot'
 /// [Compound]
 alias subgroup_ballot = spirv_1_0 + GL_KHR_shader_subgroup_ballot
